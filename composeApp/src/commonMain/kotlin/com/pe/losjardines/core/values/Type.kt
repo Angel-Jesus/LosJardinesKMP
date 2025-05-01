@@ -11,7 +11,10 @@ import org.jetbrains.compose.resources.Font
 
 data class AppTypography(
     val titleLarge: TextStyle,
-    val bodyLarge: TextStyle
+    val titleMedium: TextStyle,
+    val titleSmall: TextStyle,
+    val titleBrand: TextStyle,
+    val bodyLarge: TextStyle,
 )
 
 @Composable
@@ -28,10 +31,26 @@ fun AppTypography(): AppTypography {
             fontWeight = FontWeight.W500,
             fontSize = 18.sp
         ),
-        bodyLarge = TextStyle(
+        titleBrand = TextStyle(
+            fontFamily = appFontFamily,
+            fontWeight = FontWeight.W500,
+            fontSize = 16.sp,
+            color = BrandTextColor
+        ),
+        titleMedium = TextStyle(
             fontFamily = appFontFamily,
             fontWeight = FontWeight.W300,
+            fontSize = 16.sp
+        ),
+        titleSmall = TextStyle(
+            fontFamily = appFontFamily,
+            fontWeight = FontWeight.W100,
             fontSize = 14.sp
-        )
+        ),
+        bodyLarge = TextStyle(
+            fontFamily = appFontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 14.sp
+        ),
     )
 }

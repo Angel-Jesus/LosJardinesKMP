@@ -59,6 +59,10 @@ kotlin {
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.tabNavigator)
+            // DatePicker KMP
+            implementation(libs.kmp.date.time.picker)
+            // Icons extended
+            implementation(compose.materialIconsExtended)
         }
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
@@ -96,6 +100,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.material3.android)
+    implementation(libs.androidx.foundation.layout.android)
     debugImplementation(compose.uiTooling)
 }
 

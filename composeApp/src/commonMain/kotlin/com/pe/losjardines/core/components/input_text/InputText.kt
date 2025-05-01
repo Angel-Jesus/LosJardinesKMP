@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -24,7 +25,8 @@ fun InputText(
     defaultText: String,
     onValueChange: (String) -> Unit = {},
     clickable: Boolean = false,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    keyboardOptions: KeyboardOptions
 ){
     val typography = LocalAppTypography.current
 
@@ -32,7 +34,7 @@ fun InputText(
 
         Text(
            text = textTitle,
-           style = typography.bodyLarge,
+           style = typography.titleSmall,
            color = BlackTextColor
        )
 
@@ -45,15 +47,19 @@ fun InputText(
                     enabled = clickable,
                     onClick = onClick
             ),
+            textStyle = typography.bodyLarge,
             value = defaultText,
             onValueChange = onValueChange,
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = FocusedBorderColor,
-                unfocusedBorderColor = UnfocusedBorderColor
+                unfocusedBorderColor = UnfocusedBorderColor,
+                disabledBorderColor = UnfocusedBorderColor,
+                disabledTextColor = BlackTextColor
             ),
             shape = RoundedCornerShape(4.dp),
             singleLine = true,
-            enabled = !clickable
+            enabled = !clickable,
+            keyboardOptions = keyboardOptions
         )
    }
 }

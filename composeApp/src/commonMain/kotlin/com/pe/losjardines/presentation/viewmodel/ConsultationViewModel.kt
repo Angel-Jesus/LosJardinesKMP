@@ -45,7 +45,7 @@ class ConsultationViewModel(
 
     private fun handleErrorGetClient(failure: Failure){
         println(failure)
-        updateState { copy(state = StateConsult.ERROR) }
+        updateState { copy(state = StateConsult.ERROR, clients = emptyList()) }
     }
 
     private fun deleteClient(id: Int){

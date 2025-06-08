@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.Scaffold
@@ -49,6 +50,7 @@ import com.pe.losjardines.core.components.input_text.InputText
 import com.pe.losjardines.core.components.table.HeaderTable
 import com.pe.losjardines.core.components.table.UserInformationTable
 import com.pe.losjardines.core.components.text.TextTitle
+import com.pe.losjardines.core.values.AppTypography
 import com.pe.losjardines.core.values.BackgroundBrandColor
 import com.pe.losjardines.core.values.ConsultString
 import com.pe.losjardines.core.values.ConsultString.BTN_APPLY_FILTER
@@ -60,9 +62,11 @@ import com.pe.losjardines.core.values.ConsultString.FILTER_ORIGIN
 import com.pe.losjardines.core.values.ConsultString.TITLE_FILTER
 import com.pe.losjardines.core.values.DefaultTextColor
 import com.pe.losjardines.core.values.LocalAppTypography
+import com.pe.losjardines.domain.model.ClientFilter
 import com.pe.losjardines.domain.model.ClientModel
 import com.pe.losjardines.presentation.constance.TableConstance
 import com.pe.losjardines.presentation.contract.consult.ConsultEvent
+import com.pe.losjardines.presentation.contract.consult.ConsultState
 import com.pe.losjardines.presentation.enums.StateConsult
 import com.pe.losjardines.presentation.enums.TitleClient
 import com.pe.losjardines.presentation.model.DataUpdate
@@ -90,6 +94,7 @@ class ConsultationScreen: Screen {
 
         var filterOption by remember { mutableStateOf(FILTER_INIT) }
         var filterMonth by remember { mutableStateOf(MonthFilter.NONE.displayName) }
+        var filterInput by remember { mutableStateOf(String.EMPTY) }
         var showUpdateData by rememberSaveable{ mutableStateOf(false) }
         var showDeleteDialog by rememberSaveable{ mutableStateOf(false) }
         var valueUpdate by rememberSaveable { mutableStateOf(DataUpdate()) }
@@ -143,7 +148,7 @@ class ConsultationScreen: Screen {
                             contentDescription = "Logo_AJ",
                             modifier = Modifier
                                 .fillMaxWidth(0.5f)
-                                .height(100.dp)
+                                .height(120.dp)
                                 .padding(top = 20.dp)
                         )
                     }
@@ -172,7 +177,9 @@ class ConsultationScreen: Screen {
                             InputText(
                                 modifier = Modifier.weight(0.5f),
                                 defaultText = String.EMPTY,
-                                onValueChange = {  }
+                                onValueChange = { newValue ->
+                                    filterInput = newValue
+                                }
                             )
 
                             Spacer(modifier = Modifier.width(16.dp))
@@ -195,7 +202,13 @@ class ConsultationScreen: Screen {
                                 text = BTN_APPLY_FILTER,
                                 leadingIcon = Icons.Filled.Search,
                                 style = typography.bodyLarge,
-                                onClick = {  }
+                                onClick = {
+                                    when(filterOption){
+                                        FILTER_MONTH -> viewModel.onEvent(ConsultEvent.GetClient(ClientFilter.Month(filterMonth)))
+                                        FILTER_ORIGIN -> viewModel.onEvent(ConsultEvent.GetClient(ClientFilter.Origin(filterInput, filterMonth)))
+                                        FILTER_DNI -> viewModel.onEvent(ConsultEvent.GetClient(ClientFilter.DNI(filterInput, filterMonth)))
+                                    }
+                                }
                             )
 
                             Spacer(modifier = Modifier.width(16.dp))
@@ -207,6 +220,7 @@ class ConsultationScreen: Screen {
                                 style = typography.bodyLarge,
                                 onClick = {
                                     filterMonth = MonthFilter.NONE.displayName
+                                    filterInput = String.EMPTY
                                     filterOption = FILTER_INIT
                                 }
                             )
@@ -240,80 +254,89 @@ class ConsultationScreen: Screen {
                 }
 
                 when(consultationState.state){
-                    StateConsult.LOADING -> {
-                        item {
-                            Column(
-                                modifier = Modifier.fillMaxWidth().padding(start = 16.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Spacer(modifier = Modifier.height(24.dp))
-
-                                CircularProgressIndicator(
-                                    modifier = Modifier.size(80.dp),
-                                    color = BackgroundBrandColor,
-                                    strokeWidth = 6.dp
-                                )
-                            }
-                        }
-                    }
-                    StateConsult.SUCCESS -> {
-                        if(consultationState.clients.isEmpty()){
-                            item {
-                                Column(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalAlignment = Alignment.CenterHorizontally
-                                ) {
-                                    Spacer(modifier = Modifier.height(10.dp))
-
-                                    Image(
-                                        modifier = Modifier.fillMaxWidth(0.6f).height(200.dp),
-                                        painter = painterResource(Res.drawable.no_data),
-                                        contentDescription = null
-                                    )
-
-                                    Text(
-                                        modifier = Modifier.fillMaxWidth(),
-                                        text = "No se encontraron clientes registrado",
-                                        style = typography.bodyLarge,
-                                        color = Color.Gray,
-                                        textAlign = TextAlign.Center
-                                    )
-
-                                }
-                            }
-                        }
-                    }
-                    StateConsult.ERROR -> {
-                        item {
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally
-                            ) {
-                                Spacer(modifier = Modifier.height(10.dp))
-
-                                Image(
-                                    modifier = Modifier.fillMaxWidth(0.6f).height(200.dp),
-                                    painter = painterResource(Res.drawable.error_internet),
-                                    contentDescription = null
-                                )
-
-                                Text(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    text = "Error de conexión",
-                                    style = typography.bodyLarge,
-                                    color = Color.Gray,
-                                    textAlign = TextAlign.Center
-                                )
-
-                            }
-                        }
-                    }
+                    StateConsult.LOADING -> loadingCase()
+                    StateConsult.SUCCESS -> emptyCase(consultationState, typography)
+                    StateConsult.ERROR -> errorCase(typography)
                 }
 
                 item {
                     Spacer(modifier = Modifier.height(16.dp))
                 }
 
+            }
+        }
+    }
+
+    private fun LazyListScope.errorCase(typography: AppTypography) {
+        item {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Image(
+                    modifier = Modifier.fillMaxWidth(0.6f).height(200.dp),
+                    painter = painterResource(Res.drawable.error_internet),
+                    contentDescription = null
+                )
+
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Error de conexión",
+                    style = typography.bodyLarge,
+                    color = Color.Gray,
+                    textAlign = TextAlign.Center
+                )
+
+            }
+        }
+    }
+
+    private fun LazyListScope.emptyCase(
+        consultationState: ConsultState,
+        typography: AppTypography
+    ) {
+        if (consultationState.clients.isEmpty()) {
+            item {
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    Image(
+                        modifier = Modifier.fillMaxWidth(0.6f).height(200.dp),
+                        painter = painterResource(Res.drawable.no_data),
+                        contentDescription = null
+                    )
+
+                    Text(
+                        modifier = Modifier.fillMaxWidth(),
+                        text = "No se encontraron clientes registrado",
+                        style = typography.bodyLarge,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center
+                    )
+
+                }
+            }
+        }
+    }
+
+    private fun LazyListScope.loadingCase() {
+        item {
+            Column(
+                modifier = Modifier.fillMaxWidth().padding(start = 16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(24.dp))
+
+                CircularProgressIndicator(
+                    modifier = Modifier.size(80.dp),
+                    color = BackgroundBrandColor,
+                    strokeWidth = 6.dp
+                )
             }
         }
     }

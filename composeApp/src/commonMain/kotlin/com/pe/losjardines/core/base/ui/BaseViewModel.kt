@@ -2,6 +2,9 @@ package com.pe.losjardines.core.base.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.pe.losjardines.core.base.error.Failure
+import com.pe.losjardines.core.base.extensions.collectEither
+import com.pe.losjardines.core.base.usecase.BaseUseCase
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,5 +47,20 @@ abstract class BaseViewModel<S : BaseUiState, E: BaseEvent, F: BaseEffect>(
 
     protected fun clear(){
         viewModelScope.cancel()
+    }
+
+    protected fun <Params, Result> executeUseCase(
+        useCase: BaseUseCase<Params, Result>,
+        params: Params,
+        onSuccess: suspend (Result) -> Unit,
+        onError: suspend (Failure) -> Unit
+    ){
+        viewModelScope.launch {
+            useCase.execute(params).collectEither(
+                onLoading = {},
+                onSuccess = onSuccess,
+                onError = onError
+            )
+        }
     }
 }

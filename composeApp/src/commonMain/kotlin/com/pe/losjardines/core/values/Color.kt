@@ -4,6 +4,7 @@ import androidx.compose.ui.graphics.Color
 
 val BackgroundBrandColor = Color(0xFFEA4545)
 val BackgroundDarkColor = Color(0xFF000000)
+val BackgroundLightColor = Color(0xFFFFFFFF)
 
 val DefaultTextColor = Color(0xFFFFFFFF)
 val BlackTextColor = Color(0xFF000000)

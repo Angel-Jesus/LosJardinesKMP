@@ -1,0 +1,23 @@
+platform :ios, '14.1'
+
+target 'iosApp' do
+  use_frameworks!
+
+  # Aquí puedes añadir tus pods, por ejemplo:
+  pod 'Alamofire', '~> 5.4'
+end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      # Forzamos iOS 14.1 como mínimo (ya lo defines arriba, pero esto refuerza por pod)
+      config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.1'
+    end
+  end
+
+  # 🧼 Limpieza automática de atributos extendidos
+  puts "🔧 Limpiando atributos extendidos de frameworks de CocoaPods..."
+  Dir.glob("Pods/**/*.framework").each do |framework|
+    system("xattr -cr #{framework}")
+  end
+end

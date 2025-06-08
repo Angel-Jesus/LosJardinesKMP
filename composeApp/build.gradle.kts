@@ -1,12 +1,16 @@
 import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.nativeCocoapods)
+    alias(libs.plugins.kotlinx.serialization)
+    alias(libs.plugins.buildkonfig)
 }
 
 kotlin {
@@ -27,6 +31,19 @@ kotlin {
             isStatic = true
         }
     }
+
+    cocoapods {
+        summary = "Módulo compartido para iOS"
+        homepage = "https://tuprojecto.dev"
+        version = "1.0"
+        ios.deploymentTarget = "14.1"
+        podfile = project.file("../iosApp/Podfile")
+        framework {
+            baseName = "ComposeApp"
+            isStatic = true
+        }
+    }
+
     
     jvm("desktop")
     
@@ -36,7 +53,10 @@ kotlin {
         androidMain.dependencies {
             implementation(compose.preview)
             implementation(libs.androidx.activity.compose)
+            // Koin
             implementation(libs.koin.android)
+            // Ktor
+            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -44,6 +64,7 @@ kotlin {
             implementation(compose.material)
             implementation(compose.material3)
             implementation(compose.ui)
+            implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -63,11 +84,25 @@ kotlin {
             implementation(libs.kmp.date.time.picker)
             // Icons extended
             implementation(compose.materialIconsExtended)
+            // Ktor
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
         }
+
+        iosMain.dependencies {
+            // Ktor
+            implementation(libs.ktor.client.darwin)
+        }
+
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
+            // Coroutines
             implementation(libs.kotlinx.coroutines.swing)
+            // Koin
             implementation(libs.koin.core)
+            // Ktor
+            implementation(libs.ktor.client.cio)
         }
     }
 }
@@ -78,8 +113,8 @@ android {
 
     defaultConfig {
         applicationId = "com.pe.losjardines"
-        minSdk = libs.versions.android.minSdk.get().toInt()
-        targetSdk = libs.versions.android.targetSdk.get().toInt()
+        minSdk = 35//libs.versions.android.minSdk.get().toInt()
+        targetSdk = 35//libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
         versionName = "1.0"
     }
@@ -99,12 +134,6 @@ android {
     }
 }
 
-dependencies {
-    implementation(libs.androidx.material3.android)
-    implementation(libs.androidx.foundation.layout.android)
-    debugImplementation(compose.uiTooling)
-}
-
 compose.desktop {
     application {
         mainClass = "com.pe.losjardines.MainKt"
@@ -114,5 +143,28 @@ compose.desktop {
             packageName = "com.pe.losjardines"
             packageVersion = "1.0.0"
         }
+    }
+}
+
+buildkonfig {
+    packageName = "com.pe.losjardines"
+
+    val localProperties = Properties().apply {
+        val propsFile = rootProject.file("local.properties")
+        if(propsFile.exists()) load(propsFile.inputStream())
+    }
+
+    defaultConfigs {
+        buildConfigField(
+            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            "BASE_URL",
+            localProperties["BASE_URL"]?.toString() ?: ""
+        )
+
+        buildConfigField(
+            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            "ROUTE_AJ",
+            localProperties["ROUTE_AJ"]?.toString() ?: ""
+        )
     }
 }

@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.pe.losjardines.core.values.BrandTextColor
 import com.pe.losjardines.core.values.LocalAppTypography
@@ -64,8 +63,10 @@ actual fun DatePicker(
         ),
         dateTimePickerView = DateTimePickerView.DIALOG_VIEW,
         onDoneClick = { localDate ->
-            val date = localDate.toString().split("-")
-            onDateSelected("${date[2]}/${date[1]}/${date[0]}")
+            val day = localDate.dayOfMonth.toString().padStart(2, '0')
+            val month = localDate.monthNumber.toString().padStart(2, '0')
+            val year = localDate.year.toString()
+            onDateSelected("$day/$month/$year")
             isShow.value = false
         },
         onDismiss = {

@@ -12,6 +12,13 @@ object RegisterString{
 
 object ConsultString{
     const val TITLE_CONSULT = "Consulta"
+    const val TITLE_FILTER = "Filtro"
+    const val FILTER_INIT = "Aplicar filtro"
+    const val FILTER_ORIGIN = "Procedencia"
+    const val FILTER_MONTH = "Mes"
+    const val FILTER_DNI = "DNI"
+    const val BTN_APPLY_FILTER = "Aplicar"
+    const val BTN_CLEAR_FILTER = "Limpiar"
 }
 
 object PickerString{

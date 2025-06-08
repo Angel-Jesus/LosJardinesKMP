@@ -4,20 +4,17 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Scaffold
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -37,12 +34,14 @@ import com.pe.losjardines.core.components.input_text.InputText
 import com.pe.losjardines.core.components.picker.Picker
 import com.pe.losjardines.core.components.text.TextTitle
 import com.pe.losjardines.core.values.BackgroundBrandColor
-import com.pe.losjardines.core.values.ConsultString
 import com.pe.losjardines.core.values.DefaultTextColor
 import com.pe.losjardines.core.values.RegisterString
 import com.pe.losjardines.presentation.constance.RegisterKey
-import com.pe.losjardines.presentation.contract.registration.RegistrationEvent
-import com.pe.losjardines.presentation.contract.registration.RegistrationEvent.*
+import com.pe.losjardines.presentation.constance.RegisterKey.DATE
+import com.pe.losjardines.presentation.constance.RegisterKey.TIME
+import com.pe.losjardines.presentation.contract.registration.RegistrationEvent.OnValueChanged
+import com.pe.losjardines.presentation.contract.registration.RegistrationEvent.ResetForm
+import com.pe.losjardines.presentation.contract.registration.RegistrationEvent.SendForm
 import com.pe.losjardines.presentation.viewmodel.RegistrationViewModel
 import losjardineskmp.composeapp.generated.resources.Res
 import losjardineskmp.composeapp.generated.resources.logohotel
@@ -68,14 +67,14 @@ class RegisterScreen: Screen {
         Picker.date(
             isShow = isShowDatePicker,
             onDateSelected = {
-                viewModel.onEvent(OnValueChanged(RegisterKey.DATE, it))
+                viewModel.onEvent(OnValueChanged(DATE, it))
             }
         )
 
         Picker.time(
             isShow = isShowTimePicker,
             onTimeSelected = {
-                viewModel.onEvent(OnValueChanged(RegisterKey.TIME, it))
+                viewModel.onEvent(OnValueChanged(TIME, it))
             }
         )
 
@@ -111,8 +110,8 @@ class RegisterScreen: Screen {
                 }
 
                 item {
-                    val fieldDate = registrationState.registerMap[RegisterKey.DATE]!!
-                    val fieldTime = registrationState.registerMap[RegisterKey.TIME]!!
+                    val fieldDate = registrationState.registerMap[DATE]!!
+                    val fieldTime = registrationState.registerMap[TIME]!!
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),

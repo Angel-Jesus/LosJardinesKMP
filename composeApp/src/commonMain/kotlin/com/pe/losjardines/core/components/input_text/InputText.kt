@@ -12,33 +12,37 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.pe.losjardines.core.values.BlackTextColor
 import com.pe.losjardines.core.values.FocusedBorderColor
 import com.pe.losjardines.core.values.LocalAppTypography
 import com.pe.losjardines.core.values.UnfocusedBorderColor
+import com.pe.losjardines.utils.EMPTY
 
 @Composable
 fun InputText(
     modifier: Modifier = Modifier,
-    textTitle: String,
+    textTitle: String = String.EMPTY,
     defaultText: String,
     onValueChange: (String) -> Unit = {},
     clickable: Boolean = false,
     onClick: () -> Unit = {},
-    keyboardOptions: KeyboardOptions
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
 ){
     val typography = LocalAppTypography.current
 
     Column(modifier = modifier) {
 
-        Text(
-           text = textTitle,
-           style = typography.titleSmall,
-           color = BlackTextColor
-       )
+        if(textTitle.isNotEmpty()){
+            Text(
+                text = textTitle,
+                style = typography.titleSmall,
+                color = BlackTextColor
+            )
 
-       Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+        }
 
         OutlinedTextField(
             modifier = Modifier

@@ -5,7 +5,6 @@ import com.pe.losjardines.core.base.error.ErrorMessage
 import com.pe.losjardines.core.base.error.Failure
 import com.pe.losjardines.core.base.usecase.BaseUseCase
 import com.pe.losjardines.data.mapper.toDto
-import com.pe.losjardines.domain.model.ClientModel
 import com.pe.losjardines.domain.repository.ClientRepository
 import com.pe.losjardines.presentation.enums.TitleClient
 import com.pe.losjardines.presentation.model.DataUpdate

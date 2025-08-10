@@ -8,7 +8,6 @@ import com.pe.losjardines.data.network.ApiService
 import com.pe.losjardines.data.network.dto.ClientDto
 import com.pe.losjardines.data.network.requets.ClientRequest
 import com.pe.losjardines.domain.repository.ClientRepository
-import io.ktor.client.call.body
 
 class ClientRepositoryImpl(
     private val apiService: ApiService,

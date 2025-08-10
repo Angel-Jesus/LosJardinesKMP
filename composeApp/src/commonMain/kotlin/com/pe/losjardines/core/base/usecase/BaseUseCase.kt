@@ -19,4 +19,4 @@ abstract class BaseUseCase<in Params, out Type>: UseCase<Params, Type> {
         emit(result)
     }.catch { e -> emit(Either.Error(Failure.fromThrowable(e))) }
         .flowOn(Dispatchers.IO)
-}
+}   

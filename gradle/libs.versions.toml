@@ -1,5 +1,5 @@
 [versions]
-agp = "8.5.2"
+agp = "8.7.3"
 android-compileSdk = "35"
 android-minSdk = "24"
 android-targetSdk = "35"
@@ -8,13 +8,13 @@ androidx-appcompat = "1.7.0"
 androidx-constraintlayout = "2.2.1"
 androidx-core-ktx = "1.16.0"
 androidx-espresso-core = "3.6.1"
-androidx-lifecycle = "2.8.4"
+androidx-lifecycle = "2.9.1"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
-compose-multiplatform = "1.7.3"
+compose-multiplatform = "1.8.2"
 junit = "4.13.2"
-kotlin = "2.1.10"
-kotlinx-coroutines = "1.10.1"
+kotlin = "2.2.0"
+kotlinx-coroutines = "1.10.2"
 #Koin
 koin = "3.5.6"
 koinCompose = "1.1.5"
@@ -23,12 +23,14 @@ koinComposeViewModel = "1.2.0-Beta4"
 voyager_version = "1.0.0"
 #DatePicker KMP
 kmpDateTimePicker = "1.0.3"
-material3Android = "1.3.2"
-foundationLayoutAndroid = "1.8.0"
 # Ktor
 ktor_version = "2.3.11"
 # BuildKonfig
 buildKonfig = "0.16.0"
+# HotReload Compose
+composeReload = "1.0.0-alpha10"
+# Firebase
+gitlive = "2.2.0"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -57,8 +59,6 @@ voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", v
 voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager_version" }
 #DatePicker KMP
 kmp-date-time-picker = { module = "network.chaintech:kmp-date-time-picker", version.ref = "kmpDateTimePicker" }
-androidx-material3-android = { group = "androidx.compose.material3", name = "material3-android", version.ref = "material3Android" }
-androidx-foundation-layout-android = { group = "androidx.compose.foundation", name = "foundation-layout-android", version.ref = "foundationLayoutAndroid" }
 # Ktor
 ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor_version" }
 ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor_version" }
@@ -66,7 +66,9 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor_version" } #Android
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor_version" } # Desktop
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor_version" } # IOS
-
+# Firebase
+gitlive-firebase-auth = { group = "dev.gitlive", name = "firebase-auth", version.ref = "gitlive" }
+gitlive-firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "gitlive" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -80,3 +82,5 @@ nativeCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = 
 # Serialization
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
+# HotReload Compose
+composeReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeReload" }

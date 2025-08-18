@@ -16,16 +16,18 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -41,7 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.pe.losjardines.core.components.button.EndingButton
 import com.pe.losjardines.core.components.dialog.AlertDialogAJ
 import com.pe.losjardines.core.components.dialog.DialogInput
@@ -86,7 +88,7 @@ class ConsultationScreen: Screen {
     @Composable
     override fun Content() {
         val viewModel = koinViewModel<ConsultationViewModel>()
-        val navigator = LocalNavigator.current
+        val navigator = LocalNavigator.currentOrThrow
         val scrollRow = rememberScrollState()
         val typography = LocalAppTypography.current
 
@@ -97,8 +99,8 @@ class ConsultationScreen: Screen {
         var filterInput by remember { mutableStateOf(String.EMPTY) }
         var showUpdateData by rememberSaveable{ mutableStateOf(false) }
         var showDeleteDialog by rememberSaveable{ mutableStateOf(false) }
-        var valueUpdate by rememberSaveable { mutableStateOf(DataUpdate()) }
-        var clientDelete by rememberSaveable { mutableStateOf(ClientModel()) }
+        var valueUpdate by remember { mutableStateOf(DataUpdate()) }
+        var clientDelete by remember { mutableStateOf(ClientModel()) }
 
         LaunchedEffect(Unit){
             viewModel.onEvent(ConsultEvent.GetClient())
@@ -138,7 +140,7 @@ class ConsultationScreen: Screen {
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            topBar = { TopAppBarConsult(navigator) }
+            topBar = { TopAppBarConsult(onBack = { navigator.push(HomeScreen()) }) }
         ) { innerPadding ->
             LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 item {
@@ -341,12 +343,13 @@ class ConsultationScreen: Screen {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun TopAppBarConsult(navigator: Navigator?) {
+    private fun TopAppBarConsult(onBack: () -> Unit) {
         TopAppBar(
             title = { TextTitle(text = ConsultString.TITLE_CONSULT) },
             navigationIcon = {
-                IconButton(onClick = { navigator?.pop() }) {
+                IconButton(onClick = onBack) {
                     Icon(
                         modifier = Modifier.size(24.dp),
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -355,7 +358,7 @@ class ConsultationScreen: Screen {
                     )
                 }
             },
-            backgroundColor = BackgroundBrandColor
+            colors = TopAppBarDefaults.topAppBarColors(BackgroundBrandColor)
         )
     }
 }

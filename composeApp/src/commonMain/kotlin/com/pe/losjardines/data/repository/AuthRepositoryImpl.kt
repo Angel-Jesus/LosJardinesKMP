@@ -1,4 +1,4 @@
 package com.pe.losjardines.data.repository
 
-class ClientRepositoryImpl {
+class AuthRepositoryImpl {
 }

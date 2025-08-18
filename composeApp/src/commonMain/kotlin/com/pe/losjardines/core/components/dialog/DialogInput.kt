@@ -27,7 +27,7 @@ import com.pe.losjardines.core.components.button.EndingButton
 import com.pe.losjardines.core.components.input_text.InputText
 import com.pe.losjardines.core.components.picker.Picker
 import com.pe.losjardines.presentation.enums.TitleClient
-import com.pe.losjardines.utils.EMPTY
+import com.pe.losjardines.utils.companions.EMPTY
 
 @Composable
 fun DialogInput(

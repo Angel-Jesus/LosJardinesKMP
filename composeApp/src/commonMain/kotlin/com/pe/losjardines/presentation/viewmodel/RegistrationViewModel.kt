@@ -16,7 +16,7 @@ import com.pe.losjardines.presentation.constance.RegisterKey.TIME
 import com.pe.losjardines.presentation.contract.registration.RegistrationEffect
 import com.pe.losjardines.presentation.contract.registration.RegistrationEvent
 import com.pe.losjardines.presentation.contract.registration.RegistrationState
-import com.pe.losjardines.utils.EMPTY
+import com.pe.losjardines.utils.companions.EMPTY
 
 class RegistrationViewModel(
     private val sendClientUseCase: SendClientUseCase

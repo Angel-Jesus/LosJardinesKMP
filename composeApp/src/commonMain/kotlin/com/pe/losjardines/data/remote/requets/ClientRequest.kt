@@ -1,4 +1,4 @@
-package com.pe.losjardines.data.network.requets
+package com.pe.losjardines.data.remote.requets
 
 data class ClientRequest(
     val id: String = "",

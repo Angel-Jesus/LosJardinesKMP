@@ -18,7 +18,7 @@ import com.pe.losjardines.core.values.BlackTextColor
 import com.pe.losjardines.core.values.FocusedBorderColor
 import com.pe.losjardines.core.values.LocalAppTypography
 import com.pe.losjardines.core.values.UnfocusedBorderColor
-import com.pe.losjardines.utils.EMPTY
+import com.pe.losjardines.utils.companions.EMPTY
 
 @Composable
 fun InputText(

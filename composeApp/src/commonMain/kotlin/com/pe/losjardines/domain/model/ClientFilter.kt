@@ -1,6 +1,6 @@
 package com.pe.losjardines.domain.model
 
-import com.pe.losjardines.utils.EMPTY
+import com.pe.losjardines.utils.companions.EMPTY
 
 sealed class ClientFilter {
     data object None: ClientFilter()

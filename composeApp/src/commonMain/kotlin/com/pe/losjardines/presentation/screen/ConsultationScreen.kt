@@ -73,8 +73,8 @@ import com.pe.losjardines.presentation.enums.StateConsult
 import com.pe.losjardines.presentation.enums.TitleClient
 import com.pe.losjardines.presentation.model.DataUpdate
 import com.pe.losjardines.presentation.viewmodel.ConsultationViewModel
-import com.pe.losjardines.utils.EMPTY
-import com.pe.losjardines.utils.MonthFilter
+import com.pe.losjardines.utils.companions.EMPTY
+import com.pe.losjardines.utils.constance.MonthFilter
 import losjardineskmp.composeapp.generated.resources.Res
 import losjardineskmp.composeapp.generated.resources.error_internet
 import losjardineskmp.composeapp.generated.resources.logohotel

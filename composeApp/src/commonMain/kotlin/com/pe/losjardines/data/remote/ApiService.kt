@@ -1,7 +1,7 @@
-package com.pe.losjardines.data.network
+package com.pe.losjardines.data.remote
 
 import com.pe.losjardines.BuildKonfig
-import com.pe.losjardines.data.network.requets.ClientRequest
+import com.pe.losjardines.data.remote.requets.ClientRequest
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.statement.HttpResponse

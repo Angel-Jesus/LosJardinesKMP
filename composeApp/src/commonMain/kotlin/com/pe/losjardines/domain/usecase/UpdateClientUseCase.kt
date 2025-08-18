@@ -5,12 +5,12 @@ import com.pe.losjardines.core.base.error.ErrorMessage
 import com.pe.losjardines.core.base.error.Failure
 import com.pe.losjardines.core.base.usecase.BaseUseCase
 import com.pe.losjardines.data.mapper.toDto
-import com.pe.losjardines.domain.repository.ClientRepository
+import com.pe.losjardines.domain.repository.ClientNetworkRepository
 import com.pe.losjardines.presentation.enums.TitleClient
 import com.pe.losjardines.presentation.model.DataUpdate
 
 class UpdateClientUseCase(
-    private val repository: ClientRepository
+    private val repository: ClientNetworkRepository
 ): BaseUseCase<UpdateClientUseCase.Params, Boolean>() {
     data class Params(val dataUpdate: DataUpdate)
     override suspend fun run(params: Params): Either<Failure, Boolean> {

@@ -1,4 +1,4 @@
-package com.pe.losjardines.data.network.dto
+package com.pe.losjardines.data.remote.dto
 
 import kotlinx.serialization.Serializable
 

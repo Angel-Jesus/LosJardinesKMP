@@ -1,6 +1,6 @@
 package com.pe.losjardines.domain.utils
 
-import com.pe.losjardines.data.network.dto.ClientDto
+import com.pe.losjardines.data.remote.dto.ClientDto
 import com.pe.losjardines.domain.model.ClientFilter
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate

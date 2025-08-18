@@ -5,10 +5,10 @@ import com.pe.losjardines.core.base.error.Failure
 import com.pe.losjardines.core.base.usecase.BaseUseCase
 import com.pe.losjardines.data.mapper.toDto
 import com.pe.losjardines.domain.model.ClientModel
-import com.pe.losjardines.domain.repository.ClientRepository
+import com.pe.losjardines.domain.repository.ClientNetworkRepository
 
 class SendClientUseCase(
-    private val repository: ClientRepository
+    private val repository: ClientNetworkRepository
 ): BaseUseCase<SendClientUseCase.Params, Boolean>()  {
     data class Params(val dataClient: ClientModel)
 

@@ -1,7 +1,7 @@
 package com.pe.losjardines.domain.model
 
-import com.pe.losjardines.utils.EMPTY
-import com.pe.losjardines.utils.EMPTY_ID
+import com.pe.losjardines.utils.companions.EMPTY
+import com.pe.losjardines.utils.companions.EMPTY_ID
 
 data class ClientModel (
     val id: Int = Int.EMPTY_ID,

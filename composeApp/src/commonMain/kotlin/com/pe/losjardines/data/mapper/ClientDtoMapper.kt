@@ -1,6 +1,6 @@
 package com.pe.losjardines.data.mapper
 
-import com.pe.losjardines.data.network.dto.ClientDto
+import com.pe.losjardines.data.remote.dto.ClientDto
 import com.pe.losjardines.domain.model.ClientModel
 
 fun ClientDto.toDomain(): ClientModel = ClientModel(

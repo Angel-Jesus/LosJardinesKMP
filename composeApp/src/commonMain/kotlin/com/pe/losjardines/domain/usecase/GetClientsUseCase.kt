@@ -6,11 +6,11 @@ import com.pe.losjardines.core.base.usecase.BaseUseCase
 import com.pe.losjardines.data.mapper.toDomain
 import com.pe.losjardines.domain.model.ClientFilter
 import com.pe.losjardines.domain.model.ClientModel
-import com.pe.losjardines.domain.repository.ClientRepository
+import com.pe.losjardines.domain.repository.ClientNetworkRepository
 import com.pe.losjardines.domain.utils.filterClients
 
 class GetClientsUseCase(
-    private val repository: ClientRepository
+    private val repository: ClientNetworkRepository
 ): BaseUseCase<GetClientsUseCase.Params, List<ClientModel>>() {
     data class Params(val filter: ClientFilter)
 

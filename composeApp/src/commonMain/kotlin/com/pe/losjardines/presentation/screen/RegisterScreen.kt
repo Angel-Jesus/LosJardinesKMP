@@ -11,12 +11,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Scaffold
-import androidx.compose.material.TopAppBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -28,7 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
-import cafe.adriel.voyager.navigator.Navigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.pe.losjardines.core.components.button.EndingButton
 import com.pe.losjardines.core.components.input_text.InputText
 import com.pe.losjardines.core.components.picker.Picker
@@ -54,7 +56,7 @@ class RegisterScreen: Screen {
     @Composable
     override fun Content() {
         val viewModel = koinViewModel<RegistrationViewModel>()
-        val navigator = LocalNavigator.current
+        val navigator = LocalNavigator.currentOrThrow
 
         LaunchedEffect(Unit){
             viewModel.onEvent(ResetForm)
@@ -80,10 +82,10 @@ class RegisterScreen: Screen {
 
         Scaffold(
             modifier = Modifier.fillMaxSize(),
-            topBar = { TopAppBarRegister(navigator) }
-        ) {
+            topBar = { TopAppBarRegister(onBack = { navigator.push(HomeScreen()) } ) }
+        ) {innerPadding ->
             LazyColumn(
-                modifier = Modifier.fillMaxSize().padding(vertical = 8.dp, horizontal = 12.dp),
+                modifier = Modifier.fillMaxSize().padding(innerPadding).padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(18.dp)
             ) {
                 item {
@@ -175,12 +177,13 @@ class RegisterScreen: Screen {
     }
 
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    private fun TopAppBarRegister(navigator: Navigator?) {
+    private fun TopAppBarRegister(onBack: () -> Unit) {
         TopAppBar(
             title = { TextTitle(text = RegisterString.TITLE_REGISTER) },
             navigationIcon = {
-                IconButton(onClick = { navigator?.pop() }) {
+                IconButton(onClick = onBack) {
                     Icon(
                         modifier = Modifier.size(24.dp),
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -189,7 +192,7 @@ class RegisterScreen: Screen {
                     )
                 }
             },
-            backgroundColor = BackgroundBrandColor
+            colors = TopAppBarDefaults.topAppBarColors(BackgroundBrandColor)
         )
     }
 }

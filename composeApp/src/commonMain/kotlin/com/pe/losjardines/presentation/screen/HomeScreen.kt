@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import cafe.adriel.voyager.navigator.currentOrThrow
 import com.pe.losjardines.core.components.button.EndingButton
 import com.pe.losjardines.core.values.HomeString
 import losjardineskmp.composeapp.generated.resources.Res
@@ -22,7 +23,7 @@ import org.jetbrains.compose.resources.painterResource
 class HomeScreen: Screen{
     @Composable
     override fun Content() {
-        val navigator = LocalNavigator.current
+        val navigator = LocalNavigator.currentOrThrow
 
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -40,7 +41,7 @@ class HomeScreen: Screen{
             EndingButton(
                 modifier = Modifier.fillMaxWidth(0.8f),
                 text = HomeString.REGISTER,
-                onClick = { navigator?.push(RegisterScreen()) }
+                onClick = { navigator.push(RegisterScreen()) }
             )
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -48,7 +49,7 @@ class HomeScreen: Screen{
             EndingButton(
                 modifier = Modifier.fillMaxWidth(0.8f),
                 text = HomeString.CONSULT,
-                onClick = { navigator?.push(ConsultationScreen()) }
+                onClick = { navigator.push(ConsultationScreen()) }
             )
         }
     }

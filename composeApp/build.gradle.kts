@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.nativeCocoapods)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.buildkonfig)
+    alias(libs.plugins.composeReload)
 }
 
 kotlin {
@@ -88,6 +89,9 @@ kotlin {
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
+            // Firebase
+            implementation(libs.gitlive.firebase.auth)
+            implementation(libs.gitlive.firebase.firestore)
         }
 
         iosMain.dependencies {
@@ -155,6 +159,7 @@ buildkonfig {
     }
 
     defaultConfigs {
+        // Google Sheet Config
         buildConfigField(
             com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
             "BASE_URL",
@@ -166,5 +171,24 @@ buildkonfig {
             "ROUTE_AJ",
             localProperties["ROUTE_AJ"]?.toString() ?: ""
         )
+        // Firebase Config
+        buildConfigField(
+            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            "PROJECT_ID",
+            localProperties["PROJECT_ID"]?.toString() ?: ""
+        )
+
+        buildConfigField(
+            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            "APPLICATION_ID",
+            localProperties["APPLICATION_ID"]?.toString() ?: ""
+        )
+
+        buildConfigField(
+            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
+            "API_KEY",
+            localProperties["API_KEY"]?.toString() ?: ""
+        )
+
     }
 }

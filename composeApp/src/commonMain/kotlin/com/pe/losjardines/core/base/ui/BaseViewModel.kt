@@ -45,9 +45,6 @@ abstract class BaseViewModel<S : BaseUiState, E: BaseEvent, F: BaseEffect>(
         }
     }
 
-    protected fun clear(){
-        viewModelScope.cancel()
-    }
 
     protected fun <Params, Result> executeUseCase(
         useCase: BaseUseCase<Params, Result>,
@@ -62,5 +59,10 @@ abstract class BaseViewModel<S : BaseUiState, E: BaseEvent, F: BaseEffect>(
                 onError = onError
             )
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        _effect.close()
     }
 }

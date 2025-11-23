@@ -91,6 +91,8 @@ kotlin {
             // Firebase
             implementation(libs.gitlive.firebase.auth)
             implementation(libs.gitlive.firebase.firestore)
+            // Feature Login UI
+            implementation(project(":feature:login:ui"))
         }
 
         iosMain.dependencies {

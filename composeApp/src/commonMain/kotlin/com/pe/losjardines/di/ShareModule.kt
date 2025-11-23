@@ -4,7 +4,6 @@ import com.pe.losjardines.core.network.HttpClientFactory
 import com.pe.losjardines.core.utils.ConnectionUtils
 import com.pe.losjardines.core.utils.ConnectionUtilsImpl
 import com.pe.losjardines.data.remote.ApiService
-import com.pe.losjardines.data.remote.FirestoreService
 import com.pe.losjardines.domain.repository.ClientNetworkRepository
 import com.pe.losjardines.data.repository.ClientNetworkRepositoryImpl
 import com.pe.losjardines.domain.usecase.DeleteClientUseCase
@@ -32,7 +31,7 @@ val newtworkSharedModule: Module = module {
 
 val firebaseSharedModule: Module = module {
     single<FirebaseFirestore> { Firebase.firestore }
-    singleOf(::FirestoreService)
+    //singleOf(::FirestoreService)
 
 }
 

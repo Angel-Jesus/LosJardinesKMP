@@ -4,9 +4,10 @@ import dev.gitlive.firebase.firestore.CollectionReference
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import dev.gitlive.firebase.firestore.Query
 
+/*
 class FirestoreService(val firestore: FirebaseFirestore) {
     suspend inline fun <reified T: Any> saveData(collection: String, documentPath: String, dataModel: T){
-        return firestore.collection(collection)
+        firestore.collection(collection)
             .document(documentPath)
             .set(data = dataModel)
     }
@@ -36,3 +37,5 @@ class FirestoreService(val firestore: FirebaseFirestore) {
         return firestore.collection(collection).document(documentPath).delete()
     }
 }
+
+ */

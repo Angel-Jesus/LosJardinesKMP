@@ -33,3 +33,13 @@ plugins {
 }
 
 include(":composeApp")
+// core
+include(":core:core-common")
+include(":core:core-database")
+include(":core:core-network")
+include(":core:core-ui")
+// domain
+include(":domain")
+// feature
+include(":feature:login:ui")
+include(":feature:login:data")

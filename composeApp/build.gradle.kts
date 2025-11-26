@@ -66,7 +66,6 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
-            implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
             // Koin
@@ -93,6 +92,8 @@ kotlin {
             implementation(libs.gitlive.firebase.firestore)
             // Feature Login UI
             implementation(project(":feature:login:ui"))
+            // Core
+            implementation(project(":core:core-ui"))
         }
 
         iosMain.dependencies {

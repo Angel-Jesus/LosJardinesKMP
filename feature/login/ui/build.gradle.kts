@@ -38,6 +38,8 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             // Coroutines
             implementation(libs.kotlinx.coroutines.core)
+            // Core
+            implementation(project(":core:core-ui"))
 
         }
 

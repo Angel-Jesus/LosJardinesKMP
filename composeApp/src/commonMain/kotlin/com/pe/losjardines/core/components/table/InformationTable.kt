@@ -2,7 +2,6 @@ package com.pe.losjardines.core.components.table
 
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -26,8 +25,14 @@ import com.pe.losjardines.core.values.BackgroundLightColor
 import com.pe.losjardines.core.values.BlackTextColor
 import com.pe.losjardines.domain.model.ClientModel
 import com.pe.losjardines.presentation.constance.TableConstance.headerTitleWidth
-import com.pe.losjardines.presentation.enums.TitleClient
-import com.pe.losjardines.presentation.enums.TitleClient.*
+import com.pe.losjardines.presentation.enums.TitleClient.DATE
+import com.pe.losjardines.presentation.enums.TitleClient.DNI
+import com.pe.losjardines.presentation.enums.TitleClient.NAME
+import com.pe.losjardines.presentation.enums.TitleClient.OBSERVATION
+import com.pe.losjardines.presentation.enums.TitleClient.ORIGIN
+import com.pe.losjardines.presentation.enums.TitleClient.PRICE
+import com.pe.losjardines.presentation.enums.TitleClient.ROOM
+import com.pe.losjardines.presentation.enums.TitleClient.TIME
 import com.pe.losjardines.presentation.model.DataUpdate
 
 @Composable

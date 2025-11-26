@@ -1,10 +1,11 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
+    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.androidLibrary)
+    alias(libs.plugins.composeCompiler)
     alias(libs.plugins.kotlinx.serialization)
 }
 
@@ -23,9 +24,15 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
+            implementation(libs.androidx.activity.compose)
         }
         commonMain.dependencies {
-
+            implementation(compose.runtime)
+            implementation(compose.foundation)
+            implementation(compose.material3)
+            implementation(compose.ui)
+            implementation(compose.materialIconsExtended)
+            implementation(compose.components.resources)
         }
 
         iosMain.dependencies {
@@ -46,8 +53,25 @@ android {
         minSdk = libs.versions.android.minSdk.get().toInt()
     }
 
+    buildFeatures {
+        compose = true
+    }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "2.2.0"
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+}
+
+dependencies {
+    // Compose
+    val composeBom = platform("androidx.compose:compose-bom:2023.10.00")
+    implementation(composeBom)
+    // Android Studio Preview support
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    debugImplementation("androidx.compose.ui:ui-tooling")
 }

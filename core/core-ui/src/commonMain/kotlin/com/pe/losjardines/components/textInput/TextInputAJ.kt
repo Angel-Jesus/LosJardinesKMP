@@ -5,16 +5,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -22,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import com.pe.losjardines.components.textInput.values.TextInputAJColors
 import com.pe.losjardines.values.AppTypography
 import com.pe.losjardines.values.LocalAppTypographyCore
+import losjardineskmp.core.core_ui.generated.resources.Res
+import losjardineskmp.core.core_ui.generated.resources.visibility_lock_icon
+import losjardineskmp.core.core_ui.generated.resources.visibility_off_icon
 import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.painterResource
 
@@ -37,24 +39,24 @@ fun TextInputAJ(
     trailingIcon: DrawableResource? = null,
     colors: TextInputAJColors = TextInputAJColors(),
     isTypePassword: Boolean = false,
-    //typography: AppTypography = LocalAppTypographyCore.current
+    typography: AppTypography = LocalAppTypographyCore.current
 ){
-    var passwordVisible by remember { mutableStateOf(false) }
+    val passwordVisible = remember { mutableStateOf(false) }
 
     Column(modifier = modifier) {
         label?.let {
             Text(
                 text = label,
-                //style = typography.titleLarge
+                style = typography.titleMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
 
         OutlinedTextField(
-            modifier = Modifier.wrapContentWidth(),
+            modifier = modifier,
             value = value,
             onValueChange = onValueChange,
-            visualTransformation = if(passwordVisible){
+            visualTransformation = if(passwordVisible.value){
                 VisualTransformation.None
             } else {
                 PasswordVisualTransformation()
@@ -64,7 +66,7 @@ fun TextInputAJ(
                     Text(
                         text = placeholder,
                         color = colors.placeholderColor,
-                        //style = typography.bodyLarge
+                        style = typography.bodyLarge
                     )
                 }
             } else { null },
@@ -78,25 +80,48 @@ fun TextInputAJ(
                     )
                 }
             } else { null },
-            trailingIcon = if(trailingIcon != null) {
-                @Composable {
-                    Icon(
-                        modifier = Modifier
-                            .size(24.dp)
-                            .clickable(
-                                enabled = isTypePassword,
-                                onClick = {
-                                    passwordVisible = !passwordVisible
-                                }
-                        ),
-                        painter = painterResource(resource = trailingIcon),
-                        contentDescription = null,
-                        tint = colors.trailingIconColor
-                    )
-                }
-            } else { null },
+            trailingIcon = isTypePassword.isPasswordCase(colors, trailingIcon, passwordVisible),
             enabled = enabled,
-            shape = RoundedCornerShape(8.dp)
+            shape = RoundedCornerShape(8.dp),
+            colors = TextFieldDefaults.colors(
+                focusedPlaceholderColor = colors.focusedIndicatorColor,
+                focusedIndicatorColor = colors.focusedIndicatorColor
+            )
         )
     }
+}
+
+private fun Boolean.isPasswordCase(
+    colors: TextInputAJColors,
+    icon: DrawableResource?,
+    passwordVisible: MutableState<Boolean>
+): @Composable (() -> Unit)? {
+    if(!this){
+        if(icon == null) return null
+
+        return {
+            Icon(
+                modifier = Modifier.size(24.dp),
+                painter = painterResource(resource = icon),
+                contentDescription = null,
+                tint = colors.trailingIconColor
+            )
+        }
+    }
+    return {
+        Icon(
+            modifier = Modifier
+                .size(24.dp)
+                .clickable(
+                    enabled = true,
+                    onClick = {
+                        passwordVisible.value = !passwordVisible.value
+                    }
+                ),
+            painter = painterResource(resource = Res.drawable.visibility_lock_icon.takeIf{ passwordVisible.value } ?: Res.drawable.visibility_off_icon),
+            contentDescription = null,
+            tint = colors.trailingIconColor
+        )
+    }
+
 }

@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.buildkonfig)
     alias(libs.plugins.composeReload)
+    alias(libs.plugins.google.services)
 }
 
 kotlin {
@@ -81,19 +82,22 @@ kotlin {
             implementation(libs.voyager.tabNavigator)
             // DatePicker KMP
             implementation(libs.kmp.date.time.picker)
-            // Icons extended
-            implementation(compose.materialIconsExtended)
             // Ktor
             implementation(libs.ktor.client.core)
             implementation(libs.ktor.client.content.negotiation)
             implementation(libs.ktor.serialization.kotlinx.json)
-            // Firebase
-            implementation(libs.gitlive.firebase.auth)
-            implementation(libs.gitlive.firebase.firestore)
+            // Firebase Auth
+            implementation(libs.gitlive.firebase.auth.common)
+            //Domain
+            implementation(project(":domain"))
             // Feature Login UI
-            implementation(project(":feature:login:ui"))
+            implementation(project(":feature:ui"))
+            // Data
+            implementation(project(":feature:data"))
             // Core
             implementation(project(":core:core-ui"))
+            implementation(project(":core:core-network"))
+            implementation(project(":core:core-database"))
         }
 
         iosMain.dependencies {
@@ -161,18 +165,6 @@ buildkonfig {
     }
 
     defaultConfigs {
-        // Google Sheet Config
-        buildConfigField(
-            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
-            "BASE_URL",
-            localProperties["BASE_URL"]?.toString() ?: ""
-        )
-
-        buildConfigField(
-            com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,
-            "ROUTE_AJ",
-            localProperties["ROUTE_AJ"]?.toString() ?: ""
-        )
         // Firebase Config
         buildConfigField(
             com.codingfeline.buildkonfig.compiler.FieldSpec.Type.STRING,

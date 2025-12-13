@@ -1,17 +1,12 @@
 package com.pe.losjardines
 
 import androidx.compose.runtime.Composable
-import com.pe.losjardines.core.values.AppTheme
-import com.pe.losjardines.presentation.LoginScreen
+import com.pe.losjardines.values.AppTheme
+import com.pe.losjardines.presentation.screen.LoginScreenModule
 
 @Composable
 fun App() {
     AppTheme {
-        LoginScreen()
-        /*
-        Navigator(screen = HomeScreen()){ navigator ->
-            SlideTransition(navigator)
-        }
-         */
+        LoginScreenModule()
     }
 }

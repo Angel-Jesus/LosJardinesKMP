@@ -15,6 +15,9 @@ compose-multiplatform = "1.8.2"
 junit = "4.13.2"
 kotlin = "2.2.0"
 kotlinx-coroutines = "1.10.2"
+#Android
+startupRuntime = "1.2.0"
+
 #Koin
 koin = "3.5.6"
 koinCompose = "1.1.5"
@@ -30,7 +33,17 @@ buildKonfig = "0.16.0"
 # HotReload Compose
 composeReload = "1.0.0-alpha10"
 # Firebase
-gitlive = "2.2.0"
+gitlive = "1.12.0"
+firebase-bom = "33.4.0"
+# Google services
+google = "4.4.4"
+# DateTime
+kotlinx-datetime = "0.6.0"
+# SQLDelight
+sqldelight = "2.0.2"
+statelyCommon = "2.0.5"
+coroutinesExtensions = "2.0.2"
+serialization = "1.6.3"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -47,6 +60,8 @@ androidx-lifecycle-viewmodel-compose = { group = "org.jetbrains.androidx.lifecyc
 androidx-lifecycle-runtime-compose = { group = "org.jetbrains.androidx.lifecycle", name = "lifecycle-runtime-compose", version.ref = "androidx-lifecycle" }
 kotlinx-coroutines-swing = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-swing", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+# Android
+androidx-startup-runtime = { module = "androidx.startup:startup-runtime", version.ref = "startupRuntime" }
 #koin
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin"}
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
@@ -66,9 +81,22 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor_version" } #Android
 ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor_version" } # Desktop
 ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor_version" } # IOS
+# Firebase Auth
+gitlive-firebase-auth-common = { group = "dev.gitlive", name = "firebase-auth", version.ref = "gitlive" }
+# Firebase Firestore
+gitlive-firebase-firestore-common = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "gitlive" }
 # Firebase
-gitlive-firebase-auth = { group = "dev.gitlive", name = "firebase-auth", version.ref = "gitlive" }
-gitlive-firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "gitlive" }
+android-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+#Date Time
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
+# SQLDelight
+sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", version.ref = "sqldelight" }
+sqldelight-ios-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
+sqldelight-desktop-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
+sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "coroutinesExtensions" }
+sqldelight-stately-common = { module = "co.touchlab:stately-common", version.ref = "statelyCommon" }
+# Serializable
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -84,3 +112,5 @@ kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", vers
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
 # HotReload Compose
 composeReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeReload" }
+# Google services
+google-services = { id = "com.google.gms.google-services", version.ref = "google" }

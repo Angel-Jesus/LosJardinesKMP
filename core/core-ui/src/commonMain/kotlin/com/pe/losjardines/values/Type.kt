@@ -14,6 +14,9 @@ val LocalAppTypographyCore = staticCompositionLocalOf<AppTypography> {
     error("No Typography provided")
 }
 data class AppTypography(
+    val headerLarge: TextStyle,
+    val headerMedium: TextStyle,
+    val headerSmall: TextStyle,
     val titleLarge: TextStyle,
     val titleMedium: TextStyle,
     val titleSmall: TextStyle,
@@ -27,9 +30,24 @@ fun AppFontFamily(): FontFamily{
 }
 
 @Composable
-fun AppTypography(): AppTypography {
+fun AppTypographyCore(): AppTypography {
     val appFontFamily = AppFontFamily()
     return AppTypography(
+        headerLarge = TextStyle(
+            fontFamily = appFontFamily,
+            fontWeight = FontWeight.W500,
+            fontSize = 24.sp
+        ),
+        headerMedium = TextStyle(
+            fontFamily = appFontFamily,
+            fontWeight = FontWeight.W500,
+            fontSize = 22.sp
+        ),
+        headerSmall = TextStyle(
+            fontFamily = appFontFamily,
+            fontWeight = FontWeight.W500,
+            fontSize = 20.sp
+        ),
         titleLarge = TextStyle(
             fontFamily = appFontFamily,
             fontWeight = FontWeight.W500,

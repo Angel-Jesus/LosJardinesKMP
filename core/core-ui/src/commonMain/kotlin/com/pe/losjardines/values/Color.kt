@@ -11,6 +11,7 @@ val BlackTextColor = Color(0xFF000000)
 val BrandTextColor = Color(0xFFEA4545)
 val SoftTextColor = Color(0xFF757575)
 
+val BrandIconColor = Color(0xB3EA4545)
 
 val FocusedBorderColor = Color(0xFFEA4545)
 val UnfocusedBorderColor = Color(0xFF525252)

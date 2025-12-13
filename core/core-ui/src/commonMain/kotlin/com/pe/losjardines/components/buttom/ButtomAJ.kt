@@ -1,5 +1,6 @@
 package com.pe.losjardines.components.buttom
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
@@ -29,8 +30,9 @@ fun ButtomAJ(
         shape = RoundedCornerShape(8.dp)
     ){
         Text(
+            modifier = Modifier.padding(vertical = 8.dp),
             text = text,
-            style = typography.titleSmall
+            style = typography.titleMedium
         )
     }
 }

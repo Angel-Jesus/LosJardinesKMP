@@ -3,13 +3,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {
     repositories {
-        google {
-            mavenContent {
-                includeGroupAndSubgroups("androidx")
-                includeGroupAndSubgroups("com.android")
-                includeGroupAndSubgroups("com.google")
-            }
-        }
+        google()
         mavenCentral()
         gradlePluginPortal()
     }
@@ -17,13 +11,7 @@ pluginManagement {
 
 dependencyResolutionManagement {
     repositories {
-        google {
-            mavenContent {
-                includeGroupAndSubgroups("androidx")
-                includeGroupAndSubgroups("com.android")
-                includeGroupAndSubgroups("com.google")
-            }
-        }
+        google()
         mavenCentral()
     }
 }
@@ -41,5 +29,5 @@ include(":core:core-ui")
 // domain
 include(":domain")
 // feature
-include(":feature:login:ui")
-include(":feature:login:data")
+include(":feature:ui")
+include(":feature:data")

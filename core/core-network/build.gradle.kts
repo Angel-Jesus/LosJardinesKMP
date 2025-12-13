@@ -1,11 +1,10 @@
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlinx.serialization)
+    kotlin("plugin.serialization")
 }
 
 kotlin {
@@ -24,8 +23,19 @@ kotlin {
 
         androidMain.dependencies {
         }
-        commonMain.dependencies {
 
+        commonMain.dependencies {
+            // Firebase Auth
+            implementation(libs.gitlive.firebase.auth.common)
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.core)
+            // Firestore
+            implementation(libs.gitlive.firebase.firestore.common)
+            // Serialization
+            implementation(libs.kotlinx.serialization.json)
+
+            // Core
+            implementation(project(":core:core-common"))
         }
 
         iosMain.dependencies {
@@ -33,7 +43,8 @@ kotlin {
         }
 
         desktopMain.dependencies {
-
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }

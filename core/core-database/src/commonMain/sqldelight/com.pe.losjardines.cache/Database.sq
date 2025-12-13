@@ -1,0 +1,72 @@
+-- Schema Definitios
+PRAGMA losjardines_version = 1;
+
+-- Create Registration Table
+CREATE TABLE registration(
+    id INTEGER PRIMARY KEY NOT NULL ON CONFLICT REPLACE,
+    idFirebase TEXT NOT NULL,
+    birthday TEXT,
+    country TEXT,
+    dateEnter INTEGER,
+    dateExit INTEGER,
+    fee REAL,
+    hour TEXT,
+    name TEXT,
+    typeDocument TEXT,
+    numberDocument TEXT,
+    observation TEXT,
+    reasonTravel TEXT,
+    region TEXT,
+    room TEXT,
+    companions TEXT,
+    state TEXT
+);
+
+-- Get registers
+getRegisters:
+SELECT * FROM registration;
+
+--Insert value on table
+insertRegistration:
+INSERT INTO registration(
+    idFirebase,
+    birthday,
+    country,
+    dateEnter,
+    dateExit,
+    fee,
+    hour,
+    name,
+    typeDocument,
+    numberDocument,
+    observation,
+    reasonTravel,
+    region,
+    room,
+    companions,
+    state
+) VALUES (
+    :idFirebase,
+    :birthday,
+    :country,
+    :dateEnter,
+    :dateExit,
+    :fee,
+    :hour,
+    :name,
+    :typeDocument,
+    :numberDocument,
+    :observation,
+    :reasonTravel,
+    :region,
+    :room,
+    :companions,
+    :state
+);
+
+-- update on table
+
+
+-- delete on table
+deleteById:
+DELETE FROM registration WHERE id = ?;

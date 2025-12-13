@@ -1,7 +1,7 @@
 package com.pe.losjardines
 
 import android.app.Application
-import com.pe.losjardines.di.initKoin
+import com.pe.losjardines.di.initKoinModularization
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.logger.Level
@@ -9,7 +9,7 @@ import org.koin.core.logger.Level
 class MyApp: Application() {
     override fun onCreate() {
         super.onCreate()
-        initKoin{
+        initKoinModularization{
             androidLogger(Level.DEBUG)
             androidContext(this@MyApp)
         }

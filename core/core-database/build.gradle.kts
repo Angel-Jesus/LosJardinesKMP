@@ -1,18 +1,19 @@
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import java.util.Properties
-
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.androidLibrary)
-    alias(libs.plugins.kotlinx.serialization)
+    kotlin("plugin.serialization")
+
+    id("app.cash.sqldelight") version libs.versions.sqldelight
 }
 
 kotlin {
 
     androidTarget {
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
+        compilations.all {
+            kotlinOptions {
+                jvmTarget = "11"
+            }
+        }
     }
 
     iosArm64()
@@ -23,17 +24,28 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
+            // AndroidDx
+            implementation(libs.androidx.startup.runtime)
+            // SQLDelight
+            implementation(libs.sqldelight.android.driver)
         }
-        commonMain.dependencies {
 
+        commonMain.dependencies {
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.core)
+            // SQLDelight
+            implementation(libs.sqldelight.coroutines.extensions)
+            implementation(libs.sqldelight.stately.common)
         }
 
         iosMain.dependencies {
-
+            // SQLDelight
+            implementation(libs.sqldelight.ios.driver)
         }
 
         desktopMain.dependencies {
-
+            // SQLDelight
+            implementation(libs.sqldelight.desktop.driver)
         }
     }
 }
@@ -49,5 +61,13 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+}
+
+sqldelight{
+    databases{
+        create("Database"){
+            packageName.set("com.pe.losjardines.cache")
+        }
     }
 }

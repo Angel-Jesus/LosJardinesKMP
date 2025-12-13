@@ -23,9 +23,13 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
+
         }
         commonMain.dependencies {
-
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.core)
+            // data
+            implementation(project(":core:core-common"))
         }
 
         iosMain.dependencies {
@@ -33,7 +37,8 @@ kotlin {
         }
 
         desktopMain.dependencies {
-
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.swing)
         }
     }
 }

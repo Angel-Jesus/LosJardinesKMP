@@ -22,6 +22,8 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
+            // Koin
+            implementation(libs.koin.android)
         }
 
         commonMain.dependencies {
@@ -33,7 +35,10 @@ kotlin {
             implementation(libs.gitlive.firebase.firestore.common)
             // Serialization
             implementation(libs.kotlinx.serialization.json)
-
+            // Date Time
+            implementation(libs.kotlinx.datetime)
+            // Koin
+            implementation(libs.koin.core)
             // Core
             implementation(project(":core:core-common"))
         }

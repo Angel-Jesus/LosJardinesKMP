@@ -1,4 +1,4 @@
-package com.pe.losjardines.presentation.screen
+package com.pe.losjardines.presentation.login.screen
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -24,12 +24,14 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pe.losjardines.components.buttom.ButtomAJ
 import com.pe.losjardines.components.textInput.TextInputAJ
-import com.pe.losjardines.presentation.contract.LoginEvent
-import com.pe.losjardines.presentation.viewmodel.LoginViewModel
+import com.pe.losjardines.presentation.login.contract.LoginEffect
+import com.pe.losjardines.presentation.login.contract.LoginEvent
+import com.pe.losjardines.presentation.login.viewmodel.LoginViewModel
 import com.pe.losjardines.values.AppTypography
 import com.pe.losjardines.values.BrandTextColor
 import com.pe.losjardines.values.LocalAppTypographyCore
 import com.pe.losjardines.values.SoftTextColor
+import kotlinx.coroutines.flow.collectLatest
 import losjardineskmp.feature.ui.generated.resources.Res
 import losjardineskmp.feature.ui.generated.resources.logoaj
 import org.jetbrains.compose.resources.painterResource
@@ -38,9 +40,10 @@ import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
-fun LoginScreenModule(
+fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
-    typography: AppTypography = LocalAppTypographyCore.current
+    typography: AppTypography = LocalAppTypographyCore.current,
+    onPrincipalScreen: () -> Unit
 ){
 
     var email by remember { mutableStateOf("") }
@@ -51,7 +54,15 @@ fun LoginScreenModule(
 
     LaunchedEffect(true){
         viewModel.onEvent(LoginEvent.CheckSession)
+
+        viewModel.effect.collectLatest { effect ->
+            when(effect){
+                LoginEffect.LoginError -> TODO()
+                LoginEffect.LoginSuccess -> onPrincipalScreen()
+            }
+        }
     }
+
 
     Column(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp).offset(y = (-24).dp),

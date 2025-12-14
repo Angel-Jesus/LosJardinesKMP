@@ -1,13 +1,13 @@
-package com.pe.losjardines.presentation.viewmodel
+package com.pe.losjardines.presentation.login.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.pe.losjardines.base.error.Failure
 import com.pe.losjardines.base.ui.BaseViewModel
 import com.pe.losjardines.usecases.login.CheckSessionUseCase
 import com.pe.losjardines.usecases.login.LoginUseCase
-import com.pe.losjardines.presentation.contract.LoginEffect
-import com.pe.losjardines.presentation.contract.LoginEvent
-import com.pe.losjardines.presentation.contract.LoginState
+import com.pe.losjardines.presentation.login.contract.LoginEffect
+import com.pe.losjardines.presentation.login.contract.LoginEvent
+import com.pe.losjardines.presentation.login.contract.LoginState
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
@@ -26,9 +26,7 @@ class LoginViewModel(
     private fun checkSession(){
         viewModelScope.launch {
             if(checkSessionUseCase.invoke()){
-                updateState {
-                    copy(messageTest = "Logueado papaiii")
-                }
+                sendEffect(LoginEffect.LoginSuccess)
             }
         }
     }
@@ -39,7 +37,7 @@ class LoginViewModel(
             useCase = loginUseCase,
             params = LoginUseCase.Params(email, password),
             onSuccess = {
-                updateState { copy( messageTest = "Logueado de forma exitosa") }
+                sendEffect(LoginEffect.LoginSuccess)
             },
             onError = { failure ->
                 when(failure){

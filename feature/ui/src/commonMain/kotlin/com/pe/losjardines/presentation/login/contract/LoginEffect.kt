@@ -1,4 +1,4 @@
-package com.pe.losjardines.presentation.contract
+package com.pe.losjardines.presentation.login.contract
 
 import com.pe.losjardines.base.ui.BaseEffect
 

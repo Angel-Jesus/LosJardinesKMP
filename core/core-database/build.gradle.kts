@@ -28,6 +28,8 @@ kotlin {
             implementation(libs.androidx.startup.runtime)
             // SQLDelight
             implementation(libs.sqldelight.android.driver)
+            // Koin
+            implementation(libs.koin.android)
         }
 
         commonMain.dependencies {
@@ -36,6 +38,8 @@ kotlin {
             // SQLDelight
             implementation(libs.sqldelight.coroutines.extensions)
             implementation(libs.sqldelight.stately.common)
+            // Koin
+            implementation(libs.koin.core)
         }
 
         iosMain.dependencies {

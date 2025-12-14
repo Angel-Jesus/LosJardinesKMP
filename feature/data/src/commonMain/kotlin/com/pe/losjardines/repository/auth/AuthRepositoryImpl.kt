@@ -3,25 +3,25 @@ package com.pe.losjardines.repository.auth
 import com.pe.losjardines.base.either.Either
 import com.pe.losjardines.base.error.Failure
 import com.pe.losjardines.base.network.BaseClient
-import com.pe.losjardines.firebase.auth.LoginService
+import com.pe.losjardines.firebase.auth.LoginManager
 import com.pe.losjardines.repository.AuthRepository
+import com.pe.losjardines.repository.auth.mapper.toData
 import com.pe.losjardines.usecases.model.AuthResponseDto
 
 class AuthRepositoryImpl(
-    private val loginService: LoginService
+    private val loginManager: LoginManager
 ): BaseClient(), AuthRepository {
 
     override fun isLoggedIn(): Boolean{
-        return loginService.currentUser() != null
+        return loginManager.isLoggedIn()
     }
     override suspend fun login(email: String, password: String): Either<Failure, AuthResponseDto>{
         return callAuth {
-            val result = loginService.login(email, password)
-            AuthResponseDto(result.user?.uid.orEmpty(), result.user?.isEmailVerified == true, result.user?.providerId.orEmpty())
+           loginManager.login(email, password).toData()
         }
     }
 
     override suspend fun logout(){
-        loginService.logout()
+        loginManager.logout()
     }
 }

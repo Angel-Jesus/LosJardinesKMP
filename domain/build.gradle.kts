@@ -23,11 +23,14 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
-
+            // Koin
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             // Coroutines
             implementation(libs.kotlinx.coroutines.core)
+            // Koin
+            implementation(libs.koin.core)
             // data
             implementation(project(":core:core-common"))
         }

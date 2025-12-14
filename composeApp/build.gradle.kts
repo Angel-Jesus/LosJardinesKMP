@@ -56,8 +56,6 @@ kotlin {
             implementation(libs.androidx.activity.compose)
             // Koin
             implementation(libs.koin.android)
-            // Ktor
-            implementation(libs.ktor.client.okhttp)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -80,14 +78,13 @@ kotlin {
             implementation(libs.voyager.navigator)
             implementation(libs.voyager.transitions)
             implementation(libs.voyager.tabNavigator)
+            implementation(libs.jetbrains.compose.navigation)
             // DatePicker KMP
             implementation(libs.kmp.date.time.picker)
-            // Ktor
-            implementation(libs.ktor.client.core)
-            implementation(libs.ktor.client.content.negotiation)
-            implementation(libs.ktor.serialization.kotlinx.json)
             // Firebase Auth
             implementation(libs.gitlive.firebase.auth.common)
+            // Firestore
+            implementation(libs.gitlive.firebase.firestore.common)
             //Domain
             implementation(project(":domain"))
             // Feature Login UI
@@ -101,18 +98,13 @@ kotlin {
         }
 
         iosMain.dependencies {
-            // Ktor
-            implementation(libs.ktor.client.darwin)
+
         }
 
         desktopMain.dependencies {
             implementation(compose.desktop.currentOs)
             // Coroutines
             implementation(libs.kotlinx.coroutines.swing)
-            // Koin
-            implementation(libs.koin.core)
-            // Ktor
-            implementation(libs.ktor.client.cio)
         }
     }
 }

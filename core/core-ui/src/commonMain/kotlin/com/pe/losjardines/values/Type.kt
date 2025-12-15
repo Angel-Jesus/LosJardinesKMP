@@ -22,6 +22,8 @@ data class AppTypography(
     val titleSmall: TextStyle,
     val titleBrand: TextStyle,
     val bodyLarge: TextStyle,
+    val bottomNavDefault: TextStyle,
+    val bottomNavSelected: TextStyle,
 )
 
 @Composable
@@ -74,5 +76,15 @@ fun AppTypographyCore(): AppTypography {
             fontWeight = FontWeight.Normal,
             fontSize = 14.sp
         ),
+        bottomNavDefault = TextStyle(
+            fontFamily = appFontFamily,
+            fontWeight = FontWeight.Normal,
+            fontSize = 12.sp
+        ),
+        bottomNavSelected = TextStyle(
+            fontFamily = appFontFamily,
+            fontWeight = FontWeight.Thin,
+            fontSize = 12.sp
+        )
     )
 }

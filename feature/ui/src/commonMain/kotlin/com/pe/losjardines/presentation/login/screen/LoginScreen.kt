@@ -42,10 +42,10 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel = koinViewModel(),
+    isMobile: Boolean,
     typography: AppTypography = LocalAppTypographyCore.current,
     onPrincipalScreen: () -> Unit
 ){
-
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
 
@@ -95,7 +95,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         TextInputAJ(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(1f.takeIf { isMobile } ?: 0.4f ),
             value = email,
             label = "Nombre de usuario",
             onValueChange = { email = it }
@@ -104,7 +104,7 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(8.dp))
 
         TextInputAJ(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(1f.takeIf { isMobile } ?: 0.4f),
             value = password,
             label = "Contraseña",
             onValueChange = { password = it },
@@ -114,19 +114,11 @@ fun LoginScreen(
         Spacer(modifier = Modifier.height(32.dp))
 
         ButtomAJ(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(1f.takeIf { isMobile } ?: 0.4f),
             text = "Iniciar sesión",
             onClick = {
                 viewModel.onEvent(LoginEvent.EnterLogin(email, password))
             }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            modifier = Modifier.fillMaxWidth(),
-            text = uiState.messageTest,
-            textAlign = TextAlign.Center
         )
     }
 }

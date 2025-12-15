@@ -3,11 +3,13 @@ package com.pe.losjardines.navigation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pe.losjardines.usecases.login.CheckSessionUseCase
+import com.pe.losjardines.usecases.login.LogoutUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
 class NavigationViewModel(
-    private val checkSessionUseCase: CheckSessionUseCase
+    private val checkSessionUseCase: CheckSessionUseCase,
+    private val logoutUseCase: LogoutUseCase
 ): ViewModel() {
     val isLoggedIn: MutableStateFlow<stateScreen> = MutableStateFlow(stateScreen.INIT)
 
@@ -19,6 +21,12 @@ class NavigationViewModel(
             }else{
                 isLoggedIn.value = stateScreen.LOGIN
             }
+        }
+    }
+
+    fun logout(){
+        viewModelScope.launch {
+            logoutUseCase.invoke()
         }
     }
 }

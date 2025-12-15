@@ -9,8 +9,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.pe.losjardines.navigation.items.ItemsNavScreen
 import com.pe.losjardines.navigation.ui.SplashScreen
+import com.pe.losjardines.navigation_content.NavContentManager
 import com.pe.losjardines.presentation.login.screen.LoginScreen
-import com.pe.losjardines.presentation.registration.screen.RegistrationScreen
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
 
@@ -29,17 +29,17 @@ fun NavManager(
     LaunchedEffect(checkState){
         when(checkState){
             stateScreen.LOGIN -> navController.navigate(
-                route = ItemsNavScreen.LogiScreenNav.toString(),
+                route = ItemsNavScreen.LoginNavScreen.route,
                 builder = {
-                    popUpTo(ItemsNavScreen.SplashScreenNav.toString()){
+                    popUpTo(ItemsNavScreen.SplashNavScreen.route){
                         inclusive = true
                     }
                 }
             )
             stateScreen.CONTENT -> navController.navigate(
-                route = ItemsNavScreen.RegistrationScreenNav.toString(),
+                route = ItemsNavScreen.ContentNavScreen.route,
                 builder = {
-                    popUpTo(ItemsNavScreen.SplashScreenNav.toString()){
+                    popUpTo(ItemsNavScreen.SplashNavScreen.route){
                         inclusive = true
                     }
                 }
@@ -50,19 +50,20 @@ fun NavManager(
 
     NavHost(
         navController = navController,
-        startDestination = ItemsNavScreen.SplashScreenNav.toString()
+        startDestination = ItemsNavScreen.SplashNavScreen.route
     ){
-        composable(ItemsNavScreen.SplashScreenNav.toString()){
+        composable(ItemsNavScreen.SplashNavScreen.route){
             SplashScreen()
         }
 
-        composable(ItemsNavScreen.LogiScreenNav.toString()){
+        composable(ItemsNavScreen.LoginNavScreen.route){
             LoginScreen(
+                isMobile = isMobile(),
                 onPrincipalScreen = {
                     navController.navigate(
-                        route = ItemsNavScreen.RegistrationScreenNav.toString(),
+                        route = ItemsNavScreen.ContentNavScreen.route,
                         builder = {
-                            popUpTo(ItemsNavScreen.LogiScreenNav.toString()){
+                            popUpTo(ItemsNavScreen.LoginNavScreen.route){
                                 inclusive = true
                             }
                         }
@@ -71,9 +72,22 @@ fun NavManager(
             )
         }
 
-        composable(ItemsNavScreen.RegistrationScreenNav.toString()){
-            RegistrationScreen()
+        composable(ItemsNavScreen.ContentNavScreen.route){
+            NavContentManager(
+                onLogout = {
+                    navigationViewModel.logout()
+                    navController.navigate(
+                        route = ItemsNavScreen.LoginNavScreen.route,
+                        builder = {
+                            popUpTo(ItemsNavScreen.ContentNavScreen.route){
+                                inclusive = true
+                            }
+                        }
+                    )
+                }
+            )
         }
     }
-
 }
+
+expect fun isMobile(): Boolean

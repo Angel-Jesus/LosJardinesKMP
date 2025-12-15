@@ -1,4 +1,4 @@
-package com.pe.losjardines.presentation.registration.screen
+package com.pe.losjardines.presentation.content.registration.screen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun RegistrationScreen(){
+fun RegistrationMobileScreen(){
     Scaffold { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
             Text("Enter Registration islogin")

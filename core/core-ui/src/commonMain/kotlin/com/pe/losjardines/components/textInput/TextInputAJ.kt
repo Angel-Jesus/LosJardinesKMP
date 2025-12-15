@@ -41,7 +41,7 @@ fun TextInputAJ(
     isTypePassword: Boolean = false,
     typography: AppTypography = LocalAppTypographyCore.current
 ){
-    val passwordVisible = remember { mutableStateOf(false) }
+    val passwordVisible = remember { mutableStateOf(!isTypePassword) }
 
     Column(modifier = modifier) {
         label?.let {

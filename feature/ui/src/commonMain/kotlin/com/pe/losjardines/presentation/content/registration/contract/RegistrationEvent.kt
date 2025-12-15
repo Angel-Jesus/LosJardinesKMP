@@ -1,4 +1,4 @@
-package com.pe.losjardines.presentation.registration.contract
+package com.pe.losjardines.presentation.content.registration.contract
 
 import com.pe.losjardines.base.ui.BaseEvent
 

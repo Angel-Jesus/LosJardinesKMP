@@ -8,6 +8,7 @@ import com.pe.losjardines.navigation.isMobile
 import com.pe.losjardines.navigation_content.items.ItemsContentNavScreen
 import com.pe.losjardines.navigation_content.ui.NavigationBarScreen
 import com.pe.losjardines.presentation.content.home.screen.HomeMobileScreen
+import com.pe.losjardines.presentation.content.registration.screen.RegistrationMobileScreen
 import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(KoinExperimentalAPI::class)
@@ -33,7 +34,7 @@ fun NavContentManager(
                 }
 
                 composable(ItemsContentNavScreen.RegistrationNavScreen.route){
-
+                    RegistrationMobileScreen()
                 }
 
                 composable(ItemsContentNavScreen.ConsultNavScreen.route){

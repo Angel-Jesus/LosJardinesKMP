@@ -49,7 +49,7 @@ abstract class BaseViewModel<S : BaseUiState, E: BaseEvent, F: BaseEffect>(
         useCase: BaseSafeUseCase<Params, Result>,
         params: Params,
         onSuccess: suspend (Result) -> Unit,
-        onError: suspend (Failure) -> Unit
+        onError: suspend (Failure) -> Unit = {}
     ){
         viewModelScope.launch {
             useCase.execute(params).collectEither(

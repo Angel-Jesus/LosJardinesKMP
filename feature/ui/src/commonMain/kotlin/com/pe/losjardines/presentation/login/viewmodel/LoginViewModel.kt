@@ -8,11 +8,13 @@ import com.pe.losjardines.usecases.login.LoginUseCase
 import com.pe.losjardines.presentation.login.contract.LoginEffect
 import com.pe.losjardines.presentation.login.contract.LoginEvent
 import com.pe.losjardines.presentation.login.contract.LoginState
+import com.pe.losjardines.usecases.content.SyncronizationUseCase
 import kotlinx.coroutines.launch
 
 class LoginViewModel(
     private val loginUseCase: LoginUseCase,
-    private val checkSessionUseCase: CheckSessionUseCase
+    private val checkSessionUseCase: CheckSessionUseCase,
+    private val syncronizationUseCase: SyncronizationUseCase
 ): BaseViewModel<LoginState, LoginEvent, LoginEffect>(
     initialState = LoginState()
 ) {
@@ -37,6 +39,7 @@ class LoginViewModel(
             useCase = loginUseCase,
             params = LoginUseCase.Params(email, password),
             onSuccess = {
+                syncronizationUseCase.invoke()
                 sendEffect(LoginEffect.LoginSuccess)
             },
             onError = { failure ->

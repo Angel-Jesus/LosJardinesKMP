@@ -23,8 +23,8 @@ CREATE TABLE registration(
 );
 
 -- Get registers
-getRegisters:
-SELECT * FROM registration;
+getRegistersByMonth:
+SELECT * FROM registration WHERE dateEnter BETWEEN ? AND ? ORDER BY dateEnter DESC;
 
 --Insert value on table
 insertRegistration:
@@ -70,3 +70,132 @@ INSERT INTO registration(
 -- delete on table
 deleteById:
 DELETE FROM registration WHERE id = ?;
+
+-- create table by country
+CREATE TABLE countries (
+    id              TEXT PRIMARY KEY,
+    name            TEXT NOT NULL,
+    region          TEXT NOT NULL,
+    type            TEXT NOT NULL,
+    iso_code        TEXT
+);
+
+-- Insert countries values
+insertCountries:
+INSERT INTO countries (id, name, region, type, iso_code) VALUES
+-- América
+('PE', 'Perú', 'america', 'country', 'PE'),
+('AR', 'Argentina', 'america', 'country', 'AR'),
+('BO', 'Bolivia', 'america', 'country', 'BO'),
+('BR', 'Brasil', 'america', 'country', 'BR'),
+('CA', 'Canadá', 'america', 'country', 'CA'),
+('CL', 'Chile', 'america', 'country', 'CL'),
+('CO', 'Colombia', 'america', 'country', 'CO'),
+('CR', 'Costa Rica', 'america', 'country', 'CR'),
+('EC', 'Ecuador', 'america', 'country', 'EC'),
+('MX', 'México', 'america', 'country', 'MX'),
+('PA', 'Panamá', 'america', 'country', 'PA'),
+('US', 'Estados Unidos', 'america', 'country', 'US'),
+('UY', 'Uruguay', 'america', 'country', 'UY'),
+('VE', 'Venezuela', 'america', 'country', 'VE'),
+
+-- Europa
+('DE', 'Alemania', 'europa', 'country', 'DE'),
+('ES', 'España', 'europa', 'country', 'ES'),
+('FR', 'Francia', 'europa', 'country', 'FR'),
+('IT', 'Italia', 'europa', 'country', 'IT'),
+('NL', 'Países Bajos', 'europa', 'country', 'NL'),
+('RU', 'Rusia', 'europa', 'country', 'RU'),
+('CH', 'Suiza', 'europa', 'country', 'CH'),
+('TR', 'Turquía', 'europa', 'country', 'TR'),
+('GB', 'Reino Unido', 'europa', 'country', 'GB'),
+('BY', 'Bielorrusia', 'europa', 'country', 'BY'),
+
+-- Asia
+('CN', 'China (Rep. Popular)', 'asia', 'country', 'CN'),
+('IN', 'India', 'asia', 'country', 'IN'),
+('IL', 'Israel', 'asia', 'country', 'IL'),
+('JP', 'Japón', 'asia', 'country', 'JP'),
+('KR', 'Corea del Sur', 'asia', 'country', 'KR'),
+
+-- África / Oceanía (grupos)
+('AFRICA_GROUP', 'África (Ghana, Marruecos, Sudáfrica…)', 'africa', 'group', NULL),
+('OCEANIA_GROUP', 'Oceanía (Australia…)', 'oceania', 'group', NULL),
+
+-- Otros
+('OTHER_AMERICA', 'Otro país de América', 'america', 'other', NULL),
+('OTHER_EUROPE', 'Otro país de Europa', 'europa', 'other', NULL),
+('OTHER_ASIA', 'Otro país de Asia', 'asia', 'other', NULL);
+
+-- Get countries
+getCountries:
+SELECT * FROM countries;
+
+-- Create table by region
+CREATE TABLE regions (
+    id              TEXT PRIMARY KEY,
+    country_id      TEXT NOT NULL,
+    name            TEXT NOT NULL,
+    level           TEXT NOT NULL,
+    CONSTRAINT fk_country
+        FOREIGN KEY (country_id)
+        REFERENCES countries(id)
+);
+
+-- insert regions in table
+insertRegions:
+INSERT INTO regions (id, country_id, name, level) VALUES
+('PE_LIMA_METRO', 'PE', 'Lima Metropolitana y Callao', 'metro'),
+('PE_AMAZONAS', 'PE', 'Amazonas', 'region'),
+('PE_ANCASH', 'PE', 'Áncash', 'region'),
+('PE_APURIMAC', 'PE', 'Apurímac', 'region'),
+('PE_AREQUIPA', 'PE', 'Arequipa', 'region'),
+('PE_AYACUCHO', 'PE', 'Ayacucho', 'region'),
+('PE_CAJAMARCA', 'PE', 'Cajamarca', 'region'),
+('PE_CUSCO', 'PE', 'Cusco', 'region'),
+('PE_HUANCAVELICA', 'PE', 'Huancavelica', 'region'),
+('PE_HUANUCO', 'PE', 'Huánuco', 'region'),
+('PE_ICA', 'PE', 'Ica', 'region'),
+('PE_JUNIN', 'PE', 'Junín', 'region'),
+('PE_LA_LIBERTAD', 'PE', 'La Libertad', 'region'),
+('PE_LAMBAYEQUE', 'PE', 'Lambayeque', 'region'),
+('PE_LORETO', 'PE', 'Loreto', 'region'),
+('PE_MADRE_DE_DIOS', 'PE', 'Madre de Dios', 'region'),
+('PE_MOQUEGUA', 'PE', 'Moquegua', 'region'),
+('PE_PASCO', 'PE', 'Pasco', 'region'),
+('PE_PIURA', 'PE', 'Piura', 'region'),
+('PE_PUNO', 'PE', 'Puno', 'region'),
+('PE_SAN_MARTIN', 'PE', 'San Martín', 'region'),
+('PE_TACNA', 'PE', 'Tacna', 'region'),
+('PE_TUMBES', 'PE', 'Tumbes', 'region'),
+('PE_UCAYALI', 'PE', 'Ucayali', 'region'),
+('PE_REGION_LIMA', 'PE', 'Región Lima', 'region');
+
+-- Get regions
+getRegionsByCountry:
+SELECT * FROM regions WHERE country_id = ?;
+
+-- Create table to travel reason
+CREATE TABLE reason_travel (
+    id              TEXT PRIMARY KEY,
+    code            TEXT NOT NULL,
+    description     TEXT NOT NULL
+);
+
+-- Insert values of reason travel
+insertReasonTravel:
+INSERT INTO reason_travel (id, code, description) VALUES
+('VA', 'VACACIONES', 'Vacaciones, recreo u ocio'),
+('EV', 'EVENTOS', 'Asistencia a eventos'),
+('VI', 'VISITAS', 'Visitas a familiares y amigos'),
+('ED', 'EDUCACION', 'Educación y formación'),
+('SA', 'SALUD', 'Salud y atención médica'),
+('RE', 'RELIGION', 'Religión o peregrinaciones'),
+('CO', 'COMPRAS', 'Compras (excepto para reventa)'),
+('NE', 'NEGOCIOS', 'Negocios y motivos profesionales'),
+('TR', 'TRABAJO', 'Trabajo remunerado en lugar de alojamiento'),
+('OT', 'OTROS', 'Otros motivos');
+
+-- Get reasonTravel
+getReasonTravels:
+SELECT * FROM reason_travel;

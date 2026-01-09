@@ -8,43 +8,32 @@ androidx-appcompat = "1.7.0"
 androidx-constraintlayout = "2.2.1"
 androidx-core-ktx = "1.16.0"
 androidx-espresso-core = "3.6.1"
-androidx-lifecycle = "2.9.1"
+androidx-lifecycle = "2.8.2"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
-compose-multiplatform = "1.8.2"
+compose-multiplatform = "1.7.1"
 junit = "4.13.2"
-kotlin = "2.2.0"
-kotlinx-coroutines = "1.10.2"
+kotlin = "2.0.21"
+kotlinx-coroutines = "1.9.0"
 #Android
 startupRuntime = "1.2.0"
-navigationCompose = "2.8.0-alpha10"
-
+navigationCompose = "2.8.0-alpha08"
 #Koin
-koin = "3.5.6"
-koinCompose = "1.1.5"
-koinComposeViewModel = "1.2.0-Beta4"
-#Voyager
-voyager_version = "1.0.0"
-#DatePicker KMP
-kmpDateTimePicker = "1.0.3"
-# Ktor
-ktor_version = "2.3.11"
+koin = "4.0.0"
 # BuildKonfig
 buildKonfig = "0.16.0"
-# HotReload Compose
-composeReload = "1.0.0-alpha10"
 # Firebase
-gitlive = "1.12.0"
-firebase-bom = "33.4.0"
+gitlive = "2.1.0"
 # Google services
-google = "4.4.4"
+google = "4.4.2"
 # DateTime
-kotlinx-datetime = "0.6.0"
+kotlinx-datetime = "0.6.1"
 # SQLDelight
 sqldelight = "2.0.2"
-statelyCommon = "2.0.5"
 coroutinesExtensions = "2.0.2"
-serialization = "1.6.3"
+serialization = "1.7.3"
+# Preview
+compose-ui-tooling = "1.7.6"
 
 [libraries]
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
@@ -66,28 +55,12 @@ androidx-startup-runtime = { module = "androidx.startup:startup-runtime", versio
 #koin
 koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin"}
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
-koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koinCompose" }
-koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koinComposeViewModel" }
-#Voyager
-voyager-navigator = { module = "cafe.adriel.voyager:voyager-navigator", version.ref = "voyager_version" }
-voyager-transitions = { module = "cafe.adriel.voyager:voyager-transitions", version.ref = "voyager_version" }
-voyager-tabNavigator = { module = "cafe.adriel.voyager:voyager-tab-navigator", version.ref = "voyager_version" }
-voyager-koin = { module = "cafe.adriel.voyager:voyager-koin", version.ref = "voyager_version" }
-#DatePicker KMP
-kmp-date-time-picker = { module = "network.chaintech:kmp-date-time-picker", version.ref = "kmpDateTimePicker" }
-# Ktor
-ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor_version" }
-ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktor_version" }
-ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktor_version" }
-ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor_version" } #Android
-ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktor_version" } # Desktop
-ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor_version" } # IOS
+koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
+koin-compose-viewmodel = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 # Firebase Auth
 gitlive-firebase-auth-common = { group = "dev.gitlive", name = "firebase-auth", version.ref = "gitlive" }
 # Firebase Firestore
 gitlive-firebase-firestore-common = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "gitlive" }
-# Firebase
-android-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
 #Date Time
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 # SQLDelight
@@ -95,11 +68,13 @@ sqldelight-android-driver = { module = "app.cash.sqldelight:android-driver", ver
 sqldelight-ios-driver = { module = "app.cash.sqldelight:native-driver", version.ref = "sqldelight" }
 sqldelight-desktop-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "sqldelight" }
 sqldelight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "coroutinesExtensions" }
-sqldelight-stately-common = { module = "co.touchlab:stately-common", version.ref = "statelyCommon" }
 # Serializable
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 # Navigation
 jetbrains-compose-navigation = { group = "org.jetbrains.androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+# Preview
+androidx-compose-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "compose-ui-tooling" }
+androidx-compose-ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview", version.ref = "compose-ui-tooling" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
@@ -113,7 +88,5 @@ nativeCocoapods = { id = "org.jetbrains.kotlin.native.cocoapods", version.ref = 
 # Serialization
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 buildkonfig = { id = "com.codingfeline.buildkonfig", version.ref = "buildKonfig" }
-# HotReload Compose
-composeReload = { id = "org.jetbrains.compose.hot-reload", version.ref = "composeReload" }
 # Google services
 google-services = { id = "com.google.gms.google-services", version.ref = "google" }

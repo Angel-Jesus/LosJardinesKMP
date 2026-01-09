@@ -1,7 +1,8 @@
-platform :ios, '14.1'
-
+platform :ios, '15.4'
 target 'iosApp' do
   use_frameworks!
+  inhibit_all_warnings!
+  pod 'composeApp', :path => '../composeApp'
 
   # Aquí puedes añadir tus pods, por ejemplo:
   pod 'Alamofire', '~> 5.4'

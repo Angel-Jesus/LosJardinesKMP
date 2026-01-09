@@ -11,7 +11,6 @@ plugins {
     alias(libs.plugins.nativeCocoapods)
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.buildkonfig)
-    alias(libs.plugins.composeReload)
     alias(libs.plugins.google.services)
 }
 
@@ -19,7 +18,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_17)
         }
     }
     
@@ -37,10 +36,11 @@ kotlin {
         summary = "Módulo compartido para iOS"
         homepage = "https://tuprojecto.dev"
         version = "1.0"
-        ios.deploymentTarget = "14.1"
+        ios.deploymentTarget = "15.4"
         podfile = project.file("../iosApp/Podfile")
+
         framework {
-            baseName = "ComposeApp"
+            baseName = "composeApp"
             isStatic = true
         }
     }
@@ -71,16 +71,10 @@ kotlin {
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
             implementation(libs.koin.compose.viewmodel)
-            implementation(libs.voyager.koin)
             // Coroutines
             implementation(libs.kotlinx.coroutines.core)
             // Library Navigation
-            implementation(libs.voyager.navigator)
-            implementation(libs.voyager.transitions)
-            implementation(libs.voyager.tabNavigator)
             implementation(libs.jetbrains.compose.navigation)
-            // DatePicker KMP
-            implementation(libs.kmp.date.time.picker)
             // Firebase Auth
             implementation(libs.gitlive.firebase.auth.common)
             // Firestore
@@ -131,8 +125,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 

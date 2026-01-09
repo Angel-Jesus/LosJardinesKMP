@@ -14,6 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pe.losjardines.navigation_content.items.ItemsContentNavScreen
@@ -80,7 +81,7 @@ private fun BottomNavBar(
                         )
                     },
                     selected = isSelected,
-                    onClick = { navigateBottomBar(navController, item.route, currentRoute) }
+                    onClick = { navigateBottomBar(navController, item.route) }
                 )
             }
         }
@@ -96,9 +97,9 @@ private val NavController.shouldShowBottomBar: Boolean
         ItemsContentNavScreen.RoomStatusNavScreen.route
     )
 
-fun navigateBottomBar(navController: NavController, destination: String, current: String) {
+fun navigateBottomBar(navController: NavController, destination: String) {
     navController.navigate(destination) {
-        popUpTo(current) { saveState = true }
+        popUpTo(navController.graph.findStartDestination().route.orEmpty()) { saveState = true }
         launchSingleTop = true
         restoreState = true
     }

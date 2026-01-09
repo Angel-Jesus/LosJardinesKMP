@@ -1,16 +1,23 @@
 PODS:
   - Alamofire (5.10.2)
+  - composeApp (1.0)
 
 DEPENDENCIES:
   - Alamofire (~> 5.4)
+  - composeApp (from `../composeApp`)
 
 SPEC REPOS:
   trunk:
     - Alamofire
 
+EXTERNAL SOURCES:
+  composeApp:
+    :path: "../composeApp"
+
 SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
+  composeApp: fed8aec0132b42d9d38e848e471a16957073af12
 
-PODFILE CHECKSUM: 3f2c8dd389f8db8d52c32ca0b6a141608ecf89d1
+PODFILE CHECKSUM: 0d9b3396454da55b5389ae87071a1ac9bf8b01e7
 
 COCOAPODS: 1.16.2

@@ -1,0 +1,21 @@
+<resources>
+    <string name="registration_title">Registro de clientes</string>
+    <string name="registration_personal_information_title">Información personal</string>
+    <string name="stay_detail_information_title">Información de estadia</string>
+
+    <string name="fullname_input">Nombres y Apellidos</string>
+    <string name="sex_input">Sexo</string>
+    <string name="country_of_residence_input">País de residencia</string>
+    <string name="region_of_residence_input">Región de residencia</string>
+    <string name="document_type_input">Tipo de documento</string>
+    <string name="document_number_input">Número de documento</string>
+    <string name="travel_reason_input">Motivo de viaje</string>
+    <string name="check_in_date_input">Fecha de ingreso</string>
+    <string name="check_out_date_input">Fecha de salida</string>
+    <string name="room_input">Habitación</string>
+    <string name="rate_input">Tarifa</string>
+    <string name="observation_input">Observación</string>
+    <string name="register_button">Registrar</string>
+    <string name="cancel_button">Cancelar</string>
+
+</resources>

@@ -12,7 +12,7 @@ kotlin {
 
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
-        compilerOptions.jvmTarget.set(JvmTarget.JVM_11)
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
     }
 
     iosArm64()
@@ -25,6 +25,8 @@ kotlin {
         androidMain.dependencies {
             // Koin
             implementation(libs.koin.android)
+            // Preview
+            implementation(libs.androidx.compose.ui.tooling.preview)
         }
 
         commonMain.dependencies {
@@ -37,6 +39,8 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel.compose)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            // Date time
+            implementation(libs.kotlinx.datetime)
             // Koin
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
@@ -69,7 +73,7 @@ android {
     }
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }

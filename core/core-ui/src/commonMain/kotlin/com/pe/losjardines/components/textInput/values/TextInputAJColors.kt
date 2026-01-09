@@ -13,5 +13,7 @@ data class TextInputAJColors(
     val disableColor: Color = Color.Unspecified,
     val leadingIconColor: Color = Color.Unspecified,
     val trailingIconColor: Color = BrandIconColor,
-    val focusedIndicatorColor: Color = FocusedBorderColor
+    val focusedIndicatorColor: Color = FocusedBorderColor,
+    val focusedContainerColor: Color = Color.Transparent,
+    val unfocusedContainerColor: Color = Color.Transparent
 )

@@ -176,15 +176,17 @@ class ConsultationScreen: Screen {
                 if(filterOption != FILTER_INIT){
                     item {
                         Row(modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, top = 8.dp)) {
-                            InputText(
-                                modifier = Modifier.weight(0.5f),
-                                defaultText = String.EMPTY,
-                                onValueChange = { newValue ->
-                                    filterInput = newValue
-                                }
-                            )
+                            if(filterOption != FILTER_MONTH){
+                                InputText(
+                                    modifier = Modifier.weight(0.5f),
+                                    defaultText = String.EMPTY,
+                                    onValueChange = { newValue ->
+                                        filterInput = newValue
+                                    }
+                                )
 
-                            Spacer(modifier = Modifier.width(16.dp))
+                                Spacer(modifier = Modifier.width(16.dp))
+                            }
 
                             DropDownOption(
                                 modifier = Modifier.weight(0.5f),

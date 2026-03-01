@@ -2,6 +2,7 @@ package com.pe.losjardines.domain.utils
 
 import com.pe.losjardines.data.network.dto.ClientDto
 import com.pe.losjardines.domain.model.ClientFilter
+import com.pe.losjardines.utils.MonthFilter
 import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -11,13 +12,11 @@ fun List<ClientDto>.filterClients(filter: ClientFilter): List<ClientDto>{
     val dateNow = getDateNow()
     return when(filter){
             is ClientFilter.None -> this.filterSorted { it.fecha.isDateValid("${dateNow.monthNumber.getMonthString()}/${dateNow.year}") }
-            is ClientFilter.Month -> this.filterSorted { it.fecha.isDateValid("${filter.month}/${dateNow.year}") }
-            is ClientFilter.Origin -> this.filterSorted { it.procedencia.lowercase() == filter.origin.lowercase() && it.fecha.isDateValid("${filter.month}/${dateNow.year}")}
-            is ClientFilter.DNI -> this.filterSorted { it.dni.lowercase() == filter.dni.lowercase() && it.fecha.isDateValid("${filter.month}/${dateNow.year}") }
+            is ClientFilter.Month -> this.filterSorted { it.fecha.isDateValid("${MonthFilter.getMonthValue(filter.month)}/${dateNow.year}") }
+            is ClientFilter.Origin -> this.filterSorted { it.procedencia.equals(filter.origin, ignoreCase = true) && it.fecha.isDateValid("${MonthFilter.getMonthValue(filter.month)}/${dateNow.year}")}
+            is ClientFilter.DNI -> this.filterSorted { it.dni.equals(filter.dni, ignoreCase = true) && it.fecha.isDateValid("${MonthFilter.getMonthValue(filter.month)}/${dateNow.year}") }
     }
 }
-
-
 
 inline fun <T> List<T>.filterSorted(predicate: (T) -> Boolean): List<T>{
     val destination = ArrayList<T>()

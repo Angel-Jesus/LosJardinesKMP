@@ -35,8 +35,10 @@ kotlin {
             implementation(compose.ui)
             implementation(compose.materialIconsExtended)
             implementation(compose.components.resources)
+            implementation(compose.components.uiToolingPreview)
             // Date time
             implementation(libs.kotlinx.datetime)
+            implementation(project(":core:core-common"))
         }
 
         iosMain.dependencies {

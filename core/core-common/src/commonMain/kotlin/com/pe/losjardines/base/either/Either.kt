@@ -5,17 +5,14 @@ import com.pe.losjardines.base.error.Failure
 sealed class Either<out L, out R> {
     data class Error<out L>(val value: L) : Either<L, Nothing>()
     data class Success<out R>(val value: R) : Either<Nothing, R>()
-    data object Loading : Either<Nothing, Nothing>()
 
     fun <T> either(
         fnL: (L) -> T,
-        fnR: (R) -> T,
-        fnLoading: () -> T = { null as T }
+        fnR: (R) -> T
     ): T {
         return when (this) {
             is Error -> fnL(value)
             is Success -> fnR(value)
-            Loading -> fnLoading()
         }
     }
 
@@ -24,13 +21,11 @@ sealed class Either<out L, out R> {
 
     fun fold(
         fnL: (L) -> Unit = {},
-        fnR: (R) -> Unit = {},
-        fnLoading: () -> Unit = {}
+        fnR: (R) -> Unit = {}
     ) {
         when (this) {
             is Error -> fnL(value)
             is Success -> fnR(value)
-            Loading -> fnLoading()
         }
     }
 
@@ -44,16 +39,10 @@ sealed class Either<out L, out R> {
         return this
     }
 
-    fun onLoading(fn: () -> Unit): Either<L, R> {
-        if (this is Loading) fn()
-        return this
-    }
-
     fun <T> map(fn: (R) -> T): Either<L, T> {
         return when (this) {
             is Error -> Error(value)
             is Success -> Success(fn(value))
-            Loading -> Loading
         }
     }
 
@@ -67,7 +56,6 @@ sealed class Either<out L, out R> {
                         onFailure = { Error(Failure.MapperToDomain(it as Exception)) }
                     )
             }
-            Loading -> Loading
         }
     }
 }

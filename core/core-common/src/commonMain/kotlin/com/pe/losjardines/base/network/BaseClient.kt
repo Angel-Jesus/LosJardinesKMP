@@ -5,35 +5,45 @@ import com.pe.losjardines.base.error.Failure
 import com.pe.losjardines.base.error.FirebaseAuthErrorType
 import com.pe.losjardines.base.error.FirestoreErrorType
 import com.pe.losjardines.base.error.getMessage
+import com.pe.losjardines.utils.NetworkChecker
 import dev.gitlive.firebase.auth.FirebaseAuthException
 import dev.gitlive.firebase.firestore.FirebaseFirestoreException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.IO
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.cancellation.CancellationException
 
-abstract class BaseClient{
-    protected suspend inline fun <reified T> callAuth(crossinline authCall: suspend () -> T): Either<Failure, T>{
+abstract class BaseClient(
+    protected val networkChecker: NetworkChecker
+) {
+    protected suspend inline fun <reified T> callAuth(crossinline authCall: suspend () -> T): Either<Failure, T> {
+        if(!networkChecker.isConnected()) return Either.Error(Failure.InternetConnection("Error connection"))
+
         return try {
-            withContext(Dispatchers.IO){
-                Either.Success(authCall.invoke())
-            }
-        } catch (e: FirebaseAuthException){
+            Either.Success(withContext(Dispatchers.IO){ authCall.invoke() })
+        } catch (e: FirebaseAuthException) {
             val firebaseAuthType = FirebaseAuthErrorType.fromFirebaseAuthException(e)
             Either.Error(Failure.FirebaseAuthFailure(message = firebaseAuthType.getMessage()))
-        } catch (e: Exception){
+        } catch (e: CancellationException) {
+            Either.Error(Failure.UnknownFailure(message = e.message))
+        }
+        catch (e: Exception) {
             Either.Error(Failure.UnknownFailure(message = e.message))
         }
     }
 
-    protected suspend inline fun <reified T> callFirestore(crossinline firestoreCall: suspend () -> T): Either<Failure, T>{
+    protected suspend inline fun <reified T> callFirestore(crossinline firestoreCall: suspend () -> T): Either<Failure, T> {
+        if(!networkChecker.isConnected()) return Either.Error(Failure.InternetConnection("Error connection"))
+
         return try {
-            withContext(Dispatchers.IO){
-                Either.Success(firestoreCall.invoke())
-            }
-        } catch (e: FirebaseFirestoreException){
+            Either.Success(withContext(Dispatchers.IO){ firestoreCall.invoke() })
+        } catch (e: FirebaseFirestoreException) {
             val firestoreType = FirestoreErrorType.fromFirestoreException(e)
             Either.Error(Failure.FirestoreFailure(message = firestoreType.getMessage()))
-        } catch (e: Exception){
+        } catch (e: CancellationException) {
+            Either.Error(Failure.UnknownFailure(message = e.message))
+        }
+        catch (e: Exception) {
             Either.Error(Failure.UnknownFailure(message = e.message))
         }
     }

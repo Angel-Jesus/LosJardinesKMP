@@ -4,14 +4,14 @@ PRAGMA losjardines_version = 1;
 -- Create Registration Table
 CREATE TABLE registration(
     id INTEGER PRIMARY KEY NOT NULL ON CONFLICT REPLACE,
+    collection TEXT NOT NULL,
     idFirebase TEXT NOT NULL,
-    birthday TEXT,
     country TEXT,
     dateEnter INTEGER,
     dateExit INTEGER,
     fee REAL,
-    hour TEXT,
     name TEXT,
+    sex TEXT,
     typeDocument TEXT,
     numberDocument TEXT,
     observation TEXT,
@@ -24,19 +24,19 @@ CREATE TABLE registration(
 
 -- Get registers
 getRegistersByMonth:
-SELECT * FROM registration WHERE dateEnter BETWEEN ? AND ? ORDER BY dateEnter DESC;
+SELECT * FROM registration WHERE dateEnter BETWEEN ? AND ? AND (? = '' OR numberDocument LIKE ?) ORDER BY dateEnter DESC;
 
 --Insert value on table
 insertRegistration:
 INSERT INTO registration(
+    collection,
     idFirebase,
-    birthday,
     country,
     dateEnter,
     dateExit,
     fee,
-    hour,
     name,
+    sex,
     typeDocument,
     numberDocument,
     observation,
@@ -46,14 +46,14 @@ INSERT INTO registration(
     companions,
     state
 ) VALUES (
+    :collection,
     :idFirebase,
-    :birthday,
     :country,
     :dateEnter,
     :dateExit,
     :fee,
-    :hour,
     :name,
+    :sex,
     :typeDocument,
     :numberDocument,
     :observation,
@@ -65,7 +65,26 @@ INSERT INTO registration(
 );
 
 -- update on table
-
+updateRegistration:
+UPDATE registration
+SET
+    collection = :collection,
+    idFirebase = :idFirebase,
+    country = :country,
+    dateEnter = :dateEnter,
+    dateExit = :dateExit,
+    fee = :fee,
+    name = :name,
+    sex = :sex,
+    typeDocument = :typeDocument,
+    numberDocument = :numberDocument,
+    observation = :observation,
+    reasonTravel = :reasonTravel,
+    region = :region,
+    room = :room,
+    companions = :companions,
+    state = :state
+WHERE id = :id;
 
 -- delete on table
 deleteById:

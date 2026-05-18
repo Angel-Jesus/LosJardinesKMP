@@ -53,7 +53,6 @@ abstract class BaseViewModel<S : BaseUiState, E: BaseEvent, F: BaseEffect>(
     ){
         viewModelScope.launch {
             useCase.execute(params).collectEither(
-                onLoading = {},
                 onSuccess = onSuccess,
                 onError = onError
             )

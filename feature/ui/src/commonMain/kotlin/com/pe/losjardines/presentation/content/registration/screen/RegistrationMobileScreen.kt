@@ -1,6 +1,7 @@
 package com.pe.losjardines.presentation.content.registration.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,24 +12,34 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.pe.losjardines.components.buttom.ButtonAJ
+import com.pe.losjardines.components.dialog.ResultDialog
 import com.pe.losjardines.components.dropdown.DropDownAJ
-import com.pe.losjardines.components.picker.nativeDatePicker
+import com.pe.losjardines.components.loading.LoadingAJ
+import com.pe.losjardines.components.picker.NativeDatePicker
+import com.pe.losjardines.components.textInput.InputType
 import com.pe.losjardines.components.textInput.TextInputAJ
+import com.pe.losjardines.presentation.components.HeaderComponent
+import com.pe.losjardines.presentation.content.registration.contract.RegistrationEffect
 import com.pe.losjardines.presentation.content.registration.contract.RegistrationEvent
 import com.pe.losjardines.presentation.content.registration.viewmodel.RegistrationViewModel
-import com.pe.losjardines.presentation.content.utils.DOCUMENT_TYPE
+import com.pe.losjardines.presentation.content.utils.DocumentType
 import com.pe.losjardines.presentation.content.utils.FieldRegistration
-import com.pe.losjardines.presentation.content.utils.SEX
+import com.pe.losjardines.presentation.content.utils.ResultState
+import com.pe.losjardines.presentation.content.utils.Sex
+import com.pe.losjardines.utils.companions.EMPTY
 import com.pe.losjardines.utils.getDayNow
+import com.pe.losjardines.utils.toDateStringResult
 import com.pe.losjardines.values.AppTypography
 import com.pe.losjardines.values.LocalAppTypographyCore
+import kotlinx.coroutines.flow.collectLatest
 import losjardineskmp.feature.ui.generated.resources.Res
 import losjardineskmp.feature.ui.generated.resources.check_in_date_input
 import losjardineskmp.feature.ui.generated.resources.check_out_date_input
@@ -51,10 +62,12 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @OptIn(KoinExperimentalAPI::class)
 @Composable
 fun RegistrationMobileScreen(
+    title: String,
     viewModel: RegistrationViewModel = koinViewModel(),
     typography: AppTypography = LocalAppTypographyCore.current
 ){
-    var showDatePicker by remember { mutableStateOf<Pair<FieldRegistration?, Boolean>>(Pair(null, false)) }
+    var showDatePicker by rememberSaveable { mutableStateOf<Pair<FieldRegistration?, Boolean>>(Pair(null, false)) }
+    var isLoading by rememberSaveable{ mutableStateOf(false) }
 
     val countryCatalog by viewModel.countryCatalog.collectAsState()
     val regionCatalog by viewModel.regionCatalog.collectAsState()
@@ -65,20 +78,49 @@ fun RegistrationMobileScreen(
     val country by viewModel.country.collectAsState()
     val region by viewModel.region.collectAsState()
     val travelReason by viewModel.travelReason.collectAsState()
-    val documentType by viewModel.documentType.collectAsState(DOCUMENT_TYPE.DNI.type)
+    val documentType by viewModel.documentType.collectAsState(DocumentType.DNI.type)
     val documentNumber by viewModel.documentNumber.collectAsState()
     val checkInDate by viewModel.checkInDate.collectAsState()
     val checkOutDate by viewModel.checkOutDate.collectAsState()
     val room by viewModel.room.collectAsState()
-    val rate by viewModel.rate.collectAsState()
+    val rate by viewModel.fee.collectAsState()
     val observation by viewModel.observation.collectAsState()
+
+    var showResult by rememberSaveable { mutableStateOf(Pair(ResultState.NONE, String.EMPTY)) }
+
+    val enableButton by derivedStateOf {
+        fullName.text.isNotEmpty() &&
+        sex.isNotEmpty() &&
+        country.isNotEmpty() &&
+        validateRegion(country, region) &&
+        travelReason.isNotEmpty() &&
+        documentType.isNotEmpty() &&
+        documentNumber.text.isNotEmpty() &&
+        checkInDate.isNotEmpty() &&
+        room.text.isNotEmpty() &&
+        rate.text.isNotEmpty()
+    }
+
 
     LaunchedEffect(true){
         viewModel.onEvent(RegistrationEvent.GetCatalogInformation)
+
+        viewModel.effect.collectLatest { effect ->
+            isLoading = false
+
+            when(effect){
+                is RegistrationEffect.ErrorSave -> {
+                    showResult = Pair(ResultState.ERROR, effect.message)
+                }
+                is RegistrationEffect.SuccessSave -> {
+                    showResult = Pair(ResultState.SUCCESS, effect.message.orEmpty())
+                }
+            }
+        }
     }
 
     if(showDatePicker.second){
-        nativeDatePicker(
+        NativeDatePicker(
             initialDate = getDayNow(),
             onDismiss = {
                 showDatePicker = Pair(null, false)
@@ -86,10 +128,10 @@ fun RegistrationMobileScreen(
             onDateSelected = {
                 when (showDatePicker.first) {
                     FieldRegistration.CHECK_IN_DATE -> {
-
+                        viewModel.onEvent(RegistrationEvent.ValueChanged(it.toDateStringResult(), FieldRegistration.CHECK_IN_DATE))
                     }
                     FieldRegistration.CHECK_OUT_DATE -> {
-
+                        viewModel.onEvent(RegistrationEvent.ValueChanged(it.toDateStringResult(), FieldRegistration.CHECK_OUT_DATE))
                     }
                     else -> {
                         println("Error: Field not found")
@@ -99,10 +141,35 @@ fun RegistrationMobileScreen(
         )
     }
 
+    ResultDialog(
+        modifier = Modifier,
+        title = "Proceso del registro",
+        description = showResult.second,
+        isSuccess = showResult.first == ResultState.SUCCESS,
+        visibility = showResult.first != ResultState.NONE,
+        onDismiss = {
+            showResult = Pair(ResultState.NONE, String.EMPTY)
+        }
+    )
+
+    if(isLoading){
+        LoadingAJ(
+            title = "Información del cliente",
+            subtitle = "Enviando y guardando"
+        )
+    }
+
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(16.dp),
+        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+        item {
+            HeaderComponent(
+                modifier = Modifier.fillMaxWidth().height(48.dp),
+                title = title
+            )
+        }
+
         item {
             Text(
                 text = stringResource(Res.string.registration_personal_information_title),
@@ -118,6 +185,7 @@ fun RegistrationMobileScreen(
                 onValueChange = {
                     viewModel.onEvent(RegistrationEvent.ValueChanged(it, FieldRegistration.FULL_NAME))
                 },
+                inputType = InputType.TEXT_SPECIAL,
                 label = stringResource(Res.string.fullname_input)
             )
         }
@@ -126,7 +194,7 @@ fun RegistrationMobileScreen(
             DropDownAJ(
                 modifier = Modifier.fillMaxWidth(),
                 label = stringResource(Res.string.sex_input),
-                options = SEX.options,
+                options = Sex.options,
                 selectedOption = sex,
                 onOptionSelected = {
                     viewModel.onEvent(RegistrationEvent.ValueChanged(it, FieldRegistration.SEX))
@@ -177,7 +245,7 @@ fun RegistrationMobileScreen(
             DropDownAJ(
                 modifier = Modifier.fillMaxWidth(),
                 label = stringResource(Res.string.document_type_input),
-                options = DOCUMENT_TYPE.options,
+                options = DocumentType.options,
                 selectedOption = documentType,
                 onOptionSelected = {
                     viewModel.onEvent(RegistrationEvent.ValueChanged(it, FieldRegistration.DOCUMENT_TYPE))
@@ -192,6 +260,7 @@ fun RegistrationMobileScreen(
                 onValueChange = {
                     viewModel.onEvent(RegistrationEvent.ValueChanged(it, FieldRegistration.DOCUMENT_NUMBER))
                 },
+                inputType = InputType.DOCUMENT,
                 label = stringResource(Res.string.document_number_input)
             )
         }
@@ -238,7 +307,7 @@ fun RegistrationMobileScreen(
                 onValueChange = {
                     viewModel.onEvent(RegistrationEvent.ValueChanged(it, FieldRegistration.ROOM))
                 },
-                keyboardType = KeyboardType.Number,
+                inputType = InputType.NUMBER,
                 label = stringResource(Res.string.room_input)
             )
         }
@@ -250,7 +319,7 @@ fun RegistrationMobileScreen(
                 onValueChange = {
                     viewModel.onEvent(RegistrationEvent.ValueChanged(it, FieldRegistration.RATE))
                 },
-                keyboardType = KeyboardType.Number,
+                inputType = InputType.DECIMAL,
                 label = stringResource(Res.string.rate_input)
             )
         }
@@ -265,5 +334,24 @@ fun RegistrationMobileScreen(
                 label = stringResource(Res.string.observation_input)
             )
         }
+
+        item{
+            Box(modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)){
+                ButtonAJ(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Guardar",
+                    enabled = enableButton,
+                    onClick = {
+                        isLoading = true
+                        viewModel.onEvent(RegistrationEvent.SaveData)
+                    }
+                )
+            }
+        }
     }
+}
+
+private fun validateRegion(country: String, region: String): Boolean{
+    if(country != "Perú") return true
+    return region.isNotEmpty()
 }

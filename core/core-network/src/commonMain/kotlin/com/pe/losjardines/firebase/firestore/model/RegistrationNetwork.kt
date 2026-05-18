@@ -3,15 +3,14 @@ package com.pe.losjardines.firebase.firestore.model
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Registration(
+data class RegistrationNetwork(
     val id: String,
-    val birthday: String,
     val country: String,
-    val dateEnter: String,
-    val dateExit: String,
+    val dateEnter: Long,
+    val dateExit: Long,
     val fee: String,
-    val hour: String,
     val name: String,
+    val sex: String,
     val typeDocument: String,
     val numberDocument: String,
     val observation: String = "",

@@ -1,5 +1,6 @@
 package com.pe.losjardines.components.picker
 
+import androidx.compose.runtime.Composable
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
@@ -38,12 +39,13 @@ private fun NSDate.toLocalDate(): LocalDate {
         .date
 }
 
-actual fun nativeDatePicker(
-    initialDate: LocalDate,
+@Composable
+actual fun NativeDatePicker(
+    initialDate: LocalDate?,
     minDate: LocalDate?,
     maxDate: LocalDate?,
     onDateSelected: (LocalDate) -> Unit,
-    onDismiss: (() -> Unit)?
+    onDismiss: () -> Unit
 ) {
     val picker = UIDatePicker().apply {
         datePickerMode = UIDatePickerMode.UIDatePickerModeDate
@@ -84,7 +86,7 @@ actual fun nativeDatePicker(
             "Cancelar",
             UIAlertActionStyleCancel
         ) {
-            onDismiss?.invoke()
+            onDismiss()
         }
     )
 

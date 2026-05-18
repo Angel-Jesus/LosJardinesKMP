@@ -22,7 +22,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.pe.losjardines.components.buttom.ButtomAJ
+import com.pe.losjardines.components.buttom.ButtonAJ
+import com.pe.losjardines.components.textInput.InputType
 import com.pe.losjardines.components.textInput.TextInputAJ
 import com.pe.losjardines.presentation.login.contract.LoginEffect
 import com.pe.losjardines.presentation.login.contract.LoginEvent
@@ -98,6 +99,7 @@ fun LoginScreen(
             modifier = Modifier.fillMaxWidth(1f.takeIf { isMobile } ?: 0.4f ),
             value = email,
             label = "Nombre de usuario",
+            inputType = InputType.EMAIL,
             onValueChange = { email = it }
         )
 
@@ -113,7 +115,7 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        ButtomAJ(
+        ButtonAJ(
             modifier = Modifier.fillMaxWidth(1f.takeIf { isMobile } ?: 0.4f),
             text = "Iniciar sesión",
             onClick = {

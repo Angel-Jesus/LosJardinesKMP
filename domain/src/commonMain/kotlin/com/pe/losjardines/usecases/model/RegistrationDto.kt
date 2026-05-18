@@ -1,14 +1,15 @@
 package com.pe.losjardines.usecases.model
 
 data class RegistrationDto(
-    val id: String,
-    val birthday: String,
+    val collection: String,
+    val id: Long? = null,
+    val idFirebase: String = "",
     val country: String,
     val dateEnter: String,
     val dateExit: String,
     val fee: String,
-    val hour: String,
     val name: String,
+    val sex: String,
     val typeDocument: String,
     val numberDocument: String,
     val observation: String = "",

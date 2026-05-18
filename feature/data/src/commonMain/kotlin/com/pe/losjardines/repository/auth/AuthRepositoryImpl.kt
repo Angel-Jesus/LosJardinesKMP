@@ -7,10 +7,12 @@ import com.pe.losjardines.firebase.auth.LoginManager
 import com.pe.losjardines.repository.AuthRepository
 import com.pe.losjardines.repository.auth.mapper.toData
 import com.pe.losjardines.usecases.model.AuthResponseDto
+import com.pe.losjardines.utils.NetworkChecker
 
 class AuthRepositoryImpl(
-    private val loginManager: LoginManager
-): BaseClient(), AuthRepository {
+    private val loginManager: LoginManager,
+    networkChecker: NetworkChecker
+): BaseClient(networkChecker), AuthRepository {
 
     override fun isLoggedIn(): Boolean{
         return loginManager.isLoggedIn()

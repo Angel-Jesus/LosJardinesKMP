@@ -26,6 +26,18 @@ import com.pe.losjardines.values.FocusedBorderColor
 import com.pe.losjardines.values.LocalAppTypographyCore
 import com.pe.losjardines.values.SoftTextColor
 
+/**
+ * Menú desplegable personalizado que sigue los lineamientos visuales de la marca AJ.
+ *
+ * @param modifier         Modificador de Compose para controlar el layout externo del componente.
+ * @param label            Etiqueta opcional que se muestra encima del desplegable para describir el campo (ej: "País", "Categoría").
+ * @param options          Lista de opciones disponibles para seleccionar en el menú desplegable.
+ * @param selectedOption   Opción actualmente seleccionada que se muestra en el campo.
+ * @param placeholder      Texto opcional que se muestra cuando no hay ninguna opción seleccionada (ej: "Selecciona una opción").
+ * @param onOptionSelected Lambda que se ejecuta al seleccionar una opción, recibiendo el valor elegido como parámetro.
+ * @param enabled          Indica si el desplegable es interactuable. Si es false, se muestra deshabilitado y no responde a toques.
+ * @param typography       Sistema tipográfico de la app. Se toma automáticamente del tema activo si no se especifica.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DropDownAJ(

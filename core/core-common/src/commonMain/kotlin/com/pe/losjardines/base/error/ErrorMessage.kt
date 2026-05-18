@@ -1,7 +1,5 @@
 package com.pe.losjardines.base.error
 
-import dev.gitlive.firebase.firestore.FirebaseFirestoreException
-
 fun FirebaseAuthErrorType.getMessage(): String{
     return when(this){
         FirebaseAuthErrorType.INVALID_EMAIL -> "Please enter a valid email address"
@@ -44,5 +42,16 @@ fun FirestoreErrorType.getMessage(): String{
         FirestoreErrorType.DEADLINE_EXCEEDED -> "Request timed out. Please try again"
         FirestoreErrorType.CANCELLED -> "Operation was cancelled"
         FirestoreErrorType.UNKNOWN -> "An unexpected error occurred"
+    }
+}
+
+fun Failure.getMessage(): String? {
+    return when(this){
+        is Failure.DatabaseFailure -> this.message
+        is Failure.FirebaseAuthFailure -> this.message
+        is Failure.FirestoreFailure -> this.message
+        is Failure.InternetConnection -> this.message
+        is Failure.MapperToDomain -> this.exception?.message
+        is Failure.UnknownFailure -> this.message
     }
 }

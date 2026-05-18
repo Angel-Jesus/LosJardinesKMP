@@ -9,6 +9,6 @@ import com.pe.losjardines.values.AppTheme
 @Composable
 fun RegistrationMobileScreenPreview(){
     AppTheme {
-        RegistrationMobileScreen()
+        RegistrationMobileScreen(title = "Registro")
     }
 }

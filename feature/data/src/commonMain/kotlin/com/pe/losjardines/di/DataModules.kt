@@ -9,7 +9,7 @@ import com.pe.losjardines.repository.firestore.FirestoreRepositoryImpl
 import org.koin.dsl.module
 
 val dataModules = module {
-    single<AuthRepository>{ AuthRepositoryImpl(get()) }
-    single<FirestoreRepository>{ FirestoreRepositoryImpl(get()) }
+    single<AuthRepository>{ AuthRepositoryImpl(get(), get()) }
+    single<FirestoreRepository>{ FirestoreRepositoryImpl(get(), get()) }
     single<DatabaseRepository> { DatabaseRepositoryImpl(get()) }
 }

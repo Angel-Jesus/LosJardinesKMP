@@ -1,4 +1,5 @@
 <resources>
+    <!-- Register part -->
     <string name="registration_title">Registro de clientes</string>
     <string name="registration_personal_information_title">Información personal</string>
     <string name="stay_detail_information_title">Información de estadia</string>
@@ -17,5 +18,16 @@
     <string name="observation_input">Observación</string>
     <string name="register_button">Registrar</string>
     <string name="cancel_button">Cancelar</string>
+
+    <!-- Consultation part -->
+    <string name="filter_title">Filtros</string>
+    <string name="month_filter_title">Mes</string>
+    <string name="year_filter_title">Año</string>
+    <string name="filter_button">Aplicar Filtros</string>
+    <string name="cancel_filter_button">Remover Filtros</string>
+    <string name="search_dni_input">Buscar por DNI/Pasaporte</string>
+
+    <string name="title_not_register_found">No se encontraron registros</string>
+    <string name="description_not_register_found">No se encontraron registros almacenados en el sistema, por favor registre un nuevo cliente o intente con otros filtros</string>
 
 </resources>

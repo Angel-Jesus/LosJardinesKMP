@@ -5,6 +5,7 @@ import com.pe.losjardines.base.error.Failure
 import com.pe.losjardines.usecases.model.CountryDto
 import com.pe.losjardines.usecases.model.TravelReasonDto
 import com.pe.losjardines.usecases.model.RegionDto
+import com.pe.losjardines.usecases.model.RegistrationDto
 
 interface DatabaseRepository {
     suspend fun isSyncronized(): Boolean
@@ -17,4 +18,11 @@ interface DatabaseRepository {
 
     suspend fun getReasonTravels(): Either<Failure, List<TravelReasonDto>>
 
+    suspend fun saveCustomerInformation(registrationDto: RegistrationDto, state: String): Either<Failure, Unit>
+    suspend fun getClientsRegister(
+        dateInit: Long,
+        dateLast: Long,
+        searchDni: String?
+    ): Either<Failure, List<RegistrationDto>>
+    suspend fun updateClientInformation(state: String, registrationDto: RegistrationDto): Either<Failure, Unit>
 }

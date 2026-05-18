@@ -18,6 +18,17 @@ import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/**
+ * Indicador de carga circular animado compuesto por segmentos que giran secuencialmente.
+ *
+ * @param modifier                Modificador de Compose para controlar el layout externo del componente.
+ * @param size                    Tamaño total del loader (ancho y alto). Por defecto 64.dp.
+ * @param segmentCount            Número de segmentos que conforman el círculo del loader. Por defecto 12.
+ * @param segmentWidth            Ancho de cada segmento individual del loader. Por defecto 6.dp.
+ * @param segmentHeight           Alto de cada segmento individual del loader. Por defecto 16.dp.
+ * @param color                   Color base de los segmentos. La animación varía su opacidad para simular el giro. Por defecto Color.LightGray.
+ * @param animationDurationMillis Duración en milisegundos de un ciclo completo de la animación. Por defecto 1000ms.
+ */
 @Composable
 fun CircularLoader(
     modifier: Modifier = Modifier,

@@ -7,8 +7,10 @@ import androidx.navigation.compose.rememberNavController
 import com.pe.losjardines.navigation.isMobile
 import com.pe.losjardines.navigation_content.items.ItemsContentNavScreen
 import com.pe.losjardines.navigation_content.ui.NavigationBarScreen
+import com.pe.losjardines.presentation.content.consultation.screen.ConsultationMobileScreen
 import com.pe.losjardines.presentation.content.home.screen.HomeMobileScreen
 import com.pe.losjardines.presentation.content.registration.screen.RegistrationMobileScreen
+import com.pe.losjardines.presentation.content.room.screen.RoomMobileScreen
 import org.koin.core.annotation.KoinExperimentalAPI
 
 @OptIn(KoinExperimentalAPI::class)
@@ -34,15 +36,21 @@ fun NavContentManager(
                 }
 
                 composable(ItemsContentNavScreen.RegistrationNavScreen.route){
-                    RegistrationMobileScreen()
+                    RegistrationMobileScreen(
+                        title = ItemsContentNavScreen.RegistrationNavScreen.title,
+                    )
                 }
 
                 composable(ItemsContentNavScreen.ConsultNavScreen.route){
-
+                    ConsultationMobileScreen(
+                        title = ItemsContentNavScreen.ConsultNavScreen.title,
+                    )
                 }
 
                 composable(ItemsContentNavScreen.RoomStatusNavScreen.route){
-
+                    RoomMobileScreen(
+                        title = ItemsContentNavScreen.RoomStatusNavScreen.title,
+                    )
                 }
             }
         }

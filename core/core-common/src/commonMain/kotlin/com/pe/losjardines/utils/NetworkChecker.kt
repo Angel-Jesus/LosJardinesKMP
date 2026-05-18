@@ -1,5 +1,5 @@
 package com.pe.losjardines.utils
 
-expect class NetworkChecker {
+interface NetworkChecker {
     fun isConnected(): Boolean
 }

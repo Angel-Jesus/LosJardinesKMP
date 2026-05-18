@@ -15,8 +15,11 @@ kotlin {
         compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
     }
 
-    iosArm64()
-    iosSimulatorArm64()
+    listOf(iosX64(), iosArm64(), iosSimulatorArm64()).forEach { target ->
+        target.binaries.all {
+            linkerOpts("-framework", "SystemConfiguration")
+        }
+    }
     jvm("desktop")
 
     sourceSets {

@@ -6,9 +6,9 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.annotation.RequiresPermission
 
-actual class NetworkChecker(private val context: Context) {
+class AndroidNetworkChecker(private val context: Context) : NetworkChecker {
     @RequiresPermission(Manifest.permission.ACCESS_NETWORK_STATE)
-    actual fun isConnected(): Boolean {
+    override fun isConnected(): Boolean {
         val connectivityManager =
             context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 

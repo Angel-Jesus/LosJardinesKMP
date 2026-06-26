@@ -24,8 +24,6 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
-            // AndroidDx
-            implementation(libs.androidx.startup.runtime)
             // SQLDelight
             implementation(libs.sqldelight.android.driver)
             // Koin

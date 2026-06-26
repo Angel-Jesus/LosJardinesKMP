@@ -19,6 +19,6 @@ fun initKoinModularization(
 ) {
     startKoin {
         config?.invoke(this)
-        modules(uiModules, splashScreenModules, domainModules, dataModules, firebaseModules, databaseModules, networkUtilsModule)
+        modules(uiModules, dataModules, splashScreenModules, networkUtilsModule)
     }
 }

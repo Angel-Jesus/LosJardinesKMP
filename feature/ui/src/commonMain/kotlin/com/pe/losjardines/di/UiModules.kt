@@ -6,11 +6,12 @@ import com.pe.losjardines.presentation.content.registration.viewmodel.Registrati
 import com.pe.losjardines.presentation.content.room.viewmodel.RoomViewModel
 import com.pe.losjardines.presentation.content.utils.ExcelTemplateProvider
 import com.pe.losjardines.presentation.login.viewmodel.LoginViewModel
-import org.koin.core.module.dsl.factoryOf
 import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
 
 val uiModules = module{
+    includes(domainModules)
+
     viewModelOf(::LoginViewModel)
     viewModelOf(::RegistrationViewModel)
     viewModelOf(::ConsultationViewModel)

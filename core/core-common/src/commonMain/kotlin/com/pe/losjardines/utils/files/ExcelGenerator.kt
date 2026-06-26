@@ -11,6 +11,7 @@ interface ExcelGenerator {
     fun generarDesdeTemplate(
         templateStream: PlatformInputStream,
         outputFile: PlatformFile,
-        updates: List<ExcelCellUpdate>
+        updates: List<ExcelCellUpdate>,
+        sheetName: String
     ): Either<Failure, PlatformFile>
 }

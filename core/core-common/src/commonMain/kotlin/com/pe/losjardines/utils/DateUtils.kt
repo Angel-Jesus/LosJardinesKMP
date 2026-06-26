@@ -17,7 +17,10 @@ import kotlinx.datetime.toLocalDateTime
 data class DateParams(
     val year: Int,
     val month: Int,
-    val day: Int
+    val day: Int,
+    val hour: Int = 0,
+    val minute: Int = 0,
+    val second: Int = 0
 )
 fun getDayNow(): LocalDate =
     Clock.System
@@ -30,9 +33,8 @@ fun getDayNowParams(): DateParams {
     val value = Clock.System
         .now()
         .toLocalDateTime(TimeZone.currentSystemDefault())
-        .date
 
-    return DateParams(value.year, value.monthNumber, value.dayOfMonth)
+    return DateParams(value.date.year, value.date.monthNumber, value.date.dayOfMonth, value.hour, value.minute, value.second)
 }
 
 fun LocalDate.toDateStringResult(): String {
@@ -151,6 +153,12 @@ private fun String.parseDate(): LocalDate? {
     } catch (_: Exception) {
         null
     }
+}
+
+fun getLastMonth(): DateParams{
+    val dateNow = getDayNow()
+    val lastMonth = dateNow.minus(1, DateTimeUnit.MONTH)
+    return DateParams(lastMonth.year, lastMonth.monthNumber, lastMonth.dayOfMonth)
 }
 
 fun String.toDayOfMonth(): Int = split("/").firstOrNull()?.toIntOrNull() ?: 0

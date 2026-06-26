@@ -76,7 +76,8 @@ class FakeExcelGenerator : ExcelGenerator {
     override fun generarDesdeTemplate(
         templateStream: PlatformInputStream,
         outputFile: PlatformFile,
-        updates: List<ExcelCellUpdate>
+        updates: List<ExcelCellUpdate>,
+        sheetName: String
     ): Either<Failure, PlatformFile> {
         capturedUpdates = updates
         return Either.Success(outputFile)

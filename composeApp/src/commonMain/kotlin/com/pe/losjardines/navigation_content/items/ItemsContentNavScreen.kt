@@ -37,7 +37,7 @@ sealed class ItemsContentNavScreen(
     )
 
     data object RegistrationNavScreen : ItemsContentNavScreen(
-        route = "Registratio",
+        route = "Registration",
         title = "Registro"
     )
 

@@ -48,7 +48,7 @@ class GenerateExcelReportFileValidationTest {
             excelEditor = ExcelEditor() // implementación real (Apache POI)
         )
 
-        val template = javaClass.classLoader?.getResourceAsStream("reporte_mensual.xlsx")
+        val template = javaClass.classLoader?.getResourceAsStream("reporte_mensual_v1.xlsx")
             ?: error("No se encontró la plantilla reporte_mensual.xlsx en resources de test")
 
         // Ruta fija e inspeccionable: <módulo domain>/build/generated-reports/
@@ -69,9 +69,10 @@ class GenerateExcelReportFileValidationTest {
         println("Reporte generado en: ${File(output.path).absolutePath}")
 
         val section = ExcelCellSection()
+        val sheetName = "${MonthFilter.fromNumber(month)?.displayName.orEmpty().uppercase()} $year"
 
         WorkbookFactory.create(FileInputStream(output.path)).use { workbook ->
-            val sheet = workbook.getSheet("REPORTE MENSUAL")
+            val sheet = workbook.getSheet(sheetName)
                 ?: error("La hoja 'REPORTE MENSUAL' no existe en el archivo generado")
 
             println("\n===== CAPÍTULO II · ALOJAMIENTO (por tipo de habitación) =====")

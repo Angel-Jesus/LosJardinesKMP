@@ -4,8 +4,8 @@ val accommodationSection = listOf(
     AccommodationExcelMap(
         roomType = RoomType.SINGLE,
         cells = mapOf(
-            AccommodationColumn.ROOM_WITH_BATH to CellPosition(27, 3),
-            AccommodationColumn.BEDS to CellPosition(27, 7),
+            //AccommodationColumn.ROOM_WITH_BATH to CellPosition(27, 3),
+            //AccommodationColumn.BEDS to CellPosition(27, 7),
             AccommodationColumn.ARRIVALS to CellPosition(27, 9),
             AccommodationColumn.OCCUPIED_ROOMS to CellPosition(27, 11),
             AccommodationColumn.OVERNIGHTS to CellPosition(27, 13)
@@ -14,8 +14,8 @@ val accommodationSection = listOf(
     AccommodationExcelMap(
         roomType = RoomType.DOUBLE,
         cells = mapOf(
-            AccommodationColumn.ROOM_WITH_BATH to CellPosition(28, 3),
-            AccommodationColumn.BEDS to CellPosition(28, 7),
+            //AccommodationColumn.ROOM_WITH_BATH to CellPosition(28, 3),
+            //AccommodationColumn.BEDS to CellPosition(28, 7),
             AccommodationColumn.ARRIVALS to CellPosition(28, 9),
             AccommodationColumn.OCCUPIED_ROOMS to CellPosition(28, 11),
             AccommodationColumn.OVERNIGHTS to CellPosition(28, 13)
@@ -24,8 +24,8 @@ val accommodationSection = listOf(
     AccommodationExcelMap(
         roomType = RoomType.TRIPLE,
         cells = mapOf(
-            AccommodationColumn.ROOM_WITH_BATH to CellPosition(30, 3),
-            AccommodationColumn.BEDS to CellPosition(30, 7),
+            //AccommodationColumn.ROOM_WITH_BATH to CellPosition(30, 3),
+            //AccommodationColumn.BEDS to CellPosition(30, 7),
             AccommodationColumn.ARRIVALS to CellPosition(30, 9),
             AccommodationColumn.OCCUPIED_ROOMS to CellPosition(30, 11),
             AccommodationColumn.OVERNIGHTS to CellPosition(30, 13)

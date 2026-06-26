@@ -5,6 +5,7 @@ import com.pe.losjardines.base.error.Failure
 import com.pe.losjardines.usecases.model.FilterValues
 import com.pe.losjardines.usecases.model.RegistrationDto
 import com.pe.losjardines.utils.calculateNights
+import com.pe.losjardines.utils.constance.MonthFilter
 import com.pe.losjardines.utils.files.ExcelCellUpdate
 import com.pe.losjardines.utils.files.ExcelGenerator
 import com.pe.losjardines.utils.files.PlatformFile
@@ -25,6 +26,7 @@ import com.pe.losjardines.utils.files.model.RoomType.Companion.getRoomType
 import com.pe.losjardines.utils.files.model.TravelReason
 import com.pe.losjardines.utils.files.model.TravelReason.Companion.getTravelReason
 import com.pe.losjardines.utils.files.model.TravelReasonExcelMap
+import com.pe.losjardines.utils.getLastMonth
 import com.pe.losjardines.utils.toDayOfMonth
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -48,7 +50,9 @@ class GenerateExcelReportUseCase(
             getChapterIV(sections.chapterIV, registrations) +
             getChapterV(sections.chapterV, registrations)
 
-        return when (val result = excelEditor.generarDesdeTemplate(params.templateStream, params.outputFile, updates)) {
+        val sheetName = getSheetName(params.filter)
+
+        return when (val result = excelEditor.generarDesdeTemplate(params.templateStream, params.outputFile, updates, sheetName)) {
             is Either.Success -> result.data
             is Either.Error -> throw result.error
         }
@@ -197,5 +201,16 @@ class GenerateExcelReportUseCase(
         }
 
         return updates
+    }
+
+    private fun getSheetName(filter: FilterValues?): String{
+        if(filter != null){
+            val monthName = MonthFilter.fromDisplayName(filter.month)?.displayName.orEmpty().uppercase()
+            return "$monthName ${filter.year}"
+        } else {
+            val lastMonth = getLastMonth()
+            val monthName = MonthFilter.fromNumber(lastMonth.month)?.displayName.orEmpty().uppercase()
+            return "$monthName ${lastMonth.year}"
+        }
     }
 }

@@ -10,7 +10,8 @@ actual class ExcelEditor actual constructor() : ExcelGenerator {
     actual override fun generarDesdeTemplate(
         templateStream: PlatformInputStream,
         outputFile: PlatformFile,
-        updates: List<ExcelCellUpdate>
+        updates: List<ExcelCellUpdate>,
+        sheetName: String
     ): Either<Failure, PlatformFile> = runCatching {
 
         val workbook = WorkbookFactory.create(
@@ -18,6 +19,12 @@ actual class ExcelEditor actual constructor() : ExcelGenerator {
         ) as XSSFWorkbook
 
         workbook.setForceFormulaRecalculation(true)
+
+        //Name of sheet
+        val sheet = workbook.getSheet("REPORTE MENSUAL")
+        val row = sheet.getRow(3)
+        val cell = row.getCell(0)
+        cell.setCellValue("MES DE: $sheetName")
 
         updates.forEach { update ->
             val sheet = workbook.getSheet(update.sheet) ?: return@forEach
@@ -31,6 +38,9 @@ actual class ExcelEditor actual constructor() : ExcelGenerator {
                 is Boolean -> cell.setCellValue(v)
             }
         }
+
+        workbook.getSheetIndex("REPORTE MENSUAL").takeIf { it != -1 }
+            ?.let { workbook.setSheetName(it, sheetName) }
 
         val javaFile = outputFile.toJavaFile()
         javaFile.parentFile?.mkdirs()

@@ -7,6 +7,7 @@ actual class ExcelEditor actual constructor() : ExcelGenerator {
     actual override fun generarDesdeTemplate(
         templateStream: PlatformInputStream,
         outputFile: PlatformFile,
-        updates: List<ExcelCellUpdate>
+        updates: List<ExcelCellUpdate>,
+        sheetName: String
     ): Either<Failure, PlatformFile> = Either.Error(Failure.fromThrowable(Throwable("Not supported")))
 }

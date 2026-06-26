@@ -10,12 +10,18 @@ actual class ExcelEditor actual constructor() : ExcelGenerator {
     actual override fun generarDesdeTemplate(
         templateStream: PlatformInputStream,
         outputFile: PlatformFile,
-        updates: List<ExcelCellUpdate>
+        updates: List<ExcelCellUpdate>,
+        sheetName: String
     ): Either<Failure, PlatformFile> = runCatching  {
         // Obtiene el InputStream nativo para Apache POI
         val workbook = WorkbookFactory.create(templateStream.toJavaInputStream()) as XSSFWorkbook
 
         workbook.setForceFormulaRecalculation(true)
+        //Name of sheet
+        val sheet = workbook.getSheet("REPORTE MENSUAL")
+        val row = sheet.getRow(3)
+        val cell = row.getCell(0)
+        cell.setCellValue("MES DE: $sheetName")
 
         // Aplica cada modificación
         updates.forEach { update ->
@@ -30,6 +36,9 @@ actual class ExcelEditor actual constructor() : ExcelGenerator {
                 is Boolean -> cell.setCellValue(v)
             }
         }
+
+        workbook.getSheetIndex("REPORTE MENSUAL").takeIf { it != -1 }
+            ?.let { workbook.setSheetName(it, sheetName) }
 
         // Guarda la copia modificada
         val javaFile = outputFile.toJavaFile()

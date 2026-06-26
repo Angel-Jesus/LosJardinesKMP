@@ -15,3 +15,8 @@ fun Double?.toSmartString(): String {
 }
 
 fun String?.orZero(): String = if(this.isNullOrBlank()) "0" else this
+fun Int?.formatedWithZero(): String = when{
+    this == null -> "0"
+    this < 10 -> "0$this"
+    else -> this.toString()
+}

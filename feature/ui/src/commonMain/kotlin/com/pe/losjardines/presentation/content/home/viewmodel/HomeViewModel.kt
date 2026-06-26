@@ -7,7 +7,12 @@ import com.pe.losjardines.presentation.content.home.contract.HomeUiState
 import com.pe.losjardines.presentation.content.utils.ExcelTemplateProvider
 import com.pe.losjardines.usecases.content.GenerateExcelReportUseCase
 import com.pe.losjardines.usecases.model.FilterValues
+import com.pe.losjardines.utils.DateParams
+import com.pe.losjardines.utils.constance.MonthFilter
+import com.pe.losjardines.utils.formatedWithZero
+import com.pe.losjardines.utils.getDateNow
 import com.pe.losjardines.utils.getDayNowParams
+import com.pe.losjardines.utils.getLastMonth
 
 class HomeViewModel(
     private val excelTemplateProvider: ExcelTemplateProvider,
@@ -25,10 +30,8 @@ class HomeViewModel(
         executeTask(
             task = {
                 val dateParams = getDayNowParams()
-                val stream = excelTemplateProvider.openTemplate("reporte_mensual.xlsx")
-                val outputFile = excelTemplateProvider.outputFile(
-                    "${dateParams.year}_${dateParams.month}_${dateParams.day}_reporte_mensual.xlsx"
-                )
+                val stream = excelTemplateProvider.openTemplate("reporte_mensual_v1.xlsx")
+                val outputFile = excelTemplateProvider.outputFile("${generateNameFile(filter, dateParams)}.xlsx")
                 generateExcelReportUseCase.run(GenerateExcelReportUseCase.Params(stream, outputFile, filter))
             },
             onSuccess = {
@@ -43,5 +46,16 @@ class HomeViewModel(
 
     private fun updateRegisterByCloud(){
 
+    }
+
+    private fun generateNameFile(filter: FilterValues?, dateParams: DateParams): String{
+        if(filter != null){
+            val monthName = MonthFilter.fromDisplayName(filter.month)?.displayName.orEmpty().uppercase()
+            return "$monthName ${filter.year}_${dateParams.year}${dateParams.month.formatedWithZero()}${dateParams.day.formatedWithZero()}${dateParams.hour.formatedWithZero()}${dateParams.minute.formatedWithZero()}${dateParams.second.formatedWithZero()}"
+        } else {
+            val lastMonth = getLastMonth()
+            val monthName = MonthFilter.fromNumber(lastMonth.month)?.displayName.orEmpty().uppercase()
+            return "$monthName ${lastMonth.year}_${dateParams.year}${dateParams.month.formatedWithZero()}${dateParams.day.formatedWithZero()}${dateParams.hour.formatedWithZero()}${dateParams.minute.formatedWithZero()}${dateParams.second.formatedWithZero()}"
+        }
     }
 }

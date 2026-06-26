@@ -16,14 +16,13 @@ class SaveCustomerRegistrationUseCase(
     @Throws(Exception::class, CancellationException::class, Failure::class)
     suspend fun run(registrationDto: RegistrationDto) {
         val dto = registrationDto.copy(idFirebase = generateFirebaseDocumentId())
-        val sendResult = firestoreRepository.sendClient(dto)
 
-        val saveResult = if (sendResult is Either.Success) {
-            databaseRepository.saveCustomerInformation(dto, StateProcess.SYNC.description)
-        } else {
-            databaseRepository.saveCustomerInformation(dto, StateProcess.PENDING_INSERT.description)
+        when(val sendResult = firestoreRepository.sendClient(dto)){
+            is Either.Success -> databaseRepository.saveCustomerInformation(dto, StateProcess.SYNC.description)
+            is Either.Error-> when(sendResult.error){
+                is Failure.InternetConnection -> databaseRepository.saveCustomerInformation(dto, StateProcess.PENDING_INSERT.description)
+                else -> throw sendResult.error
+            }
         }
-
-        if (saveResult is Either.Error) throw saveResult.error
     }
 }

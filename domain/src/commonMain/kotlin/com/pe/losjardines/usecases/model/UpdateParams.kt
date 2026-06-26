@@ -1,6 +1,5 @@
 package com.pe.losjardines.usecases.model
 
-import com.pe.losjardines.utils.FirestoreConstance
 import com.pe.losjardines.utils.dateToEpochMillis
 
 data class UpdateParams(
@@ -9,20 +8,20 @@ data class UpdateParams(
     val fieldTypeRegister: FielTypeRegister?
 )
 
-enum class FielTypeRegister(val networkField: String){
-    FULL_NAME(FirestoreConstance.NAME_FIELD),
-    SEX(FirestoreConstance.SEX_FIELD),
-    COUNTRY_OF_RESIDENCE(FirestoreConstance.COUNTRY_FIELD),
-    REGION_OF_RESIDENCE(FirestoreConstance.REGION_FIELD),
-    DOCUMENT_TYPE(FirestoreConstance.TYPE_DOCUMENT_FIELD),
-    DOCUMENT_NUMBER(FirestoreConstance.NUMBER_DOCUMENT_FIELD),
-    TRAVEL_REASON(FirestoreConstance.REASON_TRAVEL_FIELD),
-    CHECK_IN_DATE(FirestoreConstance.DATE_ENTER_FIELD),
-    CHECK_OUT_DATE(FirestoreConstance.DATE_EXIT_FIELD),
-    TYPE_ROOMS(FirestoreConstance.TYPE_ROOMS_FIELD),
-    ROOM(FirestoreConstance.ROOMS_FIELD),
-    RATE(FirestoreConstance.FEE_FIELD),
-    OBSERVATION(FirestoreConstance.OBSERVATION_FIELD);
+enum class FielTypeRegister {
+    FULL_NAME,
+    SEX,
+    COUNTRY_OF_RESIDENCE,
+    REGION_OF_RESIDENCE,
+    DOCUMENT_TYPE,
+    DOCUMENT_NUMBER,
+    TRAVEL_REASON,
+    CHECK_IN_DATE,
+    CHECK_OUT_DATE,
+    TYPE_ROOMS,
+    ROOM,
+    RATE,
+    OBSERVATION;
 
     companion object {
         fun FielTypeRegister.getValueByField(newValue: String): Any {

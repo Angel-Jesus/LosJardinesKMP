@@ -3,22 +3,21 @@ package com.pe.losjardines.presentation.content.utils
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.pe.losjardines.usecases.model.FielTypeRegister
-import com.pe.losjardines.utils.FirestoreConstance
 
-enum class FieldRegistration(val displayName: String, val dimensionWidth: Dp, val networkField: String) {
-    FULL_NAME("Nombres y Apellidos", 200.dp, FirestoreConstance.NAME_FIELD),
-    SEX("Sexo", 48.dp, FirestoreConstance.SEX_FIELD),
-    COUNTRY_OF_RESIDENCE("País", 64.dp, FirestoreConstance.COUNTRY_FIELD),
-    REGION_OF_RESIDENCE("Región", 64.dp, FirestoreConstance.REGION_FIELD),
-    DOCUMENT_TYPE("T. Documento", 100.dp, FirestoreConstance.TYPE_DOCUMENT_FIELD),
-    DOCUMENT_NUMBER("N° Documento", 100.dp, FirestoreConstance.NUMBER_DOCUMENT_FIELD),
-    TRAVEL_REASON("Motivo de Viaje", 200.dp, FirestoreConstance.REASON_TRAVEL_FIELD),
-    CHECK_IN_DATE("Fecha de ingreso", 120.dp, FirestoreConstance.DATE_ENTER_FIELD),
-    CHECK_OUT_DATE("Fecha de salida", 120.dp, FirestoreConstance.DATE_EXIT_FIELD),
-    TYPE_ROOM("Tipo de habitación", 120.dp, FirestoreConstance.TYPE_ROOMS_FIELD),
-    ROOM("N° Habitación", 100.dp, FirestoreConstance.ROOMS_COLLECTION),
-    RATE("Tarifa", 80.dp, FirestoreConstance.FEE_FIELD),
-    OBSERVATION("Observación", 200.dp, FirestoreConstance.OBSERVATION_FIELD);
+enum class FieldRegistration(val displayName: String, val dimensionWidth: Dp) {
+    FULL_NAME("Nombres y Apellidos", 200.dp),
+    SEX("Sexo", 48.dp),
+    COUNTRY_OF_RESIDENCE("País", 64.dp),
+    REGION_OF_RESIDENCE("Región", 64.dp),
+    DOCUMENT_TYPE("T. Documento", 100.dp),
+    DOCUMENT_NUMBER("N° Documento", 100.dp),
+    TRAVEL_REASON("Motivo de Viaje", 200.dp),
+    CHECK_IN_DATE("Fecha de ingreso", 120.dp),
+    CHECK_OUT_DATE("Fecha de salida", 120.dp),
+    TYPE_ROOM("Tipo de habitación", 120.dp),
+    ROOM("N° Habitación", 100.dp),
+    RATE("Tarifa", 80.dp),
+    OBSERVATION("Observación", 200.dp);
 
     companion object{
         fun FieldRegistration.toFielTypeRegister(): FielTypeRegister {

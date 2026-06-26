@@ -1,4 +1,4 @@
-package com.pe.losjardines.utils
+package com.pe.losjardines.firebase.firestore
 
 object FirestoreConstance{
     const val ROOMS_COLLECTION = "Rooms"

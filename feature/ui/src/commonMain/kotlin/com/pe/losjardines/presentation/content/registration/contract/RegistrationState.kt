@@ -14,6 +14,7 @@ data class RegistrationState(
     val documentNumber: TextFieldValue = TextFieldValue(),
     val checkInDate: String = String.EMPTY,
     val checkOutDate: String = String.EMPTY,
+    val typeRoom: String = String.EMPTY,
     val room: TextFieldValue = TextFieldValue(),
     val rate: TextFieldValue = TextFieldValue(),
     val observation: TextFieldValue = TextFieldValue()

@@ -19,6 +19,7 @@ enum class FielTypeRegister(val networkField: String){
     TRAVEL_REASON(FirestoreConstance.REASON_TRAVEL_FIELD),
     CHECK_IN_DATE(FirestoreConstance.DATE_ENTER_FIELD),
     CHECK_OUT_DATE(FirestoreConstance.DATE_EXIT_FIELD),
+    TYPE_ROOMS(FirestoreConstance.TYPE_ROOMS_FIELD),
     ROOM(FirestoreConstance.ROOMS_FIELD),
     RATE(FirestoreConstance.FEE_FIELD),
     OBSERVATION(FirestoreConstance.OBSERVATION_FIELD);
@@ -43,6 +44,7 @@ enum class FielTypeRegister(val networkField: String){
                 TRAVEL_REASON -> registrationDto.copy(reasonTravel = newValue)
                 CHECK_IN_DATE -> registrationDto.copy(dateEnter = newValue)
                 CHECK_OUT_DATE -> registrationDto.copy(dateExit = newValue)
+                TYPE_ROOMS -> registrationDto.copy(typeRoom = newValue)
                 ROOM -> registrationDto.copy(room = newValue)
                 RATE -> registrationDto.copy(fee = newValue)
                 OBSERVATION -> registrationDto.copy(observation = newValue)

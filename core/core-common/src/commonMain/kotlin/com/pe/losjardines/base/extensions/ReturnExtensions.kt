@@ -11,8 +11,8 @@ suspend fun <T> Flow<Either<Failure, T>>.collectEither(
 ){
     this.collect{ result ->
         when(result){
-            is Either.Success -> onSuccess(result.value)
-            is Either.Error -> onError(result.value)
+            is Either.Success -> onSuccess(result.data)
+            is Either.Error -> onError(result.error)
         }
 
     }
@@ -23,7 +23,7 @@ suspend fun <T> Either<Failure, T>.collectEither(
     onError: suspend (Failure) -> Unit = {}
 ){
     when(this){
-        is Either.Success -> onSuccess(this.value)
-        is Either.Error -> onError(this.value)
+        is Either.Success -> onSuccess(this.data)
+        is Either.Error -> onError(this.error)
     }
 }

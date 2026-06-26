@@ -14,11 +14,26 @@ import kotlinx.datetime.plus
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
 
+data class DateParams(
+    val year: Int,
+    val month: Int,
+    val day: Int
+)
 fun getDayNow(): LocalDate =
     Clock.System
         .now()
         .toLocalDateTime(TimeZone.currentSystemDefault())
         .date
+
+
+fun getDayNowParams(): DateParams {
+    val value = Clock.System
+        .now()
+        .toLocalDateTime(TimeZone.currentSystemDefault())
+        .date
+
+    return DateParams(value.year, value.monthNumber, value.dayOfMonth)
+}
 
 fun LocalDate.toDateStringResult(): String {
     val day = dayOfMonth.toString().padStart(2, '0')
@@ -117,3 +132,25 @@ fun Long?.toLocalDate(): String {
     val localDate = Instant.fromEpochMilliseconds(this).toLocalDateTime(TimeZone.UTC).date
     return localDate.toDateStringResult()
 }
+
+fun calculateNights(dateEnter: String, dateExit: String): Int{
+    return try {
+        val enter = dateEnter.parseDate() ?: return 0
+        val exit = dateExit.parseDate() ?: return 0
+        (exit.toEpochDays() - enter.toEpochDays()).coerceAtLeast(1)
+    } catch (_: Exception) {
+        0
+    }
+}
+
+private fun String.parseDate(): LocalDate? {
+    val parts = split("/")
+    if (parts.size != 3) return null
+    return try {
+        LocalDate(year = parts[2].toInt(), monthNumber = parts[1].toInt(), dayOfMonth = parts[0].toInt())
+    } catch (_: Exception) {
+        null
+    }
+}
+
+fun String.toDayOfMonth(): Int = split("/").firstOrNull()?.toIntOrNull() ?: 0

@@ -57,7 +57,7 @@ fun DropDownAJ(
         label?.let {
             Text(
                 text = label,
-                style = typography.titleMedium
+                style = typography.titleSmall
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -79,7 +79,7 @@ fun DropDownAJ(
                         Text(
                             text = placeholder,
                             color = SoftTextColor,
-                            style = typography.titleSmall
+                            style = typography.bodyMedium
                         )
                     }
                 } else { null },

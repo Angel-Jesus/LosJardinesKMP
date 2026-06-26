@@ -8,9 +8,9 @@ import com.pe.losjardines.presentation.content.consultation.screen.UpdateFieldPa
 import com.pe.losjardines.presentation.content.utils.FieldFilter
 import com.pe.losjardines.presentation.content.utils.FieldRegistration.Companion.toFielTypeRegister
 import com.pe.losjardines.usecases.content.GetClientsRegisterUseCase
-import com.pe.losjardines.usecases.content.GetCountriesUseCase
-import com.pe.losjardines.usecases.content.GetReasonTravelsUseCase
-import com.pe.losjardines.usecases.content.GetRegionsUseCase
+import com.pe.losjardines.usecases.catalog.GetCountriesUseCase
+import com.pe.losjardines.usecases.catalog.GetReasonTravelsUseCase
+import com.pe.losjardines.usecases.catalog.GetRegionsUseCase
 import com.pe.losjardines.usecases.content.UpdateClientInfoUseCase
 import com.pe.losjardines.usecases.model.CountryDto
 import com.pe.losjardines.usecases.model.FielTypeRegister.Companion.getRegisterUpdate
@@ -50,9 +50,8 @@ class ConsultationViewModel(
            fieldTypeRegister = fieldParams?.field?.toFielTypeRegister()
         )
 
-        executeUseCase(
-            useCase = updateClientInfoUseCase,
-            params = UpdateClientInfoUseCase.Params(updateParams),
+        executeTask(
+            task = { updateClientInfoUseCase.run(updateParams) },
             onSuccess = {
                 val clientUpdate = uiState.value.clientsRegister.map {
                     if(it.id == fieldParams?.id){
@@ -72,13 +71,12 @@ class ConsultationViewModel(
     private fun getCatalogInformation(){
         getCountries()
         getTravelReasons()
-        getRegions("PE")
+        getRegions()
     }
 
     private fun getCountries(){
-        executeUseCase(
-            useCase = getCountriesUseCase,
-            params = Unit,
+        executeTask(
+            task = { getCountriesUseCase.run() },
             onSuccess = { countries ->
                 catalogState.update { it.copy(countries = countries) }
             }
@@ -86,19 +84,17 @@ class ConsultationViewModel(
     }
 
     private fun getTravelReasons(){
-        executeUseCase(
-            useCase = getReasonTravelsUseCase,
-            params = Unit,
+        executeTask(
+            task = { getReasonTravelsUseCase.run() },
             onSuccess = { travelReasons ->
                 catalogState.update { it.copy(travelReasons = travelReasons) }
             }
         )
     }
 
-    private fun getRegions(countryId: String){
-        executeUseCase(
-            useCase = getRegionsUseCase,
-            params = GetRegionsUseCase.Params(countryId),
+    private fun getRegions(){
+        executeTask(
+            task = { getRegionsUseCase.run("PE") },
             onSuccess = { regions ->
                 catalogState.update { it.copy(regions = regions) }
             }
@@ -122,9 +118,8 @@ class ConsultationViewModel(
         getCatalogInformation()
 
         updateState { copy(loading = true)}
-        executeUseCase(
-            useCase = getClientsRegisterUseCase,
-            params = GetClientsRegisterUseCase.Params(filter),
+        executeTask(
+            task = { getClientsRegisterUseCase.run(filter) },
             onSuccess = {
                 updateState { copy(clientsRegister = it, loading = false, showClearFilter = true) }
             },

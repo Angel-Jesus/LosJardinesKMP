@@ -22,9 +22,8 @@ class RoomViewModel(
     private fun updateStateRoom(room: RoomDto) {
         updateState { copy(loading = true) }
 
-        executeUseCase(
-            useCase = updateStateRoomUseCase,
-            params = UpdateStateRoomUseCase.Params(room),
+        executeTask(
+            task = { updateStateRoomUseCase.run(room) },
             onSuccess = {
                 val roomUpdated = uiState.value.rooms.map {
                     if(it.room == room.room){
@@ -44,9 +43,8 @@ class RoomViewModel(
 
     private fun getRoomState() {
         updateState { copy(loading = true) }
-        executeUseCase(
-            useCase = getRoomStateUseCase,
-            params = Unit,
+        executeTask(
+            task = { getRoomStateUseCase.run() },
             onSuccess = {
                 updateState {
                     copy(rooms = it, loading = false)

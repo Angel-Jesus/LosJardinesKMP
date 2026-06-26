@@ -55,6 +55,7 @@ import losjardineskmp.feature.ui.generated.resources.room_input
 import losjardineskmp.feature.ui.generated.resources.sex_input
 import losjardineskmp.feature.ui.generated.resources.stay_detail_information_title
 import losjardineskmp.feature.ui.generated.resources.travel_reason_input
+import losjardineskmp.feature.ui.generated.resources.type_room_input
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -72,6 +73,7 @@ fun RegistrationMobileScreen(
     val countryCatalog by viewModel.countryCatalog.collectAsState()
     val regionCatalog by viewModel.regionCatalog.collectAsState()
     val travelReasonCatalog by viewModel.reasonTravelCatalog.collectAsState()
+    val typeRoomsCatalog by viewModel.typeRoomsCatalog.collectAsState()
 
     val fullName by viewModel.fullName.collectAsState()
     val sex by viewModel.sex.collectAsState()
@@ -82,6 +84,7 @@ fun RegistrationMobileScreen(
     val documentNumber by viewModel.documentNumber.collectAsState()
     val checkInDate by viewModel.checkInDate.collectAsState()
     val checkOutDate by viewModel.checkOutDate.collectAsState()
+    val typeRoom by viewModel.typeRoom.collectAsState()
     val room by viewModel.room.collectAsState()
     val rate by viewModel.fee.collectAsState()
     val observation by viewModel.observation.collectAsState()
@@ -108,12 +111,13 @@ fun RegistrationMobileScreen(
         viewModel.effect.collectLatest { effect ->
             isLoading = false
 
-            when(effect){
+            showResult = when(effect){
                 is RegistrationEffect.ErrorSave -> {
-                    showResult = Pair(ResultState.ERROR, effect.message)
+                    Pair(ResultState.ERROR, effect.message)
                 }
+
                 is RegistrationEffect.SuccessSave -> {
-                    showResult = Pair(ResultState.SUCCESS, effect.message.orEmpty())
+                    Pair(ResultState.SUCCESS, effect.message.orEmpty())
                 }
             }
         }
@@ -297,6 +301,18 @@ fun RegistrationMobileScreen(
                     showDatePicker = Pair(FieldRegistration.CHECK_OUT_DATE, true)
                 },
                 label = stringResource(Res.string.check_out_date_input)
+            )
+        }
+
+        item {
+            DropDownAJ(
+                modifier = Modifier.fillMaxWidth(),
+                label = stringResource(Res.string.type_room_input),
+                options = typeRoomsCatalog.map { it.description },
+                selectedOption = typeRoom,
+                onOptionSelected = {
+                    viewModel.onEvent(RegistrationEvent.ValueChanged(it, FieldRegistration.TYPE_ROOM))
+                }
             )
         }
 

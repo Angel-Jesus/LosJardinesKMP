@@ -26,6 +26,8 @@ kotlin {
         val desktopMain by getting
 
         androidMain.dependencies {
+            // Apache
+            implementation(libs.apache.poi.ooxml)
         }
         commonMain.dependencies {
             implementation(libs.androidx.lifecycle.viewmodel.compose)
@@ -45,7 +47,8 @@ kotlin {
         }
 
         desktopMain.dependencies {
-
+            // Apache
+            implementation(libs.apache.poi.ooxml)
         }
     }
 }

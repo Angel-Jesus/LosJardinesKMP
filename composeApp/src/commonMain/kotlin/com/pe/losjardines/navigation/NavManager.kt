@@ -9,7 +9,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.pe.losjardines.navigation.items.ItemsNavScreen
 import com.pe.losjardines.navigation.ui.SplashScreen
-import com.pe.losjardines.navigation_content.NavContentManager
+import com.pe.losjardines.navigation_content.navContentMobileManager
 import com.pe.losjardines.presentation.login.screen.LoginScreen
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -72,8 +72,8 @@ fun NavManager(
             )
         }
 
-        composable(ItemsNavScreen.ContentNavScreen.route){
-            NavContentManager(
+        if(isMobile()){
+            navContentMobileManager(
                 onLogout = {
                     navigationViewModel.logout()
                     navController.navigate(
@@ -84,9 +84,12 @@ fun NavManager(
                             }
                         }
                     )
-                }
+                },
+                navController = navController
             )
         }
+
+
     }
 }
 

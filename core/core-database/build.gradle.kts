@@ -71,6 +71,9 @@ sqldelight{
     databases{
         create("Database"){
             packageName.set("com.pe.losjardines.cache")
+            schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
+            verifyMigrations.set(true)
+            version = 1
         }
     }
 }

@@ -14,6 +14,7 @@ object FirestoreConstance{
     const val COUNTRY_FIELD = "country"
     const val REGION_FIELD = "region"
     const val REASON_TRAVEL_FIELD = "reasonTravel"
+    const val TYPE_ROOMS_FIELD = "typeRooms"
     const val ROOMS_FIELD = "rooms"
     const val FEE_FIELD = "fee"
     const val OBSERVATION_FIELD = "observation"

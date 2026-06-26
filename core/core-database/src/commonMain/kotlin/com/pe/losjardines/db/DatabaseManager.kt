@@ -10,12 +10,15 @@ class DatabaseManager(
     fun syncCountry() = database.databaseQueries.insertCountries()
     fun syncRegion() = database.databaseQueries.insertRegions()
     fun syncReasonTravels() = database.databaseQueries.insertReasonTravel()
+    fun syncTypeRooms() = database.databaseQueries.insertTypeRooms()
 
     fun getCountries() = database.databaseQueries.getCountries().executeAsList()
     fun getRegionsByCountry(countryId: String) =
         database.databaseQueries.getRegionsByCountry(countryId).executeAsList()
 
     fun getReasonTravels() = database.databaseQueries.getReasonTravels().executeAsList()
+
+    fun getTypeRoom() = database.databaseQueries.getTypeRooms().executeAsList()
     fun saveCustomerInformation(registrationDb: RegistrationDb) = database.databaseQueries.insertRegistration(
         collection = registrationDb.collection,
         idFirebase = registrationDb.idFirebase,
@@ -31,6 +34,7 @@ class DatabaseManager(
         reasonTravel = registrationDb.reasonTravel,
         region = registrationDb.region,
         room = registrationDb.room,
+        typeRoom = registrationDb.typeRoom,
         companions = registrationDb.companions,
         state = registrationDb.state
     )
@@ -56,6 +60,7 @@ class DatabaseManager(
         observation = registrationDb.observation,
         reasonTravel = registrationDb.reasonTravel,
         region = registrationDb.region,
+        typeRoom = registrationDb.typeRoom,
         room = registrationDb.room,
         companions = null,
         state = registrationDb.state,

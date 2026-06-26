@@ -9,6 +9,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
@@ -46,6 +47,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
@@ -107,21 +109,11 @@ data class UpdateFieldParams(
 @Composable
 fun ConsultationMobileScreen(
     title: String,
-    viewModel: ConsultationViewModel = koinViewModel(),
-    typography: AppTypography = LocalAppTypographyCore.current
+    viewModel: ConsultationViewModel = koinViewModel()
 ) {
-    val sharedScrollState = rememberScrollState()
-    var isExpanded by rememberSaveable { mutableStateOf(false) }
     val uiState by viewModel.uiState.collectAsState()
-    var updateFieldParams by remember { mutableStateOf(UpdateFieldParams()) }
-    var deleteParams by remember { mutableStateOf(Triple(false, 0L, String.EMPTY)) }
     val catalog by viewModel.catalogState.collectAsState()
-
-    val rotationState by animateFloatAsState(
-        targetValue = if (isExpanded) 180f else 0f,
-        animationSpec = tween(durationMillis = 300),
-        label = "rotation"
-    )
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME){
         viewModel.onEvent(ConsultationEvent.GetClientsRegister())
@@ -134,11 +126,41 @@ fun ConsultationMobileScreen(
         )
     }
 
-    if(deleteParams.first){
+    ConsultationContent(
+        isExpanded = isExpanded,
+        dispatcherEvent = viewModel::onEvent,
+        title = title,
+        uiState = uiState,
+        catalog = catalog
+    )
+
+}
+
+@Composable
+private fun ConsultationContent(
+    isExpanded: Boolean,
+    dispatcherEvent: (ConsultationEvent) -> Unit,
+    title: String,
+    uiState: ConsultationState,
+    catalog: ConsultationViewModel.CatalogState,
+    typography: AppTypography = LocalAppTypographyCore.current
+) {
+    val sharedScrollState = rememberScrollState()
+    var isExpanded1 = isExpanded
+    var updateFieldParams by remember { mutableStateOf(UpdateFieldParams()) }
+    var deleteParams by remember { mutableStateOf(Triple(false, 0L, String.EMPTY)) }
+
+    val rotationState by animateFloatAsState(
+        targetValue = if (isExpanded1) 180f else 0f,
+        animationSpec = tween(durationMillis = 300),
+        label = "rotation"
+    )
+
+    if (deleteParams.first) {
 
     }
 
-    if(updateFieldParams.show){
+    if (updateFieldParams.show) {
         FieldUpdateDialog(
             title = updateFieldParams.title,
             descriptiion = updateFieldParams.description,
@@ -150,7 +172,12 @@ fun ConsultationMobileScreen(
                 updateFieldParams = UpdateFieldParams()
             },
             onConfirm = { value ->
-                viewModel.onEvent(ConsultationEvent.UpdateClientInformation(value, updateFieldParams))
+                dispatcherEvent(
+                    ConsultationEvent.UpdateClientInformation(
+                        value,
+                        updateFieldParams
+                    )
+                )
                 updateFieldParams = UpdateFieldParams()
             }
         )
@@ -169,17 +196,17 @@ fun ConsultationMobileScreen(
         item {
             FilterSectionComponent(
                 typography = typography,
-                isExpanded = isExpanded,
+                isExpanded = isExpanded1,
                 rotationState = rotationState,
-                onChangeExpanded = { isExpanded = it },
+                onChangeExpanded = { isExpanded1 = it },
                 onChangeValue = { value, field ->
-                    viewModel.onEvent(ConsultationEvent.ValueChanged(value, field))
+                    dispatcherEvent(ConsultationEvent.ValueChanged(value, field))
                 },
                 onFilterClick = {
-                    viewModel.onEvent(ConsultationEvent.Filter)
+                    dispatcherEvent(ConsultationEvent.Filter)
                 },
                 onClearFilterClick = {
-                    viewModel.onEvent(ConsultationEvent.ClearFilter)
+                    dispatcherEvent(ConsultationEvent.ClearFilter)
                 },
                 uiState = uiState
             )
@@ -218,7 +245,6 @@ fun ConsultationMobileScreen(
             }
         }
     }
-
 }
 
 @Composable
@@ -708,7 +734,7 @@ private fun FilterSectionComponent(
                     placeholder = stringResource(Res.string.search_dni_input)
                 )
 
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(modifier = Modifier.padding(top = 8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     ButtonAJ(
                         modifier = Modifier.weight(1f),
                         text = stringResource(Res.string.filter_button),
@@ -749,6 +775,14 @@ private fun Modifier.lineDividerSectionTable(): Modifier {
 @Composable
 fun ConsultationMobileScreenPreview() {
     AppTheme {
-        ConsultationMobileScreen(title = "Consulta")
+        Box(modifier = Modifier.background(Color.White)){
+            ConsultationContent(
+                title = "Consulta",
+                isExpanded = true,
+                dispatcherEvent = {},
+                uiState = ConsultationState(),
+                catalog = ConsultationViewModel.CatalogState()
+            )
+        }
     }
 }

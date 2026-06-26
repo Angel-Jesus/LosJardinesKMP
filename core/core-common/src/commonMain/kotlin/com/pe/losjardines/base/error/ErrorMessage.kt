@@ -47,11 +47,11 @@ fun FirestoreErrorType.getMessage(): String{
 
 fun Failure.getMessage(): String? {
     return when(this){
-        is Failure.DatabaseFailure -> this.message
-        is Failure.FirebaseAuthFailure -> this.message
-        is Failure.FirestoreFailure -> this.message
-        is Failure.InternetConnection -> this.message
+        is Failure.DatabaseFailure -> this.messageError
+        is Failure.FirebaseAuthFailure -> this.messageError
+        is Failure.FirestoreFailure -> this.messageError
+        is Failure.InternetConnection -> this.messageError
         is Failure.MapperToDomain -> this.exception?.message
-        is Failure.UnknownFailure -> this.message
+        is Failure.UnknownFailure -> this.messageError
     }
 }

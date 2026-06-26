@@ -13,13 +13,13 @@ abstract class BaseDatabase {
             withContext(Dispatchers.IO){
                 val value = databaseCall.invoke()
                 if (value == null){
-                    Either.Error(Failure.DatabaseFailure(message = "Value not found"))
+                    Either.Error(Failure.DatabaseFailure(messageError = "Value not found"))
                 } else {
                     Either.Success(value)
                 }
             }
         } catch (e: Exception){
-            Either.Error(Failure.DatabaseFailure(message = e.message))
+            Either.Error(Failure.DatabaseFailure(messageError = e.message))
         }
 
     }

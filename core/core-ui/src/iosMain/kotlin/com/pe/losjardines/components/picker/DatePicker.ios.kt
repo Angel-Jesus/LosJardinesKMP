@@ -59,7 +59,7 @@ actual fun NativeDatePicker(
         date = initialDate?.toNSDate() ?: NSDate()
         minimumDate = minDate?.toNSDate()
         maximumDate = maxDate?.toNSDate()
-        translatesAutoresizingMaskIntoConstraints = false // ✅ necesario para usar constraints
+        translatesAutoresizingMaskIntoConstraints = false
     }
 
     val alert = UIAlertController.alertControllerWithTitle(
@@ -70,7 +70,6 @@ actual fun NativeDatePicker(
 
     alert.view.addSubview(picker)
 
-    // ✅ Constraints para centrar y posicionar el picker dentro del alert
     NSLayoutConstraint.activateConstraints(listOf(
         picker.centerXAnchor.constraintEqualToAnchor(alert.view.centerXAnchor),
         picker.topAnchor.constraintEqualToAnchor(alert.view.topAnchor, constant = 50.0),

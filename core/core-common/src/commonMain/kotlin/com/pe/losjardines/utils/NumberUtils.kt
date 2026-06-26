@@ -13,3 +13,5 @@ fun Double?.toSmartString(): String {
         "$intPart.${decPart.toString().padStart(2, '0')}"
     }
 }
+
+fun String?.orZero(): String = if(this.isNullOrBlank()) "0" else this

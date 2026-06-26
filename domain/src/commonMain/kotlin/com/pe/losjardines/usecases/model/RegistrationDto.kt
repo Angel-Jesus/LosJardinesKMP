@@ -15,6 +15,7 @@ data class RegistrationDto(
     val observation: String = "",
     val reasonTravel: String,
     val region: String,
+    val typeRoom: String,
     val room: String,
     val companions: List<String> = emptyList()
 )

@@ -17,6 +17,7 @@ CREATE TABLE registration(
     observation TEXT,
     reasonTravel TEXT,
     region TEXT,
+    typeRoom TEXT,
     room TEXT,
     companions TEXT,
     state TEXT
@@ -43,6 +44,7 @@ INSERT INTO registration(
     reasonTravel,
     region,
     room,
+    typeRoom,
     companions,
     state
 ) VALUES (
@@ -60,6 +62,7 @@ INSERT INTO registration(
     :reasonTravel,
     :region,
     :room,
+    :typeRoom,
     :companions,
     :state
 );
@@ -82,6 +85,7 @@ SET
     reasonTravel = :reasonTravel,
     region = :region,
     room = :room,
+    typeRoom = :typeRoom,
     companions = :companions,
     state = :state
 WHERE id = :id;
@@ -218,3 +222,21 @@ INSERT INTO reason_travel (id, code, description) VALUES
 -- Get reasonTravel
 getReasonTravels:
 SELECT * FROM reason_travel;
+
+-- Create Type Room table
+CREATE TABLE type_room(
+    code TEXT PRIMARY KEY,
+    description TEXT
+);
+
+-- Insert values of type room
+insertTypeRooms:
+INSERT INTO type_room (code, description) VALUES
+('SI', 'Simple'),
+('MA', 'Matrimonial'),
+('TR', 'Triple'),
+('OT', 'Otros');
+
+-- Get type room
+getTypeRooms:
+SELECT * FROM type_room;

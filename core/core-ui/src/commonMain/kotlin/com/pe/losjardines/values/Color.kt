@@ -4,6 +4,8 @@ import androidx.compose.ui.graphics.Color
 
 val BackgroundBrandColor = Color(0xFFEA4545)
 val BackgroundDarkColor = Color(0xFF000000)
+
+val BackgroundBrandLightColor = Color(0x25EA4545)
 val BackgroundLightColor = Color(0xFFFFFFFF)
 val BackgroundBrandInvertedColor = Color(0xFFFFFFFF)
 
@@ -29,3 +31,4 @@ val BorderAvailableRoom = Color(0xFF008000)
 val BorderUnavailableRoom = Color(0xFF800000)
 val BackgroundAvailableRoom = Color(0x66D4ECD4)
 val BackgroundUnavailableRoom = Color(0x66ECCCCC)
+val SidebarBorderDark = Color(0xFFE2E8F0)

@@ -15,6 +15,7 @@ enum class FieldRegistration(val displayName: String, val dimensionWidth: Dp, va
     TRAVEL_REASON("Motivo de Viaje", 200.dp, FirestoreConstance.REASON_TRAVEL_FIELD),
     CHECK_IN_DATE("Fecha de ingreso", 120.dp, FirestoreConstance.DATE_ENTER_FIELD),
     CHECK_OUT_DATE("Fecha de salida", 120.dp, FirestoreConstance.DATE_EXIT_FIELD),
+    TYPE_ROOM("Tipo de habitación", 120.dp, FirestoreConstance.TYPE_ROOMS_FIELD),
     ROOM("N° Habitación", 100.dp, FirestoreConstance.ROOMS_COLLECTION),
     RATE("Tarifa", 80.dp, FirestoreConstance.FEE_FIELD),
     OBSERVATION("Observación", 200.dp, FirestoreConstance.OBSERVATION_FIELD);
@@ -31,6 +32,7 @@ enum class FieldRegistration(val displayName: String, val dimensionWidth: Dp, va
                 TRAVEL_REASON -> FielTypeRegister.TRAVEL_REASON
                 CHECK_IN_DATE -> FielTypeRegister.CHECK_IN_DATE
                 CHECK_OUT_DATE -> FielTypeRegister.CHECK_OUT_DATE
+                TYPE_ROOM -> FielTypeRegister.TYPE_ROOMS
                 ROOM -> FielTypeRegister.ROOM
                 RATE -> FielTypeRegister.RATE
                 OBSERVATION -> FielTypeRegister.OBSERVATION

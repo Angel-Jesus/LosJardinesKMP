@@ -3,8 +3,8 @@ package com.pe.losjardines.base.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pe.losjardines.base.error.Failure
-import com.pe.losjardines.base.extensions.collectEither
-import com.pe.losjardines.base.usecase.BaseSafeUseCase
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,6 +16,9 @@ import kotlinx.coroutines.launch
 abstract class BaseViewModel<S : BaseUiState, E: BaseEvent, F: BaseEffect>(
     initialState: S
 ): ViewModel(){
+    // Jobs
+    private var executeJob: Job? = null
+    private var executeParallelJob: Job? = null
 
     // Ui State
     private val _uiState = MutableStateFlow(initialState)
@@ -45,17 +48,40 @@ abstract class BaseViewModel<S : BaseUiState, E: BaseEvent, F: BaseEffect>(
     }
 
 
-    protected fun <Params, Result> executeUseCase(
-        useCase: BaseSafeUseCase<Params, Result>,
-        params: Params,
+    protected fun <Result> executeTask(
+        task: suspend () -> Result,
         onSuccess: suspend (Result) -> Unit,
         onError: suspend (Failure) -> Unit = {}
     ){
-        viewModelScope.launch {
-            useCase.execute(params).collectEither(
-                onSuccess = onSuccess,
-                onError = onError
-            )
+        executeJob?.cancel()
+        executeJob = viewModelScope.launch {
+            try {
+                val result = task.invoke()
+                onSuccess(result)
+            }catch (e: Throwable){
+                onError(Failure.fromThrowable(throwable = e))
+            }
+        }
+    }
+
+    // ── 3 use cases en paralelo ────────────────────────────────────────────────
+    protected fun <R1, R2, R3> executeParallel(
+        first: suspend () -> R1,
+        second: suspend () -> R2,
+        third: suspend () -> R3,
+        onSuccess: suspend (R1, R2, R3) -> Unit,
+        onError: suspend (Failure) -> Unit = {}
+    ) {
+        executeParallelJob?.cancel()
+        executeParallelJob = viewModelScope.launch {
+            try {
+                val r1 = async { first() }
+                val r2 = async { second() }
+                val r3 = async { third() }
+                onSuccess(r1.await(), r2.await(), r3.await())
+            } catch (e: Throwable) {
+                onError(Failure.fromThrowable(e))
+            }
         }
     }
 

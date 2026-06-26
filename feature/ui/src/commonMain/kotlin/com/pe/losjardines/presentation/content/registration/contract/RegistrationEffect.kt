@@ -2,7 +2,7 @@ package com.pe.losjardines.presentation.content.registration.contract
 
 import com.pe.losjardines.base.ui.BaseEffect
 
-sealed class RegistrationEffect: BaseEffect {
-    data class SuccessSave(val message: String? = null): RegistrationEffect()
-    data class ErrorSave(val message: String): RegistrationEffect()
+sealed interface RegistrationEffect: BaseEffect {
+    data class SuccessSave(val message: String? = null): RegistrationEffect
+    data class ErrorSave(val message: String): RegistrationEffect
 }

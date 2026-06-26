@@ -10,5 +10,6 @@ class SyncronizationUseCase(
         databaseRepository.syncCountries()
         databaseRepository.syncRegions()
         databaseRepository.syncReasonTravels()
+        databaseRepository.syncTypeRooms()
     }
 }

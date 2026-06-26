@@ -20,8 +20,16 @@ class LoginViewModel(
 ) {
     override fun onEvent(event: LoginEvent) {
         when (event) {
-            is LoginEvent.EnterLogin -> enterLogin(event.email, event.password)
+            is LoginEvent.EnterLogin -> enterLogin()
             is LoginEvent.CheckSession -> checkSession()
+            is LoginEvent.UpdateValue -> updateValue(event.value, event.field)
+        }
+    }
+
+    private fun updateValue(value: String, field: FieldType) {
+        when(field){
+            FieldType.EMAIL -> updateState { copy(email = value) }
+            FieldType.PASSWORD -> updateState { copy(password = value) }
         }
     }
 
@@ -33,11 +41,10 @@ class LoginViewModel(
         }
     }
 
-    private fun enterLogin(email: String, password: String){
-        updateState { copy( messageTest = "espere....") }
-        executeUseCase(
-            useCase = loginUseCase,
-            params = LoginUseCase.Params(email, password),
+    private fun enterLogin(){
+        updateState { copy( messageError = "") }
+        executeTask(
+            task = { loginUseCase.run(uiState.value.email, uiState.value.password) },
             onSuccess = {
                 syncronizationUseCase.invoke()
                 sendEffect(LoginEffect.LoginSuccess)
@@ -45,13 +52,18 @@ class LoginViewModel(
             onError = { failure ->
                 when(failure){
                     is Failure.FirebaseAuthFailure -> {
-                        updateState { copy( messageTest = failure.message) }
+                        updateState { copy( messageError = failure.messageError) }
                     }
                     else -> {
-                        updateState { copy( messageTest = "Error desconocido") }
+                        updateState { copy( messageError = "Error desconocido") }
                     }
                 }
             }
         )
     }
+}
+
+enum class FieldType {
+    EMAIL,
+    PASSWORD
 }

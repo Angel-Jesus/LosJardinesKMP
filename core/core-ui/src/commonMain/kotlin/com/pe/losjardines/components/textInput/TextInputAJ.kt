@@ -102,7 +102,7 @@ fun TextInputAJ(
                 onValueChange = { raw ->
                     if(inputType.validateRaw(raw) || raw.isEmpty()) onValueChange(raw)
                 },
-                textStyle = typography.bodyLarge,
+                textStyle = typography.bodyMedium,
                 visualTransformation = if (passwordVisible.value) {
                     VisualTransformation.None
                 } else {

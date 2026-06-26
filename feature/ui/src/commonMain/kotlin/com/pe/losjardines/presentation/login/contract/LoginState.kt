@@ -7,5 +7,5 @@ data class LoginState(
     val login: Boolean = false,
     val email: String = String.EMPTY,
     val password: String = String.EMPTY,
-    val messageTest: String = String.EMPTY
+    val messageError: String = String.EMPTY
 ): BaseUiState

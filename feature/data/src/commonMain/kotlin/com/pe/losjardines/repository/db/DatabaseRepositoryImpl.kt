@@ -11,6 +11,7 @@ import com.pe.losjardines.usecases.model.CountryDto
 import com.pe.losjardines.usecases.model.TravelReasonDto
 import com.pe.losjardines.usecases.model.RegionDto
 import com.pe.losjardines.usecases.model.RegistrationDto
+import com.pe.losjardines.usecases.model.TypeRoomDto
 import com.pe.losjardines.utils.getDateNow
 
 class DatabaseRepositoryImpl(
@@ -23,6 +24,7 @@ class DatabaseRepositoryImpl(
     override suspend fun syncCountries() = databaseManager.syncCountry()
 
     override suspend fun syncReasonTravels() = databaseManager.syncReasonTravels()
+    override suspend fun syncTypeRooms() = databaseManager.syncTypeRooms()
 
 
     override suspend fun getCountries(): Either<Failure, List<CountryDto>> {
@@ -40,6 +42,12 @@ class DatabaseRepositoryImpl(
     override suspend fun getReasonTravels(): Either<Failure, List<TravelReasonDto>> {
         return callDatabase {
             databaseManager.getReasonTravels().map { it.toDomain() }
+        }
+    }
+
+    override suspend fun getTypeRoom(): Either<Failure, List<TypeRoomDto>> {
+        return callDatabase {
+            databaseManager.getTypeRoom().map { it.toDomain() }
         }
     }
 

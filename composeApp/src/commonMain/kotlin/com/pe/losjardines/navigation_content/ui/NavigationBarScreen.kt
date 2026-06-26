@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CurrencyFranc
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -20,6 +22,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pe.losjardines.navigation_content.items.ItemsContentNavScreen
 import com.pe.losjardines.values.AppTypography
 import com.pe.losjardines.values.LocalAppTypographyCore
+import losjardineskmp.composeapp.generated.resources.Res
+import losjardineskmp.composeapp.generated.resources.logoaj
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -53,11 +57,11 @@ private fun BottomNavBar(
     typography: AppTypography = LocalAppTypographyCore.current
 ){
     val currentBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentRoute = currentBackStackEntry?.destination?.route ?: ItemsContentNavScreen.HomeNavScreen.route
+    val currentRoute = currentBackStackEntry?.destination?.route ?: ItemsContentNavScreen.DashboardNavScreen.route
 
     val screens = listOf(
-        ItemsContentNavScreen.HomeNavScreen,
-        ItemsContentNavScreen.RegistrationNavScreen,
+        ItemsContentNavScreen.DashboardNavScreen,
+        ItemsContentNavScreen.ReservationNavScreen,
         ItemsContentNavScreen.ConsultNavScreen,
         ItemsContentNavScreen.RoomStatusNavScreen
     )
@@ -70,7 +74,11 @@ private fun BottomNavBar(
                     icon = {
                         Icon(
                             modifier = Modifier.size(24.dp),
-                            painter = painterResource(resource = if (isSelected) item.selectedIcon else item.defaultIcon),
+                            painter = painterResource(resource = if (isSelected) {
+                                item.selectedIcon ?: Res.drawable.logoaj
+                            } else {
+                                item.defaultIcon ?: Res.drawable.logoaj
+                            }),
                             contentDescription = item.title
                         )
                     },
@@ -91,8 +99,8 @@ private fun BottomNavBar(
 
 private val NavController.shouldShowBottomBar: Boolean
     get() = currentBackStackEntry?.destination?.route in listOf(
-        ItemsContentNavScreen.HomeNavScreen.route,
-        ItemsContentNavScreen.RegistrationNavScreen.route,
+        ItemsContentNavScreen.DashboardNavScreen.route,
+        ItemsContentNavScreen.ReservationNavScreen.route,
         ItemsContentNavScreen.ConsultNavScreen.route,
         ItemsContentNavScreen.RoomStatusNavScreen.route
     )

@@ -22,6 +22,7 @@ fun RegistrationDto.toData(state: String): RegistrationDb = RegistrationDb(
     observation = this.observation,
     reasonTravel = this.reasonTravel,
     region = this.region,
+    typeRoom = this.typeRoom,
     room = this.room,
     companions = "",
     state = state
@@ -42,6 +43,7 @@ fun Registration.toDomain(): RegistrationDto = RegistrationDto(
     observation = this.observation.orEmpty(),
     reasonTravel = this.reasonTravel.orEmpty(),
     region = this.region.orEmpty(),
+    typeRoom = this.typeRoom.orEmpty(),
     room = this.room.orEmpty(),
     companions = emptyList() //this.companions
 )

@@ -23,12 +23,12 @@ abstract class BaseClient(
             Either.Success(withContext(Dispatchers.IO){ authCall.invoke() })
         } catch (e: FirebaseAuthException) {
             val firebaseAuthType = FirebaseAuthErrorType.fromFirebaseAuthException(e)
-            Either.Error(Failure.FirebaseAuthFailure(message = firebaseAuthType.getMessage()))
+            Either.Error(Failure.FirebaseAuthFailure(messageError = firebaseAuthType.getMessage()))
         } catch (e: CancellationException) {
-            Either.Error(Failure.UnknownFailure(message = e.message))
+            Either.Error(Failure.UnknownFailure(messageError = e.message))
         }
         catch (e: Exception) {
-            Either.Error(Failure.UnknownFailure(message = e.message))
+            Either.Error(Failure.UnknownFailure(messageError = e.message))
         }
     }
 
@@ -39,12 +39,12 @@ abstract class BaseClient(
             Either.Success(withContext(Dispatchers.IO){ firestoreCall.invoke() })
         } catch (e: FirebaseFirestoreException) {
             val firestoreType = FirestoreErrorType.fromFirestoreException(e)
-            Either.Error(Failure.FirestoreFailure(message = firestoreType.getMessage()))
+            Either.Error(Failure.FirestoreFailure(messageError = firestoreType.getMessage()))
         } catch (e: CancellationException) {
-            Either.Error(Failure.UnknownFailure(message = e.message))
+            Either.Error(Failure.UnknownFailure(messageError = e.message))
         }
         catch (e: Exception) {
-            Either.Error(Failure.UnknownFailure(message = e.message))
+            Either.Error(Failure.UnknownFailure(messageError = e.message))
         }
     }
 }

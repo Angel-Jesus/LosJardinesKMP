@@ -9,14 +9,16 @@ import com.pe.losjardines.presentation.content.registration.contract.Registratio
 import com.pe.losjardines.presentation.content.registration.contract.RegistrationState
 import com.pe.losjardines.presentation.content.utils.FieldRegistration
 import com.pe.losjardines.presentation.content.utils.mapToState
-import com.pe.losjardines.usecases.content.GetCountriesUseCase
-import com.pe.losjardines.usecases.content.GetReasonTravelsUseCase
-import com.pe.losjardines.usecases.content.GetRegionsUseCase
+import com.pe.losjardines.usecases.catalog.GetCountriesUseCase
+import com.pe.losjardines.usecases.catalog.GetReasonTravelsUseCase
+import com.pe.losjardines.usecases.catalog.GetRegionsUseCase
+import com.pe.losjardines.usecases.catalog.GetTypeRoomUseCase
 import com.pe.losjardines.usecases.content.SaveCustomerRegistrationUseCase
 import com.pe.losjardines.usecases.model.CountryDto
 import com.pe.losjardines.usecases.model.RegionDto
 import com.pe.losjardines.usecases.model.RegistrationDto
 import com.pe.losjardines.usecases.model.TravelReasonDto
+import com.pe.losjardines.usecases.model.TypeRoomDto
 import com.pe.losjardines.utils.companions.EMPTY
 import com.pe.losjardines.utils.getDateNow
 import com.pe.losjardines.utils.getDayNow
@@ -28,18 +30,20 @@ class RegistrationViewModel(
     private val getCountriesUseCase: GetCountriesUseCase,
     private val getRegionsUseCase: GetRegionsUseCase,
     private val getReasonTravelsUseCase: GetReasonTravelsUseCase,
+    private val getTypeRoomUseCase: GetTypeRoomUseCase,
     private val saveCustomerRegistrationUseCase: SaveCustomerRegistrationUseCase
 ): BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(RegistrationState()) {
 
     private val _catalogState = MutableStateFlow(CatalogState())
     val countryCatalog = _catalogState.mapToState(viewModelScope, emptyList(), mapper = { it.countries })
     val regionCatalog = _catalogState.mapToState(viewModelScope, emptyList(), mapper = { it.regions })
-
     val reasonTravelCatalog = _catalogState.mapToState(viewModelScope, emptyList(), mapper = { it.travelReasons })
+    val typeRoomsCatalog = _catalogState.mapToState(viewModelScope, emptyList(), mapper = { it.typeRooms })
 
     val fullName = uiState.mapToState(viewModelScope, TextFieldValue(), mapper = { it.fullName })
     val sex = uiState.mapToState(viewModelScope, String.EMPTY, mapper = { it.sex })
     val country = uiState.mapToState(viewModelScope, String.EMPTY, mapper = { it.country })
+    val typeRoom = uiState.mapToState(viewModelScope, String.EMPTY, mapper = { it.typeRoom })
     val region = uiState.mapToState(viewModelScope, String.EMPTY, mapper = { it.region })
     val travelReason = uiState.mapToState(viewModelScope, String.EMPTY, mapper = { it.travelReason })
     val documentType = uiState.mapToState(viewModelScope, String.EMPTY, mapper = { it.documentType })
@@ -74,11 +78,11 @@ class RegistrationViewModel(
             observation = observation.value.text,
             reasonTravel = travelReason.value,
             region = region.value,
+            typeRoom = typeRoom.value,
             room = room.value.text
         )
-        executeUseCase(
-            useCase = saveCustomerRegistrationUseCase,
-            params = SaveCustomerRegistrationUseCase.Params(customerInformation),
+        executeTask(
+            task = { saveCustomerRegistrationUseCase.run(customerInformation) },
             onSuccess = {
                 resetData()
                 sendEffect(RegistrationEffect.SuccessSave("Información del cliente guardado correctamente"))
@@ -108,6 +112,7 @@ class RegistrationViewModel(
             FieldRegistration.TRAVEL_REASON -> updateState { copy(travelReason = value as String) }
             FieldRegistration.CHECK_IN_DATE -> updateState { copy(checkInDate = value as String) }
             FieldRegistration.CHECK_OUT_DATE -> updateState { copy(checkOutDate = value as String) }
+            FieldRegistration.TYPE_ROOM -> updateState { copy(typeRoom = value as String) }
             FieldRegistration.ROOM -> updateState { copy(room = value as TextFieldValue) }
             FieldRegistration.RATE -> updateState { copy(rate = value as TextFieldValue) }
             FieldRegistration.OBSERVATION -> updateState { copy(observation = value as TextFieldValue) }
@@ -115,34 +120,28 @@ class RegistrationViewModel(
     }
 
     private fun getCatalogInformation(){
-        getCountries()
-        getTravelReasons()
-    }
-
-    private fun getCountries(){
-        executeUseCase(
-            useCase = getCountriesUseCase,
-            params = Unit,
-            onSuccess = { countries ->
-                _catalogState.update { it.copy(countries = countries) }
-            }
-        )
-    }
-
-    private fun getTravelReasons(){
-        executeUseCase(
-            useCase = getReasonTravelsUseCase,
-            params = Unit,
-            onSuccess = { travelReasons ->
-                _catalogState.update { it.copy(travelReasons = travelReasons) }
+        executeParallel(
+            first = { getCountriesUseCase.run() },
+            second = { getReasonTravelsUseCase.run() },
+            third = { getTypeRoomUseCase.run() },
+            onSuccess = { countries, reasons, typeRooms ->
+                _catalogState.update {
+                    it.copy(
+                        countries = countries,
+                        travelReasons = reasons,
+                        typeRooms = typeRooms
+                    )
+                }
+            },
+            onError = {
+                println("Error: $it")
             }
         )
     }
 
     private fun getRegions(countryId: String){
-        executeUseCase(
-            useCase = getRegionsUseCase,
-            params = GetRegionsUseCase.Params(countryId),
+        executeTask(
+            task = { getRegionsUseCase.run(countryId) },
             onSuccess = { regions ->
                 _catalogState.update { it.copy(regions = regions) }
                 if(regions.isEmpty()) updateState { copy(region = String.EMPTY) }
@@ -157,6 +156,7 @@ class RegistrationViewModel(
     data class CatalogState(
         val countries: List<CountryDto> = emptyList(),
         val regions: List<RegionDto> = emptyList(),
-        val travelReasons: List<TravelReasonDto> = emptyList()
+        val travelReasons: List<TravelReasonDto> = emptyList(),
+        val typeRooms: List<TypeRoomDto> = emptyList()
     )
 }

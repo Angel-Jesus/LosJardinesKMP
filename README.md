@@ -11,4 +11,8 @@
   you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
 
 
+## Arquitectura
+
+La estructura modular, las capas, el flujo de dependencias y las decisiones de diseño están documentadas en [ARCHITECTURE.md](ARCHITECTURE.md).
+
 Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…

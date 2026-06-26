@@ -15,6 +15,7 @@ import com.pe.losjardines.usecases.login.CheckSessionUseCase
 import com.pe.losjardines.usecases.login.LoginUseCase
 import com.pe.losjardines.usecases.login.LogoutUseCase
 import com.pe.losjardines.utils.files.ExcelEditor
+import com.pe.losjardines.utils.files.ExcelGenerator
 import org.koin.core.module.dsl.factoryOf
 import org.koin.dsl.module
 
@@ -34,5 +35,5 @@ val domainModules = module {
     factoryOf(::UpdateClientInfoUseCase)
     factoryOf(::GenerateExcelReportUseCase)
 
-    single { ExcelEditor() }
+    single<ExcelGenerator> { ExcelEditor() }
 }

@@ -5,30 +5,30 @@ val accommodationSection = listOf(
         roomType = RoomType.SINGLE,
         cells = mapOf(
             AccommodationColumn.ROOM_WITH_BATH to CellPosition(27, 3),
-            AccommodationColumn.BEDS to CellPosition(27, 5),
-            AccommodationColumn.ARRIVALS to CellPosition(27, 6),
-            AccommodationColumn.OCCUPIED_ROOMS to CellPosition(27, 7),
-            AccommodationColumn.OVERNIGHTS to CellPosition(27, 8)
+            AccommodationColumn.BEDS to CellPosition(27, 7),
+            AccommodationColumn.ARRIVALS to CellPosition(27, 9),
+            AccommodationColumn.OCCUPIED_ROOMS to CellPosition(27, 11),
+            AccommodationColumn.OVERNIGHTS to CellPosition(27, 13)
         )
     ),
     AccommodationExcelMap(
         roomType = RoomType.DOUBLE,
         cells = mapOf(
             AccommodationColumn.ROOM_WITH_BATH to CellPosition(28, 3),
-            AccommodationColumn.BEDS to CellPosition(28, 5),
-            AccommodationColumn.ARRIVALS to CellPosition(28, 6),
-            AccommodationColumn.OCCUPIED_ROOMS to CellPosition(28, 7),
-            AccommodationColumn.OVERNIGHTS to CellPosition(28, 8)
+            AccommodationColumn.BEDS to CellPosition(28, 7),
+            AccommodationColumn.ARRIVALS to CellPosition(28, 9),
+            AccommodationColumn.OCCUPIED_ROOMS to CellPosition(28, 11),
+            AccommodationColumn.OVERNIGHTS to CellPosition(28, 13)
         )
     ),
     AccommodationExcelMap(
         roomType = RoomType.TRIPLE,
         cells = mapOf(
             AccommodationColumn.ROOM_WITH_BATH to CellPosition(30, 3),
-            AccommodationColumn.BEDS to CellPosition(30, 5),
-            AccommodationColumn.ARRIVALS to CellPosition(30, 6),
-            AccommodationColumn.OCCUPIED_ROOMS to CellPosition(30, 7),
-            AccommodationColumn.OVERNIGHTS to CellPosition(30, 8)
+            AccommodationColumn.BEDS to CellPosition(30, 7),
+            AccommodationColumn.ARRIVALS to CellPosition(30, 9),
+            AccommodationColumn.OCCUPIED_ROOMS to CellPosition(30, 11),
+            AccommodationColumn.OVERNIGHTS to CellPosition(30, 13)
         )
     )
 )
@@ -36,162 +36,162 @@ val dailyArrivalSection = listOf(
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_1,
-        cell = CellPosition(row = 39, column = 3) // D40
+        cell = CellPosition(row = 39, column = 2) // D40
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_2,
-        cell = CellPosition(row = 39, column = 5) // F40
+        cell = CellPosition(row = 39, column = 4) // F40
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_3,
-        cell = CellPosition(row = 39, column = 7) // H40
+        cell = CellPosition(row = 39, column = 6) // H40
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_4,
-        cell = CellPosition(row = 39, column = 9) // J40
+        cell = CellPosition(row = 39, column = 8) // J40
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_5,
-        cell = CellPosition(row = 39, column = 11) // L40
+        cell = CellPosition(row = 39, column = 10) // L40
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_6,
-        cell = CellPosition(row = 39, column = 13) // N40
+        cell = CellPosition(row = 39, column = 12) // N40
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_7,
-        cell = CellPosition(row = 39, column = 15) // P40
+        cell = CellPosition(row = 39, column = 14) // P40
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_8,
-        cell = CellPosition(row = 39, column = 17) // R40
+        cell = CellPosition(row = 39, column = 16) // R40
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_9,
-        cell = CellPosition(row = 40, column = 3) // D41
+        cell = CellPosition(row = 40, column = 2) // D41
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_10,
-        cell = CellPosition(row = 40, column = 5) // F41
+        cell = CellPosition(row = 40, column = 4) // F41
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_11,
-        cell = CellPosition(row = 40, column = 7) // H41
+        cell = CellPosition(row = 40, column = 6) // H41
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_12,
-        cell = CellPosition(row = 40, column = 9) // J41
+        cell = CellPosition(row = 40, column = 8) // J41
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_13,
-        cell = CellPosition(row = 40, column = 11) // L41
+        cell = CellPosition(row = 40, column = 10) // L41
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_14,
-        cell = CellPosition(row = 40, column = 13) // N41
+        cell = CellPosition(row = 40, column = 12) // N41
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_15,
-        cell = CellPosition(row = 40, column = 15) // P41
+        cell = CellPosition(row = 40, column = 14) // P41
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_16,
-        cell = CellPosition(row = 40, column = 17) // R41
+        cell = CellPosition(row = 40, column = 16) // R41
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_17,
-        cell = CellPosition(row = 41, column = 3) // D42
+        cell = CellPosition(row = 41, column = 2) // D42
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_18,
-        cell = CellPosition(row = 41, column = 5) // F42
+        cell = CellPosition(row = 41, column = 4) // F42
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_19,
-        cell = CellPosition(row = 41, column = 7) // H42
+        cell = CellPosition(row = 41, column = 6) // H42
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_20,
-        cell = CellPosition(row = 41, column = 9) // J42
+        cell = CellPosition(row = 41, column = 8) // J42
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_21,
-        cell = CellPosition(row = 41, column = 11) // L42
+        cell = CellPosition(row = 41, column = 10) // L42
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_22,
-        cell = CellPosition(row = 41, column = 13) // N42
+        cell = CellPosition(row = 41, column = 12) // N42
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_23,
-        cell = CellPosition(row = 41, column = 15) // P42
+        cell = CellPosition(row = 41, column = 14) // P42
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_24,
-        cell = CellPosition(row = 41, column = 17) // R42
+        cell = CellPosition(row = 41, column = 16) // R42
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_25,
-        cell = CellPosition(row = 42, column = 3) // D43
+        cell = CellPosition(row = 42, column = 2) // D43
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_26,
-        cell = CellPosition(row = 42, column = 5) // F43
+        cell = CellPosition(row = 42, column = 4) // F43
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_27,
-        cell = CellPosition(row = 42, column = 7) // H43
+        cell = CellPosition(row = 42, column = 6) // H43
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_28,
-        cell = CellPosition(row = 42, column = 9) // J43
+        cell = CellPosition(row = 42, column = 8) // J43
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_29,
-        cell = CellPosition(row = 42, column = 11) // L43
+        cell = CellPosition(row = 42, column = 10) // L43
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_30,
-        cell = CellPosition(row = 42, column = 13) // N43
+        cell = CellPosition(row = 42, column = 12) // N43
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.DAY_31,
-        cell = CellPosition(row = 42, column = 15) // P43
+        cell = CellPosition(row = 42, column = 14) // P43
     ),
 
     DailyArrivalExcelMap(
         day = DailyArrivalDay.TOTAL,
-        cell = CellPosition(row = 42, column = 18) // S43
+        cell = CellPosition(row = 42, column = 16) // S43
     )
 )
 val foreignResidenceSection = listOf(
@@ -472,16 +472,16 @@ val peruResidenceSection = listOf(
     PeruResidenceExcelMap(
         region = PeruRegion.LIMA_METROPOLITANA_CALLAO,
         cells = mapOf(
-            ResidenceMetric.ARRIVALS to CellPosition(49, 13),      // N50
-            ResidenceMetric.OVERNIGHTS to CellPosition(49, 15)     // P50
+            ResidenceMetric.ARRIVALS to CellPosition(48, 13),      // N50
+            ResidenceMetric.OVERNIGHTS to CellPosition(48, 15)     // P50
         )
     ),
 
     PeruResidenceExcelMap(
         region = PeruRegion.REGION_LIMA,
         cells = mapOf(
-            ResidenceMetric.ARRIVALS to CellPosition(51, 13),
-            ResidenceMetric.OVERNIGHTS to CellPosition(51, 15)
+            ResidenceMetric.ARRIVALS to CellPosition(50, 13),
+            ResidenceMetric.OVERNIGHTS to CellPosition(50, 15)
         )
     ),
 
@@ -690,51 +690,51 @@ val travelReasonSection = listOf(
         guestCategory = GuestCategory.FOREIGNERS,
         cells = mapOf(
 
-            TravelReason.TOTAL_ARRIVALS to CellPosition(87, 2),          // C88
+            TravelReason.TOTAL_ARRIVALS to CellPosition(87, 1),          // C88
 
-            TravelReason.VACATION_RECREATION to CellPosition(87, 4),     // E88
-            TravelReason.FAMILY_VISIT to CellPosition(87, 6),            // G88
-            TravelReason.EDUCATION to CellPosition(87, 8),               // I88
-            TravelReason.HEALTH to CellPosition(87, 10),                 // K88
-            TravelReason.RELIGION to CellPosition(87, 12),               // M88
-            TravelReason.SHOPPING to CellPosition(87, 14),               // O88
-            TravelReason.BUSINESS to CellPosition(87, 16),               // Q88
-            TravelReason.WORK to CellPosition(87, 18),                   // S88
-            TravelReason.OTHER to CellPosition(87, 20)                   // U88
+            TravelReason.VACATION_RECREATION to CellPosition(87, 3),     // E88
+            TravelReason.FAMILY_VISIT to CellPosition(87, 5),            // G88
+            TravelReason.EDUCATION to CellPosition(87, 7),               // I88
+            TravelReason.HEALTH to CellPosition(87, 9),                 // K88
+            TravelReason.RELIGION to CellPosition(87, 11),               // M88
+            TravelReason.SHOPPING to CellPosition(87, 13),               // O88
+            TravelReason.BUSINESS to CellPosition(87, 15),               // Q88
+            TravelReason.WORK to CellPosition(87, 17),                   // S88
+            TravelReason.OTHER to CellPosition(87, 19)                   // U88
         )
     ),
     TravelReasonExcelMap(
         guestCategory = GuestCategory.PERUVIANS,
         cells = mapOf(
 
-            TravelReason.TOTAL_ARRIVALS to CellPosition(88, 2),          // C89
+            TravelReason.TOTAL_ARRIVALS to CellPosition(88, 1),          // C89
 
-            TravelReason.VACATION_RECREATION to CellPosition(88, 4),     // E89
-            TravelReason.FAMILY_VISIT to CellPosition(88, 6),            // G89
-            TravelReason.EDUCATION to CellPosition(88, 8),               // I89
-            TravelReason.HEALTH to CellPosition(88, 10),                 // K89
-            TravelReason.RELIGION to CellPosition(88, 12),               // M89
-            TravelReason.SHOPPING to CellPosition(88, 14),               // O89
-            TravelReason.BUSINESS to CellPosition(88, 16),               // Q89
-            TravelReason.WORK to CellPosition(88, 18),                   // S89
-            TravelReason.OTHER to CellPosition(88, 20)                   // U89
+            TravelReason.VACATION_RECREATION to CellPosition(88, 3),     // E89
+            TravelReason.FAMILY_VISIT to CellPosition(88, 5),            // G89
+            TravelReason.EDUCATION to CellPosition(88, 7),               // I89
+            TravelReason.HEALTH to CellPosition(88, 9),                 // K89
+            TravelReason.RELIGION to CellPosition(88, 11),               // M89
+            TravelReason.SHOPPING to CellPosition(88, 13),               // O89
+            TravelReason.BUSINESS to CellPosition(88, 15),               // Q89
+            TravelReason.WORK to CellPosition(88, 17),                   // S89
+            TravelReason.OTHER to CellPosition(88, 19)                   // U89
         )
     ),
     TravelReasonExcelMap(
         guestCategory = GuestCategory.TOTAL,
         cells = mapOf(
 
-            TravelReason.TOTAL_ARRIVALS to CellPosition(89, 2),          // C90
+            TravelReason.TOTAL_ARRIVALS to CellPosition(89, 1),          // C90
 
-            TravelReason.VACATION_RECREATION to CellPosition(89, 4),     // E90
-            TravelReason.FAMILY_VISIT to CellPosition(89, 6),            // G90
-            TravelReason.EDUCATION to CellPosition(89, 8),               // I90
-            TravelReason.HEALTH to CellPosition(89, 10),                 // K90
-            TravelReason.RELIGION to CellPosition(89, 12),               // M90
-            TravelReason.SHOPPING to CellPosition(89, 14),               // O90
-            TravelReason.BUSINESS to CellPosition(89, 16),               // Q90
-            TravelReason.WORK to CellPosition(89, 18),                   // S90
-            TravelReason.OTHER to CellPosition(89, 20)                   // U90
+            TravelReason.VACATION_RECREATION to CellPosition(89, 3),     // E90
+            TravelReason.FAMILY_VISIT to CellPosition(89, 5),            // G90
+            TravelReason.EDUCATION to CellPosition(89, 7),               // I90
+            TravelReason.HEALTH to CellPosition(89, 9),                 // K90
+            TravelReason.RELIGION to CellPosition(89, 11),               // M90
+            TravelReason.SHOPPING to CellPosition(89, 13),               // O90
+            TravelReason.BUSINESS to CellPosition(89, 15),               // Q90
+            TravelReason.WORK to CellPosition(89, 17),                   // S90
+            TravelReason.OTHER to CellPosition(89, 19)                   // U90
         )
     )
 )

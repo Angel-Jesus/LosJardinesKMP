@@ -6,8 +6,8 @@ import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.FileOutputStream
 
-actual class ExcelEditor actual constructor() {
-    actual fun generarDesdeTemplate(
+actual class ExcelEditor actual constructor() : ExcelGenerator {
+    actual override fun generarDesdeTemplate(
         templateStream: PlatformInputStream,
         outputFile: PlatformFile,
         updates: List<ExcelCellUpdate>

@@ -6,7 +6,7 @@ import com.pe.losjardines.usecases.model.FilterValues
 import com.pe.losjardines.usecases.model.RegistrationDto
 import com.pe.losjardines.utils.calculateNights
 import com.pe.losjardines.utils.files.ExcelCellUpdate
-import com.pe.losjardines.utils.files.ExcelEditor
+import com.pe.losjardines.utils.files.ExcelGenerator
 import com.pe.losjardines.utils.files.PlatformFile
 import com.pe.losjardines.utils.files.PlatformInputStream
 import com.pe.losjardines.utils.files.model.AccommodationColumn
@@ -30,7 +30,7 @@ import kotlin.coroutines.cancellation.CancellationException
 
 class GenerateExcelReportUseCase(
     private val getClientsRegisterUseCase: GetClientsRegisterUseCase,
-    private val excelEditor: ExcelEditor
+    private val excelEditor: ExcelGenerator
 ) {
     data class Params(
         val templateStream: PlatformInputStream,

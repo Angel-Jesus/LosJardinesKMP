@@ -43,6 +43,14 @@ kotlin {
             // Coroutines
             implementation(libs.kotlinx.coroutines.swing)
         }
+
+        val androidUnitTest by getting {
+            dependencies {
+                implementation(libs.junit)
+                // Apache POI: para validar el .xlsx generado en la prueba
+                implementation(libs.apache.poi.ooxml)
+            }
+        }
     }
 }
 
@@ -57,5 +65,14 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    testOptions {
+        unitTests.all {
+            it.testLogging {
+                events("passed", "failed", "skipped")
+                showStandardStreams = true // muestra println / System.out en consola
+            }
+        }
     }
 }

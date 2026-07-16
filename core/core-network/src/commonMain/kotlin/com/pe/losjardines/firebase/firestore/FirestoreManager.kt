@@ -2,6 +2,7 @@ package com.pe.losjardines.firebase.firestore
 
 import com.pe.losjardines.firebase.firestore.model.RegistrationNetwork
 import com.pe.losjardines.firebase.firestore.model.RoomStateNetwork
+import com.pe.losjardines.firebase.firestore.model.TrashNetwork
 
 class FirestoreManager(
     private val firestoreService: FirestoreService
@@ -9,6 +10,14 @@ class FirestoreManager(
 
     suspend fun send(collection: String, registrationNetwork: RegistrationNetwork){
         firestoreService.send(collection, registrationNetwork)
+    }
+
+    suspend fun getRegistrations(collection: String): List<RegistrationNetwork>{
+        return firestoreService.getRegistrations(collection)
+    }
+
+    suspend fun sendTrash(trashNetwork: TrashNetwork){
+        firestoreService.sendTrash(trashNetwork)
     }
 
     suspend fun delete(collection: String, documentPath: String){

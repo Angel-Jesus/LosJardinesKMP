@@ -22,10 +22,14 @@ interface DatabaseRepository {
     suspend fun getTypeRoom(): Either<Failure, List<TypeRoomDto>>
 
     suspend fun saveCustomerInformation(registrationDto: RegistrationDto, state: String): Either<Failure, Unit>
+    suspend fun getRegistrationById(id: Long): Either<Failure, RegistrationDto>
+    suspend fun moveToTrash(registrationDto: RegistrationDto, dateDeleted: Long, state: String): Either<Failure, Unit>
     suspend fun getClientsRegister(
         dateInit: Long,
         dateLast: Long,
         searchDni: String?
     ): Either<Failure, List<RegistrationDto>>
     suspend fun updateClientInformation(state: String, registrationDto: RegistrationDto): Either<Failure, Unit>
+    suspend fun deleteAllRegisters(): Either<Failure, Unit>
+    suspend fun insertRegistrations(registrations: List<RegistrationDto>, state: String): Either<Failure, Unit>
 }

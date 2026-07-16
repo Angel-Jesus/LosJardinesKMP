@@ -65,6 +65,10 @@ fun getDateNow(): LocalDateTime{
     return currentDateTime.toLocalDateTime(TimeZone.UTC)
 }
 
+fun getCurrentMillis(): Long = Clock.System.now().toEpochMilliseconds()
+
+fun getCurrentYear(): String = getDateNow().year.toString()
+
 fun generateFirebaseDocumentId(): String{
     val dateTimeInUtc = getDateNow()
     val year = dateTimeInUtc.year

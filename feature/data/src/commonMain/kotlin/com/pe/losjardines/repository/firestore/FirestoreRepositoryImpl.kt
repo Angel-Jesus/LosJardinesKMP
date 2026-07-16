@@ -7,7 +7,9 @@ import com.pe.losjardines.firebase.firestore.FirestoreConstance
 import com.pe.losjardines.firebase.firestore.FirestoreManager
 import com.pe.losjardines.repository.FirestoreRepository
 import com.pe.losjardines.repository.firestore.mapper.toData
+import com.pe.losjardines.repository.firestore.mapper.toDomain
 import com.pe.losjardines.repository.firestore.mapper.toFirestoreField
+import com.pe.losjardines.repository.firestore.mapper.toTrashData
 import com.pe.losjardines.usecases.model.FielTypeRegister
 import com.pe.losjardines.usecases.model.RegistrationDto
 import com.pe.losjardines.usecases.model.RoomDto
@@ -20,6 +22,12 @@ class FirestoreRepositoryImpl(
     override suspend fun sendClient(registrationDto: RegistrationDto): Either<Failure, Unit> {
         return callFirestore {
             firebaseManager.send(registrationDto.collection, registrationDto.toData())
+        }
+    }
+
+    override suspend fun sendToTrash(registrationDto: RegistrationDto, dateDeleted: Long): Either<Failure, Unit> {
+        return callFirestore {
+            firebaseManager.sendTrash(registrationDto.toTrashData(dateDeleted))
         }
     }
 
@@ -56,6 +64,12 @@ class FirestoreRepositoryImpl(
     override suspend fun getRoomState(): Either<Failure, List<RoomDto>> {
         return callFirestore {
             firebaseManager.getRoomState().map { it.toData() }
+        }
+    }
+
+    override suspend fun getRegistrationsByCollection(collection: String): Either<Failure, List<RegistrationDto>> {
+        return callFirestore {
+            firebaseManager.getRegistrations(collection).map { it.toDomain(collection) }
         }
     }
 }

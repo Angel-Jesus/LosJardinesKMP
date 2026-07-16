@@ -9,13 +9,13 @@ enum class FieldRegistration(val displayName: String, val dimensionWidth: Dp) {
     SEX("Sexo", 48.dp),
     COUNTRY_OF_RESIDENCE("País", 64.dp),
     REGION_OF_RESIDENCE("Región", 64.dp),
-    DOCUMENT_TYPE("T. Documento", 100.dp),
-    DOCUMENT_NUMBER("N° Documento", 100.dp),
-    TRAVEL_REASON("Motivo de Viaje", 200.dp),
-    CHECK_IN_DATE("Fecha de ingreso", 120.dp),
+    DOCUMENT_TYPE("T. Documento", 120.dp),
+    DOCUMENT_NUMBER("N° Documento", 120.dp),
+    TRAVEL_REASON("Motivo de Viaje", 150.dp),
+    CHECK_IN_DATE("Fecha de ingreso", 140.dp),
     CHECK_OUT_DATE("Fecha de salida", 120.dp),
     TYPE_ROOM("Tipo de habitación", 120.dp),
-    ROOM("N° Habitación", 100.dp),
+    ROOM("N° Habitación", 120.dp),
     RATE("Tarifa", 80.dp),
     OBSERVATION("Observación", 200.dp);
 

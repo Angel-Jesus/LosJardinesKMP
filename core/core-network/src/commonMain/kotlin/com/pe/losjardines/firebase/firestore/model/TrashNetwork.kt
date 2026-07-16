@@ -1,10 +1,9 @@
 package com.pe.losjardines.firebase.firestore.model
 
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class RegistrationNetwork(
+data class TrashNetwork(
     val id: String,
     val country: String,
     val dateEnter: Long,
@@ -18,7 +17,6 @@ data class RegistrationNetwork(
     val reasonTravel: String,
     val region: String,
     val room: String,
-    @SerialName("typeRooms")
-    val typeRoom: String = "",
-    val companions: List<String> = emptyList()
+    val companions: List<String> = emptyList(),
+    val dateDeleted: Long
 )

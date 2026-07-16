@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.pe.losjardines.components.buttom.ButtonAJ
+import com.pe.losjardines.components.loading.LoadingAJ
 import com.pe.losjardines.presentation.components.HeaderComponent
 import com.pe.losjardines.presentation.components.ImageDescriptionItem
 import com.pe.losjardines.presentation.components.ItemCard
@@ -52,6 +53,13 @@ fun HomeMobileScreen(
     viewModel: HomeViewModel = koinViewModel(),
 ){
     val uiState by viewModel.uiState.collectAsState()
+
+    if(uiState.isLoading){
+        LoadingAJ(
+            title = "Actualización",
+            subtitle = "Obteniendo información de los clientyes"
+        )
+    }
 
     HomeMobileContent(
         title = title,

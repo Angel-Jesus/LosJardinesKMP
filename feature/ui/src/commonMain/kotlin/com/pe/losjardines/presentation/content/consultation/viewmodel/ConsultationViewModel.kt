@@ -1,5 +1,7 @@
 package com.pe.losjardines.presentation.content.consultation.viewmodel
 
+import com.pe.losjardines.base.error.Failure
+import com.pe.losjardines.base.error.getMessage
 import com.pe.losjardines.base.ui.BaseViewModel
 import com.pe.losjardines.presentation.content.consultation.contract.ConsultationEffect
 import com.pe.losjardines.presentation.content.consultation.contract.ConsultationEvent
@@ -11,6 +13,7 @@ import com.pe.losjardines.usecases.content.GetClientsRegisterUseCase
 import com.pe.losjardines.usecases.catalog.GetCountriesUseCase
 import com.pe.losjardines.usecases.catalog.GetReasonTravelsUseCase
 import com.pe.losjardines.usecases.catalog.GetRegionsUseCase
+import com.pe.losjardines.usecases.content.DeleteClientUseCase
 import com.pe.losjardines.usecases.content.UpdateClientInfoUseCase
 import com.pe.losjardines.usecases.model.CountryDto
 import com.pe.losjardines.usecases.model.FielTypeRegister.Companion.getRegisterUpdate
@@ -19,6 +22,7 @@ import com.pe.losjardines.usecases.model.RegionDto
 import com.pe.losjardines.usecases.model.TravelReasonDto
 import com.pe.losjardines.usecases.model.UpdateParams
 import com.pe.losjardines.utils.companions.EMPTY
+import com.pe.losjardines.utils.getDayNowParams
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -27,9 +31,10 @@ class ConsultationViewModel(
     private val getCountriesUseCase: GetCountriesUseCase,
     private val getRegionsUseCase: GetRegionsUseCase,
     private val getReasonTravelsUseCase: GetReasonTravelsUseCase,
-    private val updateClientInfoUseCase: UpdateClientInfoUseCase
+    private val updateClientInfoUseCase: UpdateClientInfoUseCase,
+    private val deleteClientUseCase: DeleteClientUseCase
 ): BaseViewModel<ConsultationState, ConsultationEvent, ConsultationEffect>(
-    ConsultationState()
+    ConsultationState(yearFilter = getDayNowParams().year.toString())
 ) {
     val catalogState = MutableStateFlow(CatalogState())
 
@@ -40,10 +45,25 @@ class ConsultationViewModel(
             is ConsultationEvent.ValueChanged -> valueChanged(event.value, event.type)
             is ConsultationEvent.GetClientsRegister -> getClientsRegister(event.filter)
             is ConsultationEvent.UpdateClientInformation -> updateClientInformation(event.newValue, event.fieldParams)
+            is ConsultationEvent.DeleteClientInformation -> deleteClientInformation(event.id, event.idFirebase)
         }
     }
 
+    private fun deleteClientInformation(id: Long, idFirebase: String){
+        updateState { copy(loading = true) }
+        executeTask(
+            task = { deleteClientUseCase.run(id, idFirebase) },
+            onSuccess = {
+                getClientsRegister()
+                updateState { copy(loading = false) }
+            },
+            onError = ::handleError
+        )
+    }
+
     private fun updateClientInformation(newValue: String, fieldParams: UpdateFieldParams?) {
+        updateState { copy(loading = true) }
+
         val updateParams = UpdateParams(
            registrationDto = uiState.value.clientsRegister.firstOrNull{ it.id == fieldParams?.id },
            newValue = newValue,
@@ -62,9 +82,7 @@ class ConsultationViewModel(
                 }
                 updateState { copy(clientsRegister = clientUpdate, loading = false) }
             },
-            onError = {
-                updateState { copy(loading = false) }
-            }
+            onError = ::handleError
         )
     }
 
@@ -123,9 +141,7 @@ class ConsultationViewModel(
             onSuccess = {
                 updateState { copy(clientsRegister = it, loading = false, showClearFilter = true) }
             },
-            onError = {
-                updateState { copy(loading = false) }
-            }
+            onError = ::handleError
         )
     }
 
@@ -135,6 +151,14 @@ class ConsultationViewModel(
             FieldFilter.YEAR_FILTER -> updateState { copy(yearFilter = value) }
             FieldFilter.SEARCH_DNI_FILTER -> updateState { copy(searchDni = value) }
         }
+    }
+
+    private fun handleError(failure: Failure){
+        updateState { copy(loading = false, errorMessage = failure.getMessage()) }
+    }
+
+    fun hideErrorMessage(){
+        updateState { copy(errorMessage = null) }
     }
 
     data class CatalogState(

@@ -11,4 +11,5 @@ sealed interface ConsultationEvent: BaseEvent {
     data object Filter: ConsultationEvent
     data object ClearFilter: ConsultationEvent
     data class UpdateClientInformation(val newValue: String, val fieldParams: UpdateFieldParams?): ConsultationEvent
+    data class DeleteClientInformation(val id: Long, val idFirebase: String): ConsultationEvent
 }

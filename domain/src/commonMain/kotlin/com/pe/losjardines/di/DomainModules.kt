@@ -1,5 +1,6 @@
 package com.pe.losjardines.di
 
+import com.pe.losjardines.usecases.content.DeleteClientUseCase
 import com.pe.losjardines.usecases.content.GenerateExcelReportUseCase
 import com.pe.losjardines.usecases.content.GetClientsRegisterUseCase
 import com.pe.losjardines.usecases.catalog.GetCountriesUseCase
@@ -10,6 +11,7 @@ import com.pe.losjardines.usecases.content.GetRoomStateUseCase
 import com.pe.losjardines.usecases.content.SaveCustomerRegistrationUseCase
 import com.pe.losjardines.usecases.content.SyncronizationUseCase
 import com.pe.losjardines.usecases.content.UpdateClientInfoUseCase
+import com.pe.losjardines.usecases.content.UpdateRegisterByCloudUseCase
 import com.pe.losjardines.usecases.content.UpdateStateRoomUseCase
 import com.pe.losjardines.usecases.login.CheckSessionUseCase
 import com.pe.losjardines.usecases.login.LoginUseCase
@@ -33,7 +35,9 @@ val domainModules = module {
     factoryOf(::GetRoomStateUseCase)
     factoryOf(::UpdateStateRoomUseCase)
     factoryOf(::UpdateClientInfoUseCase)
+    factoryOf(::DeleteClientUseCase)
     factoryOf(::GenerateExcelReportUseCase)
+    factoryOf(::UpdateRegisterByCloudUseCase)
 
     single<ExcelGenerator> { ExcelEditor() }
 }

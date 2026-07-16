@@ -6,6 +6,7 @@ import com.pe.losjardines.presentation.content.home.contract.HomeEvent
 import com.pe.losjardines.presentation.content.home.contract.HomeUiState
 import com.pe.losjardines.presentation.content.utils.ExcelTemplateProvider
 import com.pe.losjardines.usecases.content.GenerateExcelReportUseCase
+import com.pe.losjardines.usecases.content.UpdateRegisterByCloudUseCase
 import com.pe.losjardines.usecases.model.FilterValues
 import com.pe.losjardines.utils.DateParams
 import com.pe.losjardines.utils.constance.MonthFilter
@@ -16,7 +17,8 @@ import com.pe.losjardines.utils.getLastMonth
 
 class HomeViewModel(
     private val excelTemplateProvider: ExcelTemplateProvider,
-    private val generateExcelReportUseCase: GenerateExcelReportUseCase
+    private val generateExcelReportUseCase: GenerateExcelReportUseCase,
+    private val updateRegisterByCloudUseCase: UpdateRegisterByCloudUseCase
 ): BaseViewModel<HomeUiState, HomeEvent, HomeEffect>(HomeUiState()) {
     override fun onEvent(event: HomeEvent) {
         when(event){
@@ -45,7 +47,19 @@ class HomeViewModel(
     }
 
     private fun updateRegisterByCloud(){
-
+        updateState { copy(isLoading = true) }
+        executeTask(
+            task = {
+                updateRegisterByCloudUseCase.run()
+            },
+            onSuccess = {
+                updateState { copy(isLoading = false) }
+            },
+            onError = {
+                updateState { copy(isLoading = false) }
+                println("Error updating register by cloud: $it")
+            }
+        )
     }
 
     private fun generateNameFile(filter: FilterValues?, dateParams: DateParams): String{

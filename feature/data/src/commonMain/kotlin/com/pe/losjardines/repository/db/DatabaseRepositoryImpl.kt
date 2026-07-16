@@ -7,6 +7,7 @@ import com.pe.losjardines.db.DatabaseManager
 import com.pe.losjardines.repository.DatabaseRepository
 import com.pe.losjardines.repository.db.mapper.toData
 import com.pe.losjardines.repository.db.mapper.toDomain
+import com.pe.losjardines.repository.db.mapper.toTrashData
 import com.pe.losjardines.usecases.model.CountryDto
 import com.pe.losjardines.usecases.model.TravelReasonDto
 import com.pe.losjardines.usecases.model.RegionDto
@@ -57,6 +58,25 @@ class DatabaseRepositoryImpl(
         }
     }
 
+    override suspend fun getRegistrationById(id: Long): Either<Failure, RegistrationDto> {
+        return callDatabase {
+            databaseManager.getRegistrationById(id)?.toDomain()
+        }
+    }
+
+    override suspend fun moveToTrash(
+        registrationDto: RegistrationDto,
+        dateDeleted: Long,
+        state: String
+    ): Either<Failure, Unit> {
+        return callDatabase {
+            databaseManager.moveToTrash(
+                registrationDto.toTrashData(dateDeleted, state),
+                registrationDto.id ?: 0L
+            )
+        }
+    }
+
     override suspend fun getClientsRegister(
         dateInit: Long,
         dateLast: Long,
@@ -70,6 +90,18 @@ class DatabaseRepositoryImpl(
     override suspend fun updateClientInformation(state: String, registrationDto: RegistrationDto): Either<Failure, Unit> {
         return callDatabase {
             databaseManager.updateClientInformation(registrationDto.toData(state))
+        }
+    }
+
+    override suspend fun deleteAllRegisters(): Either<Failure, Unit> {
+        return callDatabase {
+            databaseManager.deleteAllRegistration()
+        }
+    }
+
+    override suspend fun insertRegistrations(registrations: List<RegistrationDto>, state: String): Either<Failure, Unit> {
+        return callDatabase {
+            databaseManager.insertRegistrations(registrations.map { it.toData(state) })
         }
     }
 }

@@ -10,5 +10,6 @@ data class ConsultationState(
     val monthFilter: String = MonthFilter.NONE.displayName,
     val yearFilter: String = "",
     val searchDni: String = "",
-    val clientsRegister: List<RegistrationDto> = emptyList()
+    val clientsRegister: List<RegistrationDto> = emptyList(),
+    val errorMessage: String? = null
 ): BaseUiState

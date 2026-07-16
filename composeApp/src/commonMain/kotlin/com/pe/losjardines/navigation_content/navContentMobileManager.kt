@@ -1,9 +1,9 @@
 package com.pe.losjardines.navigation_content
 
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.pe.losjardines.navigation.isMobile
 import com.pe.losjardines.navigation.items.ItemsNavScreen
 import com.pe.losjardines.navigation_content.items.ItemsContentNavScreen
@@ -14,8 +14,7 @@ import com.pe.losjardines.presentation.content.registration.screen.RegistrationM
 import com.pe.losjardines.presentation.content.room.screen.RoomMobileScreen
 
 fun NavGraphBuilder.navContentMobileManager(
-    onLogout: () -> Unit,
-    navController: NavHostController
+    onLogout: () -> Unit
 ){
 
     composable(ItemsContentNavScreen.RegistrationNavScreen.route){
@@ -25,12 +24,13 @@ fun NavGraphBuilder.navContentMobileManager(
     }
 
     composable(ItemsNavScreen.ContentNavScreen.route){
+        val contentNavController = rememberNavController()
         NavigationBarScreen(
             isMobile = true,
-            navController = navController,
+            navController = contentNavController,
             content = {
                 NavHost(
-                    navController = navController,
+                    navController = contentNavController,
                     startDestination = ItemsContentNavScreen.DashboardNavScreen.route
                 ){
                     composable(ItemsContentNavScreen.DashboardNavScreen.route){

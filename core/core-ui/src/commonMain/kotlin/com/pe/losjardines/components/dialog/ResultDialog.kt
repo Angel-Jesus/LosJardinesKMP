@@ -4,9 +4,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,9 +20,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import com.pe.losjardines.components.buttom.ButtonAJ
+import com.pe.losjardines.values.AppTheme
 import com.pe.losjardines.values.AppTypography
+import com.pe.losjardines.values.BackgroundBrandInvertedColor
 import com.pe.losjardines.values.BackgroundLightColor
 import com.pe.losjardines.values.BlackTextColor
+import com.pe.losjardines.values.BrandIconColor
 import com.pe.losjardines.values.GrayTextColor
 import com.pe.losjardines.values.LocalAppTypographyCore
 import kotlinx.coroutines.delay
@@ -26,6 +34,7 @@ import losjardineskmp.core.core_ui.generated.resources.Res
 import losjardineskmp.core.core_ui.generated.resources.ic_error
 import losjardineskmp.core.core_ui.generated.resources.ic_success
 import org.jetbrains.compose.resources.painterResource
+import org.jetbrains.compose.ui.tooling.preview.Preview
 
 /**
  * Diálogo de resultado que muestra el estado de una operación al usuario.
@@ -95,4 +104,80 @@ fun ResultDialog(
         }
     }
 
+}
+
+/**
+ * Diálogo de resultado con acciones. Muestra el estado de una operación e incluye dos botones
+ * (primario y secundario) cuyo texto es configurable, para que el usuario decida el siguiente paso.
+ *
+ * A diferencia de [ResultDialog], este diálogo no se cierra automáticamente: permanece visible
+ * hasta que el usuario pulsa alguno de los botones.
+ *
+ * @param modifier              Modificador de Compose para controlar el layout externo del diálogo.
+ * @param title                 Texto principal del diálogo que resume el resultado.
+ * @param description           Texto secundario opcional con detalles adicionales. Si es null, no se muestra.
+ * @param primaryButtonText     Texto del botón primario (acción principal, ej: "Aceptar", "Reintentar").
+ * @param secondaryButtonText   Texto del botón secundario (acción alternativa, ej: "Cancelar", "Volver").
+ * @param onPrimaryClick        Lambda ejecutada al pulsar el botón primario.
+ * @param onSecondaryClick      Lambda ejecutada al pulsar el botón secundario.
+ * @param onDismiss             Lambda ejecutada cuando el diálogo se cierra por gesto o botón de retroceso.
+ * @param typography            Sistema tipográfico de la app. Se toma automáticamente del tema activo si no se especifica.
+ */
+@Composable
+fun ResultActionDialog(
+    modifier: Modifier = Modifier,
+    title: String,
+    description: String? = null,
+    primaryButtonText: String,
+    secondaryButtonText: String,
+    onPrimaryClick: () -> Unit,
+    onSecondaryClick: () -> Unit = {},
+    onDismiss: () -> Unit,
+    typography: AppTypography = LocalAppTypographyCore.current
+){
+    Dialog(
+        onDismissRequest = onDismiss
+    ){
+        Column(
+            modifier = modifier
+                .clip(RoundedCornerShape(14.dp))
+                .background(BackgroundLightColor)
+                .padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            Text(
+                text = title,
+                style = typography.headerSmall,
+                color = BlackTextColor
+            )
+
+            if(!description.isNullOrEmpty()) {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = description,
+                    style = typography.bodyLarge,
+                    color = GrayTextColor,
+                    textAlign = TextAlign.Center
+                )
+            }
+
+            Row(
+                modifier = Modifier.padding(top = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                ButtonAJ(
+                    modifier = Modifier.weight(1f),
+                    text = primaryButtonText,
+                    onClick = onPrimaryClick
+                )
+
+                ButtonAJ(
+                    modifier = Modifier.weight(1f),
+                    text = secondaryButtonText,
+                    colors = ButtonDefaults.buttonColors(containerColor = BackgroundBrandInvertedColor, contentColor = BrandIconColor),
+                    onClick = onSecondaryClick
+                )
+            }
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.pe.losjardines.base.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pe.losjardines.base.error.Failure
+import com.pe.losjardines.base.error.getMessage
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel

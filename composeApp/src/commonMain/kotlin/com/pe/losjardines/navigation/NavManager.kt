@@ -84,8 +84,7 @@ fun NavManager(
                             }
                         }
                     )
-                },
-                navController = navController
+                }
             )
         }
 

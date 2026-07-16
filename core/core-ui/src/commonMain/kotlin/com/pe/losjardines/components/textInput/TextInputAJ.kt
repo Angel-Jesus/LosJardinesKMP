@@ -90,7 +90,7 @@ fun TextInputAJ(
         label?.let {
             Text(
                 text = it,
-                style = typography.titleMedium
+                style = typography.titleSmall
             )
             Spacer(modifier = Modifier.height(8.dp))
         }

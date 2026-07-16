@@ -2,6 +2,7 @@ package com.pe.losjardines.presentation.login.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.pe.losjardines.base.error.Failure
+import com.pe.losjardines.base.error.getMessage
 import com.pe.losjardines.base.ui.BaseViewModel
 import com.pe.losjardines.usecases.login.CheckSessionUseCase
 import com.pe.losjardines.usecases.login.LoginUseCase
@@ -42,24 +43,22 @@ class LoginViewModel(
     }
 
     private fun enterLogin(){
-        updateState { copy( messageError = "") }
+        updateState { copy( messageError = "", loading = true) }
         executeTask(
             task = { loginUseCase.run(uiState.value.email, uiState.value.password) },
             onSuccess = {
                 syncronizationUseCase.invoke()
+                updateState { copy(loading = false) }
                 sendEffect(LoginEffect.LoginSuccess)
             },
             onError = { failure ->
-                when(failure){
-                    is Failure.FirebaseAuthFailure -> {
-                        updateState { copy( messageError = failure.messageError) }
-                    }
-                    else -> {
-                        updateState { copy( messageError = "Error desconocido") }
-                    }
-                }
+                updateState { copy(loading = false, messageError = failure.getMessage().orEmpty().ifEmpty { "Error desconocido" }) }
             }
         )
+    }
+
+    fun hideErrorDialog(){
+        updateState { copy( messageError = "") }
     }
 }
 

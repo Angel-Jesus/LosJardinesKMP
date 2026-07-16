@@ -9,10 +9,12 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,6 +29,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowCircleDown
 import androidx.compose.material.icons.filled.Delete
@@ -44,6 +47,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
@@ -54,6 +58,8 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import com.pe.losjardines.components.buttom.ButtonAJ
 import com.pe.losjardines.components.buttom.IconButtonAJ
 import com.pe.losjardines.components.dialog.FieldUpdateDialog
+import com.pe.losjardines.components.dialog.ResultActionDialog
+import com.pe.losjardines.components.dialog.ResultDialog
 import com.pe.losjardines.components.dialog.TypeField
 import com.pe.losjardines.components.dropdown.DropDownAJ
 import com.pe.losjardines.components.empty_state.EmptyStateAJ
@@ -67,12 +73,14 @@ import com.pe.losjardines.presentation.content.consultation.viewmodel.Consultati
 import com.pe.losjardines.presentation.content.utils.DocumentType
 import com.pe.losjardines.presentation.content.utils.FieldFilter
 import com.pe.losjardines.presentation.content.utils.FieldRegistration
+import com.pe.losjardines.presentation.content.utils.ResultState
 import com.pe.losjardines.presentation.content.utils.Sex
 import com.pe.losjardines.usecases.model.RegistrationDto
 import com.pe.losjardines.utils.companions.EMPTY
 import com.pe.losjardines.utils.constance.MonthFilter
 import com.pe.losjardines.values.AppTheme
 import com.pe.losjardines.values.AppTypography
+import com.pe.losjardines.values.BackgroundBrandColor
 import com.pe.losjardines.values.BackgroundOverlay
 import com.pe.losjardines.values.BackgroundTableBrand
 import com.pe.losjardines.values.DefaultTextColor
@@ -113,7 +121,6 @@ fun ConsultationMobileScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val catalog by viewModel.catalogState.collectAsState()
-    var isExpanded by rememberSaveable { mutableStateOf(false) }
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME){
         viewModel.onEvent(ConsultationEvent.GetClientsRegister())
@@ -126,8 +133,18 @@ fun ConsultationMobileScreen(
         )
     }
 
+    ResultDialog(
+        modifier = Modifier,
+        title = "Sucedió un inconveniente",
+        description = uiState.errorMessage,
+        isSuccess = false,
+        visibility = uiState.errorMessage != null,
+        onDismiss = {
+            viewModel.hideErrorMessage()
+        }
+    )
+
     ConsultationContent(
-        isExpanded = isExpanded,
         dispatcherEvent = viewModel::onEvent,
         title = title,
         uiState = uiState,
@@ -138,7 +155,6 @@ fun ConsultationMobileScreen(
 
 @Composable
 private fun ConsultationContent(
-    isExpanded: Boolean,
     dispatcherEvent: (ConsultationEvent) -> Unit,
     title: String,
     uiState: ConsultationState,
@@ -146,18 +162,34 @@ private fun ConsultationContent(
     typography: AppTypography = LocalAppTypographyCore.current
 ) {
     val sharedScrollState = rememberScrollState()
-    var isExpanded1 = isExpanded
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
     var updateFieldParams by remember { mutableStateOf(UpdateFieldParams()) }
     var deleteParams by remember { mutableStateOf(Triple(false, 0L, String.EMPTY)) }
 
     val rotationState by animateFloatAsState(
-        targetValue = if (isExpanded1) 180f else 0f,
+        targetValue = if (isExpanded) 180f else 0f,
         animationSpec = tween(durationMillis = 300),
         label = "rotation"
     )
 
-    if (deleteParams.first) {
-
+    if(deleteParams.first){
+        ResultActionDialog(
+            modifier = Modifier,
+            title = "Eliminar registro",
+            description = "Esta por eliminar el registro. ¿Desea continuar?",
+            primaryButtonText = "Eliminar",
+            secondaryButtonText = "Cancelar",
+            onPrimaryClick = {
+                dispatcherEvent(ConsultationEvent.DeleteClientInformation(deleteParams.second, deleteParams.third))
+                deleteParams = Triple(false, 0L, String.EMPTY)
+            },
+            onSecondaryClick = {
+                deleteParams = Triple(false, 0L, String.EMPTY)
+            },
+            onDismiss = {
+                deleteParams = Triple(false, 0L, String.EMPTY)
+            }
+        )
     }
 
     if (updateFieldParams.show) {
@@ -196,9 +228,9 @@ private fun ConsultationContent(
         item {
             FilterSectionComponent(
                 typography = typography,
-                isExpanded = isExpanded1,
+                isExpanded = isExpanded,
                 rotationState = rotationState,
-                onChangeExpanded = { isExpanded1 = it },
+                onChangeExpanded = { isExpanded = it },
                 onChangeValue = { value, field ->
                     dispatcherEvent(ConsultationEvent.ValueChanged(value, field))
                 },
@@ -229,7 +261,7 @@ private fun ConsultationContent(
                     updateFieldParams = it
                 },
                 onDeleteClick = { id, idFirebase ->
-
+                    deleteParams = Triple(true, id, idFirebase)
                 }
             )
         }
@@ -254,9 +286,10 @@ private fun HeaderTableContent(
 ) {
     Row(
         modifier = modifier
+            .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
             .background(BackgroundTableBrand)
             .lineDividerSectionTable()
-            .padding(8.dp),
+            .padding(12.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -623,7 +656,7 @@ private fun InformationTableContent(
                     onUpdateClick(updateFieldParams)
                 }
             ,
-            text = "S/${client.fee}",
+            text = "S/ ${client.fee}",
             color = SoftTextColor,
             style = typography.bodyLarge
         )
@@ -652,10 +685,15 @@ private fun InformationTableContent(
         )
 
         Box(modifier = Modifier.width(64.dp), contentAlignment = Alignment.Center){
-            IconButtonAJ(
-                modifier = Modifier.size(48.dp),
-                icon = Icons.Default.Delete,
-                onClick = { onDeleteClick(client.id ?: 0L, client.idFirebase) }
+            Icon(
+                modifier = Modifier
+                    .size(24.dp)
+                    .clickable(
+                        onClick = { onDeleteClick(client.id ?: 0L, client.idFirebase) }
+                    ),
+                imageVector = Icons.Default.Delete,
+                contentDescription = null,
+                tint = BackgroundBrandColor
             )
         }
     }
@@ -778,7 +816,6 @@ fun ConsultationMobileScreenPreview() {
         Box(modifier = Modifier.background(Color.White)){
             ConsultationContent(
                 title = "Consulta",
-                isExpanded = true,
                 dispatcherEvent = {},
                 uiState = ConsultationState(),
                 catalog = ConsultationViewModel.CatalogState()

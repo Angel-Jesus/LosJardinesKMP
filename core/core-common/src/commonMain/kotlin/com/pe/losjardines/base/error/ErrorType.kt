@@ -61,7 +61,11 @@ enum class FirebaseAuthErrorType {
                         fullMessage.contains("network request failed") -> NETWORK_ERROR
 
                 fullMessage.contains("invalid-credential") ||
-                        fullMessage.contains("credential is malformed") -> INVALID_CREDENTIAL
+                        fullMessage.contains("invalid_login_credentials") ||
+                        fullMessage.contains("invalid login credentials") ||
+                        fullMessage.contains("credential is malformed") ||
+                        fullMessage.contains("auth credential is incorrect") ||
+                        fullMessage.contains("malformed or has expired") -> INVALID_CREDENTIAL
 
                 fullMessage.contains("account-exists-with-different-credential") ||
                         fullMessage.contains("exists with different sign-in credentials") ->

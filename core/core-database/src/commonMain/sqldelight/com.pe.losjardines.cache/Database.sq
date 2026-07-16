@@ -27,6 +27,10 @@ CREATE TABLE registration(
 getRegistersByMonth:
 SELECT * FROM registration WHERE dateEnter BETWEEN ? AND ? AND (? = '' OR numberDocument LIKE ?) ORDER BY dateEnter DESC;
 
+-- Get register by id
+getRegistrationById:
+SELECT * FROM registration WHERE id = ?;
+
 --Insert value on table
 insertRegistration:
 INSERT INTO registration(
@@ -93,6 +97,75 @@ WHERE id = :id;
 -- delete on table
 deleteById:
 DELETE FROM registration WHERE id = ?;
+
+-- delete all rows on table
+deleteAllRegistration:
+DELETE FROM registration;
+
+-- Create Trash Table
+CREATE TABLE trash(
+    id INTEGER PRIMARY KEY NOT NULL ON CONFLICT REPLACE,
+    collection TEXT NOT NULL,
+    idFirebase TEXT NOT NULL,
+    country TEXT,
+    dateEnter INTEGER,
+    dateExit INTEGER,
+    fee REAL,
+    name TEXT,
+    sex TEXT,
+    typeDocument TEXT,
+    numberDocument TEXT,
+    observation TEXT,
+    reasonTravel TEXT,
+    region TEXT,
+    typeRoom TEXT,
+    room TEXT,
+    companions TEXT,
+    dateDeleted INTEGER,
+    state TEXT
+);
+
+-- Insert value on trash table
+insertTrash:
+INSERT INTO trash(
+    collection,
+    idFirebase,
+    country,
+    dateEnter,
+    dateExit,
+    fee,
+    name,
+    sex,
+    typeDocument,
+    numberDocument,
+    observation,
+    reasonTravel,
+    region,
+    room,
+    typeRoom,
+    companions,
+    dateDeleted,
+    state
+) VALUES (
+    :collection,
+    :idFirebase,
+    :country,
+    :dateEnter,
+    :dateExit,
+    :fee,
+    :name,
+    :sex,
+    :typeDocument,
+    :numberDocument,
+    :observation,
+    :reasonTravel,
+    :region,
+    :room,
+    :typeRoom,
+    :companions,
+    :dateDeleted,
+    :state
+);
 
 -- create table by country
 CREATE TABLE countries (

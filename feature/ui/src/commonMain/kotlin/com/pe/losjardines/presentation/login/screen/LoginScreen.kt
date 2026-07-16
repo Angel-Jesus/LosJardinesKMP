@@ -26,13 +26,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.pe.losjardines.components.buttom.ButtonAJ
+import com.pe.losjardines.components.dialog.ResultDialog
+import com.pe.losjardines.components.loading.LoadingAJ
 import com.pe.losjardines.components.textInput.InputType
 import com.pe.losjardines.components.textInput.TextInputAJ
+import com.pe.losjardines.presentation.content.utils.ResultState
 import com.pe.losjardines.presentation.login.contract.LoginEffect
 import com.pe.losjardines.presentation.login.contract.LoginEvent
 import com.pe.losjardines.presentation.login.contract.LoginState
 import com.pe.losjardines.presentation.login.viewmodel.FieldType
 import com.pe.losjardines.presentation.login.viewmodel.LoginViewModel
+import com.pe.losjardines.utils.companions.EMPTY
 import com.pe.losjardines.values.AppTheme
 import com.pe.losjardines.values.AppTypography
 import com.pe.losjardines.values.BrandTextColor
@@ -45,6 +49,7 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
+import kotlin.String.Companion
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
@@ -60,10 +65,25 @@ fun LoginScreen(
 
         viewModel.effect.collectLatest { effect ->
             when(effect){
-                LoginEffect.LoginError -> TODO()
                 LoginEffect.LoginSuccess -> onPrincipalScreen()
             }
         }
+    }
+
+    ResultDialog(
+        modifier = Modifier,
+        title = "Error en el inicio de sesión",
+        description = uiState.messageError,
+        isSuccess = false,
+        visibility = uiState.messageError.isNotEmpty(),
+        onDismiss = { viewModel.hideErrorDialog() }
+    )
+
+    if(uiState.loading){
+        LoadingAJ(
+            title = "Iniciar sesión",
+            subtitle = "Validando..."
+        )
     }
 
     LoginContent(

@@ -11,7 +11,7 @@ fun FirebaseAuthErrorType.getMessage(): String{
         FirebaseAuthErrorType.OPERATION_NOT_ALLOWED -> "This operation is not allowed"
         FirebaseAuthErrorType.TOO_MANY_REQUESTS -> "Too many attempts. Please try again later"
         FirebaseAuthErrorType.NETWORK_ERROR -> "Network error. Please check your connection"
-        FirebaseAuthErrorType.INVALID_CREDENTIAL -> "Invalid credentials provided"
+        FirebaseAuthErrorType.INVALID_CREDENTIAL -> "Incorrect email or password. Please try again"
         FirebaseAuthErrorType.ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL ->
             "An account already exists with a different sign-in method"
         FirebaseAuthErrorType.REQUIRES_RECENT_LOGIN -> "Please log in again to continue"

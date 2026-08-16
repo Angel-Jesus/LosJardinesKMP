@@ -230,7 +230,7 @@ private fun ReservationContent(
             rowKey = { it.id ?: 0L },
             scrollState = sharedScrollState,
             actionWidth = ACTION_COLUMN_WIDTH,
-            onUpdateClick = { updateFieldParams = it },
+            onUpdateClick = { if(uiState.reservationStatus.description == ReservationStatus.CHECK_IN.description) updateFieldParams = it },
             emptyContent = {
                 EmptyStateAJ(
                     modifier = Modifier.fillMaxWidth(),

@@ -41,7 +41,11 @@ fun NavGraphBuilder.navContentMobileManager(
             reservationId = reservationId,
             onBack = { navController.popBackStack() },
             onCompleted = {
-                navController.navigate(ItemsNavScreen.ContentNavScreen.route) {
+                navController.navigate(
+                    ItemsNavScreen.ContentNavScreen.createRoute(
+                        ItemsContentNavScreen.ConsultNavScreen.route
+                    )
+                ) {
                     popUpTo(ItemsNavScreen.ContentNavScreen.route) { inclusive = true }
                     launchSingleTop = true
                 }
@@ -56,7 +60,20 @@ fun NavGraphBuilder.navContentMobileManager(
         )
     }
 
-    composable(ItemsNavScreen.ContentNavScreen.route){
+    composable(
+        route = ItemsNavScreen.ContentNavScreen.routeWithArgs,
+        arguments = listOf(
+            navArgument(ItemsNavScreen.ContentNavScreen.ARG_START_TAB) {
+                type = NavType.StringType
+                nullable = true
+                defaultValue = null
+            }
+        )
+    ){ backStackEntry ->
+        val startTab = backStackEntry.arguments
+            ?.getString(ItemsNavScreen.ContentNavScreen.ARG_START_TAB)
+            ?: ItemsContentNavScreen.DashboardNavScreen.route
+
         val contentNavController = rememberNavController()
         NavigationBarScreen(
             navController = contentNavController,
@@ -68,7 +85,7 @@ fun NavGraphBuilder.navContentMobileManager(
             content = {
                 NavHost(
                     navController = contentNavController,
-                    startDestination = ItemsContentNavScreen.DashboardNavScreen.route
+                    startDestination = startTab
                 ){
                     composable(ItemsContentNavScreen.DashboardNavScreen.route){
                         HomeMobileScreen(
@@ -78,9 +95,7 @@ fun NavGraphBuilder.navContentMobileManager(
                     }
 
                     composable(ItemsContentNavScreen.ConsultNavScreen.route){
-                        ConsultationMobileScreen(
-                            title = ItemsContentNavScreen.ConsultNavScreen.title,
-                        )
+                        ConsultationMobileScreen(title = ItemsContentNavScreen.ConsultNavScreen.title)
                     }
 
                     composable(ItemsContentNavScreen.ReservationNavScreen.route){
@@ -97,9 +112,7 @@ fun NavGraphBuilder.navContentMobileManager(
                     }
 
                     composable(ItemsContentNavScreen.RoomStatusNavScreen.route){
-                        RoomMobileScreen(
-                            title = ItemsContentNavScreen.RoomStatusNavScreen.title,
-                        )
+                        RoomMobileScreen(title = ItemsContentNavScreen.RoomStatusNavScreen.title)
                     }
                 }
             }

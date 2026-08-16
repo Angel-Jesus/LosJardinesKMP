@@ -1,6 +1,7 @@
 package com.pe.losjardines.firebase.firestore
 
 import com.pe.losjardines.firebase.firestore.model.RegistrationNetwork
+import com.pe.losjardines.firebase.firestore.model.ReservationNetwork
 import com.pe.losjardines.firebase.firestore.model.RoomStateNetwork
 import com.pe.losjardines.firebase.firestore.model.TrashNetwork
 import dev.gitlive.firebase.firestore.FirebaseFirestore
@@ -33,5 +34,13 @@ class FirestoreService(private val firestore: FirebaseFirestore) {
 
     suspend fun getRegistrations(collection: String): List<RegistrationNetwork>{
         return firestore.collection(collection).get().documents.map { it.data<RegistrationNetwork>().copy(id = it.id) }
+    }
+
+    suspend fun sendReservation(reservationNetwork: ReservationNetwork){
+        firestore.collection(FirestoreConstance.RESERVATION_COLLECTION).document(reservationNetwork.id).set(data = reservationNetwork, merge = true)
+    }
+
+    suspend fun getReservations(): List<ReservationNetwork>{
+        return firestore.collection(FirestoreConstance.RESERVATION_COLLECTION).get().documents.map { it.data<ReservationNetwork>().copy(id = it.id) }
     }
 }

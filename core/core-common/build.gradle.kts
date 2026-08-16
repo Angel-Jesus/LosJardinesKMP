@@ -34,10 +34,6 @@ kotlin {
             implementation(libs.androidx.lifecycle.runtime.compose)
             // Coroutines
             implementation(libs.kotlinx.coroutines.core)
-            // Firebase Auth
-            implementation(libs.gitlive.firebase.auth.common)
-            // Firestore
-            implementation(libs.gitlive.firebase.firestore.common)
             // Date Time
             implementation(libs.kotlinx.datetime)
         }

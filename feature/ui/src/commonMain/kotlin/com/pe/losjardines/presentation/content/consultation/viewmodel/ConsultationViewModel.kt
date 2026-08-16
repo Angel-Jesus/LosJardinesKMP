@@ -6,7 +6,7 @@ import com.pe.losjardines.base.ui.BaseViewModel
 import com.pe.losjardines.presentation.content.consultation.contract.ConsultationEffect
 import com.pe.losjardines.presentation.content.consultation.contract.ConsultationEvent
 import com.pe.losjardines.presentation.content.consultation.contract.ConsultationState
-import com.pe.losjardines.presentation.content.consultation.screen.UpdateFieldParams
+import com.pe.losjardines.presentation.components.table.UpdateFieldParams
 import com.pe.losjardines.presentation.content.utils.FieldFilter
 import com.pe.losjardines.presentation.content.utils.FieldRegistration.Companion.toFielTypeRegister
 import com.pe.losjardines.usecases.content.GetClientsRegisterUseCase
@@ -62,20 +62,24 @@ class ConsultationViewModel(
     }
 
     private fun updateClientInformation(newValue: String, fieldParams: UpdateFieldParams?) {
+        if(fieldParams == null) return
+
         updateState { copy(loading = true) }
 
         val updateParams = UpdateParams(
-           registrationDto = uiState.value.clientsRegister.firstOrNull{ it.id == fieldParams?.id },
+           registrationDto = uiState.value.clientsRegister.firstOrNull{ it.id == fieldParams.id },
            newValue = newValue,
-           fieldTypeRegister = fieldParams?.field?.toFielTypeRegister()
+           fieldTypeRegister = fieldParams.field?.toFielTypeRegister()
         )
 
         executeTask(
             task = { updateClientInfoUseCase.run(updateParams) },
             onSuccess = {
                 val clientUpdate = uiState.value.clientsRegister.map {
-                    if(it.id == fieldParams?.id){
-                        updateParams.fieldTypeRegister?.getRegisterUpdate(newValue, updateParams.registrationDto!!)?: it
+                    if(it.id == fieldParams.id){
+                        updateParams.registrationDto?.let { registrationDto ->
+                            updateParams.fieldTypeRegister?.getRegisterUpdate(newValue, registrationDto)
+                        } ?: it
                     }else{
                         it
                     }
@@ -87,34 +91,18 @@ class ConsultationViewModel(
     }
 
     private fun getCatalogInformation(){
-        getCountries()
-        getTravelReasons()
-        getRegions()
-    }
-
-    private fun getCountries(){
-        executeTask(
-            task = { getCountriesUseCase.run() },
-            onSuccess = { countries ->
-                catalogState.update { it.copy(countries = countries) }
-            }
-        )
-    }
-
-    private fun getTravelReasons(){
-        executeTask(
-            task = { getReasonTravelsUseCase.run() },
-            onSuccess = { travelReasons ->
-                catalogState.update { it.copy(travelReasons = travelReasons) }
-            }
-        )
-    }
-
-    private fun getRegions(){
-        executeTask(
-            task = { getRegionsUseCase.run("PE") },
-            onSuccess = { regions ->
-                catalogState.update { it.copy(regions = regions) }
+        executeParallel(
+            first = { getCountriesUseCase.run() },
+            second = { getReasonTravelsUseCase.run() },
+            third = { getRegionsUseCase.run("PE") },
+            onSuccess = { countries, travelReasons, regions ->
+                catalogState.update {
+                    it.copy(
+                        countries = countries,
+                        travelReasons = travelReasons,
+                        regions = regions
+                    )
+                }
             }
         )
     }

@@ -30,5 +30,7 @@
 
     <string name="title_not_register_found">No se encontraron registros</string>
     <string name="description_not_register_found">No se encontraron registros almacenados en el sistema, por favor registre un nuevo cliente o intente con otros filtros</string>
+    <string name="title_not_reservation_found">No se encontraron reservas</string>
+    <string name="description_not_reservation_found">No se encontraron reservas almacenados en el sistema, por favor registre una nueva reserva</string>
 
 </resources>

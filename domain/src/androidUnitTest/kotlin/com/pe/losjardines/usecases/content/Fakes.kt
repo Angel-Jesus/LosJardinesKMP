@@ -8,6 +8,7 @@ import com.pe.losjardines.usecases.model.CountryDto
 import com.pe.losjardines.usecases.model.FielTypeRegister
 import com.pe.losjardines.usecases.model.RegionDto
 import com.pe.losjardines.usecases.model.RegistrationDto
+import com.pe.losjardines.usecases.model.ReservationDto
 import com.pe.losjardines.usecases.model.RoomDto
 import com.pe.losjardines.usecases.model.TravelReasonDto
 import com.pe.losjardines.usecases.model.TypeRoomDto
@@ -54,6 +55,15 @@ class FakeDatabaseRepository(
     override suspend fun getTypeRoom(): Either<Failure, List<TypeRoomDto>> = Either.Success(emptyList())
     override suspend fun saveCustomerInformation(registrationDto: RegistrationDto, state: String): Either<Failure, Unit> = Either.Success(Unit)
     override suspend fun updateClientInformation(state: String, registrationDto: RegistrationDto): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun getRegistrationById(id: Long): Either<Failure, RegistrationDto> = Either.Error(Failure.UnknownFailure("fake"))
+    override suspend fun moveToTrash(registrationDto: RegistrationDto, dateDeleted: Long, state: String): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun deleteAllRegisters(): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun insertRegistrations(registrations: List<RegistrationDto>, state: String): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun saveReservation(reservationDto: ReservationDto, state: String): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun getReservationById(id: Long): Either<Failure, ReservationDto> = Either.Error(Failure.UnknownFailure("fake"))
+    override suspend fun moveReservationToTrash(reservationDto: ReservationDto, dateDeleted: Long, state: String): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun getReservations(state: String, limit: Long, offset: Long): Either<Failure, List<ReservationDto>> = Either.Success(emptyList())
+    override suspend fun updateReservationAttentionState(id: Long, attentionState: String, state: String): Either<Failure, Unit> = Either.Success(Unit)
 }
 
 /** Fake del repositorio remoto. No participa en la generación del reporte. */
@@ -63,6 +73,12 @@ class FakeFirestoreRepository : FirestoreRepository {
     override suspend fun updateClientField(registrationDto: RegistrationDto, field: FielTypeRegister, value: Any): Either<Failure, Unit> = Either.Success(Unit)
     override suspend fun updateRoomState(room: RoomDto): Either<Failure, Unit> = Either.Success(Unit)
     override suspend fun getRoomState(): Either<Failure, List<RoomDto>> = Either.Success(emptyList())
+    override suspend fun sendToTrash(registrationDto: RegistrationDto, dateDeleted: Long): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun sendReservation(reservationDto: ReservationDto): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun updateReservationAttentionState(reservationDto: ReservationDto, attentionState: String): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun sendReservationToTrash(reservationDto: ReservationDto, dateDeleted: Long): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun deleteReservation(reservationDto: ReservationDto): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun getRegistrationsByCollection(collection: String): Either<Failure, List<RegistrationDto>> = Either.Success(emptyList())
 }
 
 /**

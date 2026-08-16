@@ -3,8 +3,10 @@ package com.pe.losjardines.firebase.firestore
 object FirestoreConstance{
     const val ROOMS_COLLECTION = "Rooms"
     const val TRASH_COLLECTION = "Trash"
+    const val RESERVATION_COLLECTION = "Reservation"
     const val PRICE_FIELD = "price"
     const val STATE_FIELD = "state"
+    const val ATTENTION_STATE_FIELD = "attentionState"
 
     const val NAME_FIELD = "name"
     const val SEX_FIELD = "sex"

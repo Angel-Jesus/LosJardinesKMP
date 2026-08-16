@@ -39,7 +39,7 @@ enum class FielTypeRegister {
                 COUNTRY_OF_RESIDENCE -> registrationDto.copy(country = newValue)
                 REGION_OF_RESIDENCE -> registrationDto.copy(region = newValue)
                 DOCUMENT_TYPE -> registrationDto.copy(typeDocument = newValue)
-                DOCUMENT_NUMBER -> registrationDto.copy(numberDocument = newValue)
+                DOCUMENT_NUMBER -> registrationDto.copy(numberDocument =  newValue)
                 TRAVEL_REASON -> registrationDto.copy(reasonTravel = newValue)
                 CHECK_IN_DATE -> registrationDto.copy(dateEnter = newValue)
                 CHECK_OUT_DATE -> registrationDto.copy(dateExit = newValue)

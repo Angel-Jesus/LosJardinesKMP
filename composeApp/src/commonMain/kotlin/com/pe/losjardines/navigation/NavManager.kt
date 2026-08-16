@@ -74,6 +74,7 @@ fun NavManager(
 
         if(isMobile()){
             navContentMobileManager(
+                navController = navController,
                 onLogout = {
                     navigationViewModel.logout()
                     navController.navigate(

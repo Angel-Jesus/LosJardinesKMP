@@ -2,6 +2,7 @@ package com.pe.losjardines.presentation.content.registration.contract
 
 import androidx.compose.ui.text.input.TextFieldValue
 import com.pe.losjardines.base.ui.BaseUiState
+import com.pe.losjardines.usecases.model.ReservationDto
 import com.pe.losjardines.utils.companions.EMPTY
 
 data class RegistrationState(
@@ -17,5 +18,7 @@ data class RegistrationState(
     val typeRoom: String = String.EMPTY,
     val room: TextFieldValue = TextFieldValue(),
     val rate: TextFieldValue = TextFieldValue(),
-    val observation: TextFieldValue = TextFieldValue()
+    val observation: TextFieldValue = TextFieldValue(),
+    /** Reserva de origen cuando la pantalla opera en modo check-in; `null` en registro normal. */
+    val reservation: ReservationDto? = null
 ): BaseUiState

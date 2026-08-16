@@ -7,8 +7,13 @@ import com.pe.losjardines.usecases.catalog.GetCountriesUseCase
 import com.pe.losjardines.usecases.catalog.GetReasonTravelsUseCase
 import com.pe.losjardines.usecases.catalog.GetRegionsUseCase
 import com.pe.losjardines.usecases.catalog.GetTypeRoomUseCase
+import com.pe.losjardines.usecases.content.CheckInReservationUseCase
+import com.pe.losjardines.usecases.content.DeleteReservationUseCase
+import com.pe.losjardines.usecases.content.GetReservationByIdUseCase
+import com.pe.losjardines.usecases.content.GetReservationsUseCase
 import com.pe.losjardines.usecases.content.GetRoomStateUseCase
 import com.pe.losjardines.usecases.content.SaveCustomerRegistrationUseCase
+import com.pe.losjardines.usecases.content.SaveReservationUseCase
 import com.pe.losjardines.usecases.content.SyncronizationUseCase
 import com.pe.losjardines.usecases.content.UpdateClientInfoUseCase
 import com.pe.losjardines.usecases.content.UpdateRegisterByCloudUseCase
@@ -36,6 +41,11 @@ val domainModules = module {
     factoryOf(::UpdateStateRoomUseCase)
     factoryOf(::UpdateClientInfoUseCase)
     factoryOf(::DeleteClientUseCase)
+    factoryOf(::SaveReservationUseCase)
+    factoryOf(::GetReservationsUseCase)
+    factoryOf(::DeleteReservationUseCase)
+    factoryOf(::CheckInReservationUseCase)
+    factoryOf(::GetReservationByIdUseCase)
     factoryOf(::GenerateExcelReportUseCase)
     factoryOf(::UpdateRegisterByCloudUseCase)
 

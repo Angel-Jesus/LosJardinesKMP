@@ -39,7 +39,16 @@ sealed class ItemsContentNavScreen(
     data object RegistrationNavScreen : ItemsContentNavScreen(
         route = "Registration",
         title = "Registro"
-    )
+    ) {
+        const val ARG_RESERVATION_ID = "reservationId"
+
+        /** Ruta que declara el argumento opcional `reservationId` (modo check-in). */
+        val routeWithArgs = "$route?$ARG_RESERVATION_ID={$ARG_RESERVATION_ID}"
+
+        /** Construye la ruta de navegación. Con [reservationId] entra en modo check-in. */
+        fun createRoute(reservationId: Long? = null): String =
+            if (reservationId != null) "$route?$ARG_RESERVATION_ID=$reservationId" else route
+    }
 
     data object ReservationRegisterNavScreen : ItemsContentNavScreen(
         route = "ReservationRegister",

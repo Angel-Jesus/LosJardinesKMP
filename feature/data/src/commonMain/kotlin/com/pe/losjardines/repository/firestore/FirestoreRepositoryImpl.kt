@@ -2,7 +2,7 @@ package com.pe.losjardines.repository.firestore
 
 import com.pe.losjardines.base.either.Either
 import com.pe.losjardines.base.error.Failure
-import com.pe.losjardines.base.network.BaseClient
+import com.pe.losjardines.firebase.base.BaseClient
 import com.pe.losjardines.firebase.firestore.FirestoreConstance
 import com.pe.losjardines.firebase.firestore.FirestoreManager
 import com.pe.losjardines.repository.FirestoreRepository
@@ -12,6 +12,7 @@ import com.pe.losjardines.repository.firestore.mapper.toFirestoreField
 import com.pe.losjardines.repository.firestore.mapper.toTrashData
 import com.pe.losjardines.usecases.model.FielTypeRegister
 import com.pe.losjardines.usecases.model.RegistrationDto
+import com.pe.losjardines.usecases.model.ReservationDto
 import com.pe.losjardines.usecases.model.RoomDto
 import com.pe.losjardines.utils.NetworkChecker
 
@@ -70,6 +71,37 @@ class FirestoreRepositoryImpl(
     override suspend fun getRegistrationsByCollection(collection: String): Either<Failure, List<RegistrationDto>> {
         return callFirestore {
             firebaseManager.getRegistrations(collection).map { it.toDomain(collection) }
+        }
+    }
+
+    override suspend fun sendReservation(reservationDto: ReservationDto): Either<Failure, Unit> {
+        return callFirestore {
+            firebaseManager.sendReservation(reservationDto.toData())
+        }
+    }
+
+    override suspend fun updateReservationAttentionState(
+        reservationDto: ReservationDto,
+        attentionState: String
+    ): Either<Failure, Unit> {
+        return callFirestore {
+            firebaseManager.update(
+                FirestoreConstance.RESERVATION_COLLECTION,
+                reservationDto.idFirebase,
+                mapOf(FirestoreConstance.ATTENTION_STATE_FIELD to attentionState)
+            )
+        }
+    }
+
+    override suspend fun sendReservationToTrash(reservationDto: ReservationDto, dateDeleted: Long): Either<Failure, Unit> {
+        return callFirestore {
+            firebaseManager.sendTrash(reservationDto.toTrashData(dateDeleted))
+        }
+    }
+
+    override suspend fun deleteReservation(reservationDto: ReservationDto): Either<Failure, Unit> {
+        return callFirestore {
+            firebaseManager.delete(FirestoreConstance.RESERVATION_COLLECTION, reservationDto.idFirebase)
         }
     }
 }

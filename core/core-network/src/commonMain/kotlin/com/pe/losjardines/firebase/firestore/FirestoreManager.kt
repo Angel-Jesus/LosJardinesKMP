@@ -1,6 +1,7 @@
 package com.pe.losjardines.firebase.firestore
 
 import com.pe.losjardines.firebase.firestore.model.RegistrationNetwork
+import com.pe.losjardines.firebase.firestore.model.ReservationNetwork
 import com.pe.losjardines.firebase.firestore.model.RoomStateNetwork
 import com.pe.losjardines.firebase.firestore.model.TrashNetwork
 
@@ -14,6 +15,14 @@ class FirestoreManager(
 
     suspend fun getRegistrations(collection: String): List<RegistrationNetwork>{
         return firestoreService.getRegistrations(collection)
+    }
+
+    suspend fun sendReservation(reservationNetwork: ReservationNetwork){
+        firestoreService.sendReservation(reservationNetwork)
+    }
+
+    suspend fun getReservations(): List<ReservationNetwork>{
+        return firestoreService.getReservations()
     }
 
     suspend fun sendTrash(trashNetwork: TrashNetwork){

@@ -1,7 +1,7 @@
 package com.pe.losjardines.presentation.content.consultation.contract
 
 import com.pe.losjardines.base.ui.BaseEvent
-import com.pe.losjardines.presentation.content.consultation.screen.UpdateFieldParams
+import com.pe.losjardines.presentation.components.table.UpdateFieldParams
 import com.pe.losjardines.presentation.content.utils.FieldFilter
 import com.pe.losjardines.usecases.model.FilterValues
 

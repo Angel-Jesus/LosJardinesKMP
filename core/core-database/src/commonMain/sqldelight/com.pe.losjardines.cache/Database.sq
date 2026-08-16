@@ -167,6 +167,88 @@ INSERT INTO trash(
     :state
 );
 
+-- Create Reservation Table
+CREATE TABLE reservation(
+    id INTEGER PRIMARY KEY NOT NULL ON CONFLICT REPLACE,
+    collection TEXT NOT NULL,
+    idFirebase TEXT NOT NULL,
+    country TEXT,
+    dateEnter INTEGER,
+    dateExit INTEGER,
+    fee REAL,
+    name TEXT,
+    sex TEXT,
+    typeDocument TEXT,
+    numberDocument TEXT,
+    observation TEXT,
+    region TEXT,
+    typeRoom TEXT,
+    room TEXT,
+    companions TEXT,
+    state TEXT,
+    attentionState TEXT
+);
+
+-- Get reservations by state, newest first, paginated
+getReservationsByState:
+SELECT * FROM reservation WHERE attentionState = :attentionState ORDER BY dateEnter DESC LIMIT :limit OFFSET :offset;
+
+-- Get reservation by id
+getReservationById:
+SELECT * FROM reservation WHERE id = ?;
+
+-- Insert value on reservation table
+insertReservation:
+INSERT INTO reservation(
+    collection,
+    idFirebase,
+    country,
+    dateEnter,
+    dateExit,
+    fee,
+    name,
+    sex,
+    typeDocument,
+    numberDocument,
+    observation,
+    region,
+    room,
+    typeRoom,
+    companions,
+    state,
+    attentionState
+) VALUES (
+    :collection,
+    :idFirebase,
+    :country,
+    :dateEnter,
+    :dateExit,
+    :fee,
+    :name,
+    :sex,
+    :typeDocument,
+    :numberDocument,
+    :observation,
+    :region,
+    :room,
+    :typeRoom,
+    :companions,
+    :state,
+    :attentionState
+);
+
+-- update reservation attention state (check-in) and its sync state
+updateReservationAttentionState:
+UPDATE reservation SET attentionState = :attentionState, state = :state WHERE id = :id;
+
+-- delete reservation on table
+deleteReservationById:
+DELETE FROM reservation WHERE id = ?;
+
+-- delete all rows on reservation table
+deleteAllReservations:
+DELETE FROM reservation;
+
 -- create table by country
 CREATE TABLE countries (
     id              TEXT PRIMARY KEY,

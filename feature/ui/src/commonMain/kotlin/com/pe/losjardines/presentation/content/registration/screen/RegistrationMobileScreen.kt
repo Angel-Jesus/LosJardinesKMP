@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -64,6 +65,9 @@ import org.koin.core.annotation.KoinExperimentalAPI
 @Composable
 fun RegistrationMobileScreen(
     title: String,
+    reservationId: Long? = null,
+    onBack: () -> Unit = {},
+    onCompleted: () -> Unit = {},
     viewModel: RegistrationViewModel = koinViewModel(),
     typography: AppTypography = LocalAppTypographyCore.current
 ){
@@ -107,18 +111,21 @@ fun RegistrationMobileScreen(
 
     LaunchedEffect(true){
         viewModel.onEvent(RegistrationEvent.GetCatalogInformation)
+        reservationId?.let { viewModel.onEvent(RegistrationEvent.LoadReservation(it)) }
 
         viewModel.effect.collectLatest { effect ->
             isLoading = false
 
-            showResult = when(effect){
+            when(effect){
                 is RegistrationEffect.ErrorSave -> {
-                    Pair(ResultState.ERROR, effect.message)
+                    showResult = Pair(ResultState.ERROR, effect.message)
                 }
 
                 is RegistrationEffect.SuccessSave -> {
-                    Pair(ResultState.SUCCESS, effect.message.orEmpty())
+                    showResult = Pair(ResultState.SUCCESS, effect.message.orEmpty())
                 }
+
+                is RegistrationEffect.CheckInCompleted -> onCompleted()
             }
         }
     }
@@ -164,13 +171,15 @@ fun RegistrationMobileScreen(
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+        modifier = Modifier.fillMaxSize().systemBarsPadding().padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         item {
             HeaderComponent(
                 modifier = Modifier.fillMaxWidth().height(48.dp),
-                title = title
+                title = title,
+                backEnabled = true,
+                onBack = onBack
             )
         }
 

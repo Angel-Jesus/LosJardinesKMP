@@ -13,6 +13,8 @@ import com.pe.losjardines.usecases.catalog.GetCountriesUseCase
 import com.pe.losjardines.usecases.catalog.GetReasonTravelsUseCase
 import com.pe.losjardines.usecases.catalog.GetRegionsUseCase
 import com.pe.losjardines.usecases.catalog.GetTypeRoomUseCase
+import com.pe.losjardines.usecases.content.CheckInReservationUseCase
+import com.pe.losjardines.usecases.content.GetReservationByIdUseCase
 import com.pe.losjardines.usecases.content.SaveCustomerRegistrationUseCase
 import com.pe.losjardines.usecases.model.CountryDto
 import com.pe.losjardines.usecases.model.RegionDto
@@ -31,7 +33,9 @@ class RegistrationViewModel(
     private val getRegionsUseCase: GetRegionsUseCase,
     private val getReasonTravelsUseCase: GetReasonTravelsUseCase,
     private val getTypeRoomUseCase: GetTypeRoomUseCase,
-    private val saveCustomerRegistrationUseCase: SaveCustomerRegistrationUseCase
+    private val saveCustomerRegistrationUseCase: SaveCustomerRegistrationUseCase,
+    private val checkInReservationUseCase: CheckInReservationUseCase,
+    private val getReservationByIdUseCase: GetReservationByIdUseCase
 ): BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(RegistrationState()) {
 
     private val _catalogState = MutableStateFlow(CatalogState())
@@ -59,11 +63,13 @@ class RegistrationViewModel(
             is RegistrationEvent.GetCatalogInformation -> getCatalogInformation()
             is RegistrationEvent.ValueChanged -> valueChanged(event.value, event.field)
             is RegistrationEvent.SaveData -> saveData()
+            is RegistrationEvent.LoadReservation -> loadReservation(event.id)
         }
     }
 
     private fun saveData() {
         val collection = getDateNow().year.toString()
+        val reservation = uiState.value.reservation
 
         val customerInformation = RegistrationDto(
             collection = collection,
@@ -82,15 +88,59 @@ class RegistrationViewModel(
             room = room.value.text
         )
         executeTask(
-            task = { saveCustomerRegistrationUseCase.run(customerInformation) },
+            task = {
+                // Modo check-in: primero se actualiza el estado de la reserva (Firebase + local),
+                // luego se registra al cliente. Cada paso degrada a "pendiente" si no hay conexión.
+                if (reservation != null) checkInReservationUseCase.run(reservation)
+                saveCustomerRegistrationUseCase.run(customerInformation)
+            },
             onSuccess = {
                 resetData()
-                sendEffect(RegistrationEffect.SuccessSave("Información del cliente guardado correctamente"))
+                if (reservation != null) {
+                    sendEffect(RegistrationEffect.CheckInCompleted)
+                } else {
+                    sendEffect(RegistrationEffect.SuccessSave("Información del cliente guardado correctamente"))
+                }
             },
             onError = {
                 sendEffect(RegistrationEffect.ErrorSave(it.getMessage().orEmpty()))
             }
         )
+    }
+
+    private fun loadReservation(id: Long) {
+        executeTask(
+            task = { getReservationByIdUseCase.run(id) },
+            onSuccess = { reservation ->
+                updateState {
+                    copy(
+                        fullName = TextFieldValue(reservation.userName),
+                        sex = reservation.sex,
+                        country = reservation.country,
+                        region = reservation.region,
+                        documentType = reservation.typeDocument,
+                        documentNumber = TextFieldValue(reservation.numberDocument),
+                        checkInDate = reservation.dateEnter,
+                        checkOutDate = reservation.dateExit,
+                        typeRoom = reservation.typeRoom,
+                        room = TextFieldValue(reservation.room),
+                        rate = TextFieldValue(reservation.fee),
+                        observation = TextFieldValue(reservation.observation),
+                        reservation = reservation
+                    )
+                }
+                loadRegionsForSelectedCountry(reservation.country)
+            },
+            onError = {
+                sendEffect(RegistrationEffect.ErrorSave(it.getMessage().orEmpty()))
+            }
+        )
+    }
+
+    private fun loadRegionsForSelectedCountry(countryName: String) {
+        if (countryName.isEmpty()) return
+        val country = _catalogState.value.countries.find { it.name == countryName } ?: return
+        getRegions(country.id)
     }
 
     private fun valueChanged(value: Any, field: FieldRegistration){
@@ -132,6 +182,8 @@ class RegistrationViewModel(
                         typeRooms = typeRooms
                     )
                 }
+                // Si el formulario ya fue precargado (modo check-in), aseguramos las regiones del país.
+                loadRegionsForSelectedCountry(uiState.value.country)
             },
             onError = {
                 println("Error: $it")

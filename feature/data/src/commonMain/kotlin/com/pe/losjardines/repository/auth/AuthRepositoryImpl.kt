@@ -2,7 +2,7 @@ package com.pe.losjardines.repository.auth
 
 import com.pe.losjardines.base.either.Either
 import com.pe.losjardines.base.error.Failure
-import com.pe.losjardines.base.network.BaseClient
+import com.pe.losjardines.firebase.base.BaseClient
 import com.pe.losjardines.firebase.auth.LoginManager
 import com.pe.losjardines.repository.AuthRepository
 import com.pe.losjardines.repository.auth.mapper.toData

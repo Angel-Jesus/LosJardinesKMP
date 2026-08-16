@@ -3,6 +3,8 @@ package com.pe.losjardines.presentation.components
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -23,16 +25,31 @@ fun HeaderComponent(
     title: String,
     typography: AppTypography = LocalAppTypographyCore.current,
     logoutEnabled: Boolean = false,
+    backEnabled: Boolean = false,
+    onBack: () -> Unit = {},
     onLogout: () -> Unit = {}
 ){
     Box(
         modifier = modifier
     ) {
-        Image(
-            modifier = Modifier.size(48.dp).align(alignment = Alignment.CenterStart),
-            painter = painterResource(resource = Res.drawable.logoaj),
-            contentDescription = "logo",
-        )
+        if(backEnabled){
+            IconButton(
+                modifier = Modifier.align(alignment = Alignment.CenterStart),
+                onClick = onBack
+            ){
+                Icon(
+                    modifier = Modifier.size(24.dp),
+                    imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "back"
+                )
+            }
+        } else {
+            Image(
+                modifier = Modifier.size(48.dp).align(alignment = Alignment.CenterStart),
+                painter = painterResource(resource = Res.drawable.logoaj),
+                contentDescription = "logo",
+            )
+        }
 
         Text(
             modifier = Modifier.align(alignment = Alignment.Center),

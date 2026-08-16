@@ -3,6 +3,7 @@ package com.pe.losjardines.di
 import com.pe.losjardines.presentation.content.consultation.viewmodel.ConsultationViewModel
 import com.pe.losjardines.presentation.content.home.viewmodel.HomeViewModel
 import com.pe.losjardines.presentation.content.registration.viewmodel.RegistrationViewModel
+import com.pe.losjardines.presentation.content.reservation.register.viewmodel.ReservationRegisterViewModel
 import com.pe.losjardines.presentation.content.reservation.viewmodel.ReservationViewModel
 import com.pe.losjardines.presentation.content.room.viewmodel.RoomViewModel
 import com.pe.losjardines.presentation.content.utils.ExcelTemplateProvider
@@ -17,6 +18,7 @@ val uiModules = module{
     viewModelOf(::RegistrationViewModel)
     viewModelOf(::ConsultationViewModel)
     viewModelOf(::ReservationViewModel)
+    viewModelOf(::ReservationRegisterViewModel)
     viewModelOf(::RoomViewModel)
     viewModelOf(::HomeViewModel)
 

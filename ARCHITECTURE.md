@@ -47,10 +47,10 @@ Dependencias de proyecto por módulo:
 
 ### Presentation
 - **`:composeApp`** — composition root. `App`, `NavManager`, `NavigationViewModel`, `initKoinModularization`. Lógica específica de plataforma vía `expect/actual` (Android `MyApp`, iOS `MainViewController`, Desktop `main.kt`).
-- **`feature:ui`** — ViewModels MVI (`Login`, `Registration`, `Home`, `Room`, `Consultation`) sobre `BaseViewModel<State, Event, Effect>`, pantallas Compose y contratos.
+- **`feature:ui`** — ViewModels MVI (`Login`, `Registration`, `Home`, `Room`, `Consultation`, `Reservation`) sobre `BaseViewModel<State, Event, Effect>`, pantallas Compose y contratos.
 
 ### Domain (`:domain`)
-- **UseCases** orquestan la lógica de negocio y devuelven/consumen `Either<Failure, T>`.
+- **UseCases** orquestan la lógica de negocio. Consumen el `Either<Failure, T>` que devuelven los repositorios y lo **desenvuelven**: retornan el valor en `Either.Success` o **lanzan** el `Failure` en `Either.Error` (marcados con `@Throws`). Es la presentación quien captura ese `Failure` en `BaseViewModel.executeTask` / `executeParallel`.
 - **DTOs** (`RegistrationDto`, `RoomDto`, catálogos…).
 - **Interfaces de Repository** expresadas por **intención**, sin filtrar detalles de persistencia:
   - `FirestoreRepository`: `sendClient`, `deleteClient`, `updateClientField`, `updateRoomState`, `getRoomState`.
@@ -63,16 +63,25 @@ Dependencias de proyecto por módulo:
   - `FielTypeRegisterMapper.toFirestoreField()` traduce el enum de dominio al nombre de campo de Firestore (la única capa que conoce esa correspondencia, junto a `core-network`).
 
 ### Core
-- **`core-common`** — `BaseViewModel`, `BaseClient`, `Either`, `Failure` (sealed), `NetworkChecker` (expect), `StateProcess`, utilidades, `ExcelEditor`.
+- **`core-common`** — `BaseViewModel`, `Either`, `Failure` (sealed), `NetworkChecker` (expect), `StateProcess`, utilidades, `ExcelEditor`. **No depende de ningún SDK de backend** (sin Firebase/GitLive).
 - **`core-ui`** — `AppTheme`, componentes reutilizables (`ButtonAJ`, `TextInputAJ`, `DropDownAJ`, `DatePicker` por plataforma, diálogos…).
-- **`core-network`** — Firebase Auth/Firestore (GitLive), `LoginManager/Service`, `FirestoreManager/Service`, modelos de red y `FirestoreConstance` (nombres de colecciones/campos).
+- **`core-network`** — Firebase Auth/Firestore (GitLive), `BaseClient` (pre-check de red + `callAuth`/`callFirestore`), mapeo de excepciones Firebase (`FirebaseAuthErrorType`/`FirestoreErrorType`), `LoginManager/Service`, `FirestoreManager/Service`, modelos de red y `FirestoreConstance` (nombres de colecciones/campos).
 - **`core-database`** — SQLDelight, `DatabaseManager`, y el `SqlDriver` provisto por plataforma vía Koin.
 
 ## Manejo de errores — `Either<Failure, T>`
 
-`BaseClient` hace un pre-check de conectividad y envuelve las llamadas en `try/catch`, devolviendo:
+Flujo de un extremo a otro:
+
+1. **`core-network`** — `BaseClient` hace un pre-check de conectividad y envuelve las llamadas Firebase en `try/catch` (`callAuth` / `callFirestore`). Traduce las excepciones (`FirebaseAuthException`, `FirebaseFirestoreException`) a un `Failure` mediante `FirebaseAuthErrorType` / `FirestoreErrorType`, y las expone como `Either<Failure, T>`.
+2. **`feature:data`** — los repositorios propagan ese `Either` hacia el dominio.
+3. **`:domain`** — los UseCases desenvuelven el `Either`: retornan el valor o **lanzan** el `Failure`.
+4. **`feature:ui`** — `BaseViewModel.executeTask` / `executeParallel` capturan el `Throwable` (`Failure.fromThrowable`) y lo llevan al `onError`, que actualiza el estado con `Failure.getMessage()`.
+
+Variantes de `Failure` (sealed, en `core-common`):
 
 `FirebaseAuthFailure` · `FirestoreFailure` · `DatabaseFailure` · `MapperToDomain` · `InternetConnection` · `UnknownFailure`
+
+> `Failure` y su extensión genérica `Failure.getMessage()` viven en `core-common` (agnósticos). El mapeo de excepciones específicas de Firebase (`FirebaseAuthErrorType` / `FirestoreErrorType` y sus `getMessage()`) vive en `core-network`.
 
 ## Estrategia offline-first (en los UseCases)
 
@@ -122,7 +131,19 @@ initKoinModularization
 
 ## Convenciones
 
-- Las clases base viven en `core-common` (`base/ui`, `base/either`, `base/error`, `base/network`).
+- Las clases base agnósticas viven en `core-common` (`base/ui`, `base/either`, `base/error`). Las que dependen de Firebase (`BaseClient`, mapeo de errores) viven en `core-network` (`firebase/base`, `firebase/error`).
 - Los `val xxxModules` de Koin viven en el paquete `com.pe.losjardines.di` de cada módulo Gradle.
 - Cada feature de presentación tiene su tripleta de contrato MVI: `*State` · `*Event` · `*Effect`.
 - Los detalles de persistencia (nombres de colecciones/campos de Firestore, drivers de BD) **no suben** del nivel `core-network` / `feature:data`.
+- **Ningún SDK de backend (Firebase/GitLive) debe aparecer en `core-common`.** El núcleo compartido se mantiene agnóstico; todo lo que dependa de Firebase vive en `core-network`.
+
+## Historial de cambios
+
+### 2026-07-16 — Firebase fuera de `core-common`
+`core-common` dependía de `gitlive.firebase.auth` y `gitlive.firebase.firestore`, lo que hacía que el módulo base (y transitivamente `:domain` y `core-ui`) arrastrara el SDK de Firebase. Se reubicó todo lo acoplado a Firebase en `core-network`:
+
+- `BaseClient` (`base/network`) → `core-network` (`firebase/base`).
+- `FirebaseAuthErrorType` / `FirestoreErrorType` y sus parsers (`base/error/ErrorType.kt`) → `core-network` (`firebase/error/ErrorType.kt`).
+- Extensiones `getMessage()` de esos enums → `core-network` (`firebase/error/ErrorMessage.kt`).
+
+Se mantuvo en `core-common` lo genérico: `Failure` (sealed) y `Failure.getMessage()`. Se eliminaron las dependencias de Firebase de `core-common/build.gradle.kts`. Los únicos consumidores de `BaseClient` (`AuthRepositoryImpl`, `FirestoreRepositoryImpl` en `feature:data`) actualizaron su import a `com.pe.losjardines.firebase.base.BaseClient`.

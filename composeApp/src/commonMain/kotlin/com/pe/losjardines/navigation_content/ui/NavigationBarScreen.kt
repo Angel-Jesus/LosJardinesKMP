@@ -5,7 +5,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CurrencyFranc
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -21,6 +23,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.pe.losjardines.navigation_content.items.ItemsContentNavScreen
 import com.pe.losjardines.values.AppTypography
+import com.pe.losjardines.values.BackgroundBrandColor
 import com.pe.losjardines.values.LocalAppTypographyCore
 import losjardineskmp.composeapp.generated.resources.Res
 import losjardineskmp.composeapp.generated.resources.logoaj
@@ -28,25 +31,53 @@ import org.jetbrains.compose.resources.painterResource
 
 @Composable
 fun NavigationBarScreen(
-    isMobile: Boolean,
     navController: NavHostController,
+    onRegisterClick: (String) -> Unit,
     content: @Composable (() -> Unit)
 ){
-    if(isMobile){
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            bottomBar = {
-                BottomNavBar(navController = navController)
-            },
-            content = {
-                Box(
-                    modifier = Modifier.padding(it).fillMaxSize(),
-                    content = { content() }
-                )
-            }
-        )
-    } else {
+    val currentBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = currentBackStackEntry?.destination?.route
 
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            BottomNavBar(navController = navController)
+        },
+        floatingActionButton = {
+            RegisterFloatingActionButton(
+                currentRoute = currentRoute,
+                onRegisterClick = onRegisterClick
+            )
+        },
+        content = {
+            Box(
+                modifier = Modifier.padding(it).fillMaxSize(),
+                content = { content() }
+            )
+        }
+    )
+}
+
+@Composable
+private fun RegisterFloatingActionButton(
+    currentRoute: String?,
+    onRegisterClick: (String) -> Unit
+){
+    val registerRoute = when (currentRoute) {
+        ItemsContentNavScreen.ConsultNavScreen.route -> ItemsContentNavScreen.RegistrationNavScreen.route
+        ItemsContentNavScreen.ReservationNavScreen.route -> ItemsContentNavScreen.ReservationRegisterNavScreen.route
+        else -> null
+    } ?: return
+
+    FloatingActionButton(
+        onClick = { onRegisterClick(registerRoute) },
+        containerColor = BackgroundBrandColor,
+        contentColor = Color.White
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = "Registrar"
+        )
     }
 }
 

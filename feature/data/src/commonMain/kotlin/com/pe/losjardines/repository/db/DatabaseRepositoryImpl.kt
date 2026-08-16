@@ -9,11 +9,11 @@ import com.pe.losjardines.repository.db.mapper.toData
 import com.pe.losjardines.repository.db.mapper.toDomain
 import com.pe.losjardines.repository.db.mapper.toTrashData
 import com.pe.losjardines.usecases.model.CountryDto
-import com.pe.losjardines.usecases.model.TravelReasonDto
 import com.pe.losjardines.usecases.model.RegionDto
 import com.pe.losjardines.usecases.model.RegistrationDto
+import com.pe.losjardines.usecases.model.ReservationDto
+import com.pe.losjardines.usecases.model.TravelReasonDto
 import com.pe.losjardines.usecases.model.TypeRoomDto
-import com.pe.losjardines.utils.getDateNow
 
 class DatabaseRepositoryImpl(
     private val databaseManager: DatabaseManager
@@ -102,6 +102,47 @@ class DatabaseRepositoryImpl(
     override suspend fun insertRegistrations(registrations: List<RegistrationDto>, state: String): Either<Failure, Unit> {
         return callDatabase {
             databaseManager.insertRegistrations(registrations.map { it.toData(state) })
+        }
+    }
+
+    override suspend fun saveReservation(reservationDto: ReservationDto, state: String): Either<Failure, Unit> {
+        return callDatabase {
+            databaseManager.saveReservation(reservationDto.toData(state))
+        }
+    }
+
+    override suspend fun getReservationById(id: Long): Either<Failure, ReservationDto> {
+        return callDatabase {
+            databaseManager.getReservationById(id)?.toDomain()
+        }
+    }
+
+    override suspend fun moveReservationToTrash(
+        reservationDto: ReservationDto,
+        dateDeleted: Long,
+        state: String
+    ): Either<Failure, Unit> {
+        return callDatabase {
+            databaseManager.moveReservationToTrash(
+                reservationDto.toTrashData(dateDeleted, state),
+                reservationDto.id ?: 0L
+            )
+        }
+    }
+
+    override suspend fun getReservations(
+        state: String,
+        limit: Long,
+        offset: Long
+    ): Either<Failure, List<ReservationDto>> {
+        return callDatabase {
+            databaseManager.getReservations(state, limit, offset).map { it.toDomain() }
+        }
+    }
+
+    override suspend fun updateReservationAttentionState(id: Long, attentionState: String, state: String): Either<Failure, Unit> {
+        return callDatabase {
+            databaseManager.updateReservationAttentionState(id, attentionState, state)
         }
     }
 }

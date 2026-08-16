@@ -14,7 +14,7 @@ enum class FieldRegistration(val displayName: String, val dimensionWidth: Dp) {
     TRAVEL_REASON("Motivo de Viaje", 150.dp),
     CHECK_IN_DATE("Fecha de ingreso", 140.dp),
     CHECK_OUT_DATE("Fecha de salida", 120.dp),
-    TYPE_ROOM("Tipo de habitación", 120.dp),
+    TYPE_ROOM("Tipo de habitación", 140.dp),
     ROOM("N° Habitación", 120.dp),
     RATE("Tarifa", 80.dp),
     OBSERVATION("Observación", 200.dp);

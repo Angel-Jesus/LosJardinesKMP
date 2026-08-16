@@ -66,7 +66,7 @@ fun FieldUpdateDialog(
     onConfirm: (String) -> Unit,
     typography: AppTypography = LocalAppTypographyCore.current
 ){
-    var valueState by rememberSaveable{ mutableStateOf(value) }
+    var valueState by rememberSaveable(value){ mutableStateOf(value) }
     var showDatePicker by rememberSaveable{ mutableStateOf(false) }
 
     if(showDatePicker){
@@ -173,6 +173,7 @@ private fun TypeField.getInputType(): InputType {
     return when(this){
         TypeField.TEXT -> InputType.TEXT
         TypeField.TEXT_SPECIAL -> InputType.TEXT_SPECIAL
+        TypeField.DOCUMENT -> InputType.DOCUMENT
         TypeField.NUMBER -> InputType.NUMBER
         else -> InputType.TEXT
     }
@@ -181,6 +182,7 @@ private fun TypeField.getInputType(): InputType {
 enum class TypeField{
     TEXT,
     TEXT_SPECIAL,
+    DOCUMENT,
     NUMBER,
     DATE_PICKER,
     DROP_DOWN

@@ -1,10 +1,10 @@
-package com.pe.losjardines.base.network
+package com.pe.losjardines.firebase.base
 
 import com.pe.losjardines.base.either.Either
 import com.pe.losjardines.base.error.Failure
-import com.pe.losjardines.base.error.FirebaseAuthErrorType
-import com.pe.losjardines.base.error.FirestoreErrorType
-import com.pe.losjardines.base.error.getMessage
+import com.pe.losjardines.firebase.error.FirebaseAuthErrorType
+import com.pe.losjardines.firebase.error.FirestoreErrorType
+import com.pe.losjardines.firebase.error.getMessage
 import com.pe.losjardines.utils.NetworkChecker
 import dev.gitlive.firebase.auth.FirebaseAuthException
 import dev.gitlive.firebase.firestore.FirebaseFirestoreException

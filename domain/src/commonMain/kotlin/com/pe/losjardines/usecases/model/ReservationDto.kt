@@ -16,5 +16,7 @@ data class ReservationDto(
     val typeRoom: String,
     val room: String,
     val observation: String,
+    val state: String = "",
+    val attentionState: String = ReservationStatus.CHECK_IN.value,
     val companions: List<String> = emptyList()
 )

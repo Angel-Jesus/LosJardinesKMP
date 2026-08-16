@@ -1,4 +1,4 @@
-package com.pe.losjardines.base.error
+package com.pe.losjardines.firebase.error
 
 import dev.gitlive.firebase.auth.FirebaseAuthException
 import dev.gitlive.firebase.firestore.FirebaseFirestoreException

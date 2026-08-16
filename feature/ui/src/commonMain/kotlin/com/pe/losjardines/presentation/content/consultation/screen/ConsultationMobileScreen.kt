@@ -9,12 +9,8 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkHorizontally
 import androidx.compose.animation.shrinkVertically
-import androidx.compose.foundation.LocalIndication
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,12 +23,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowCircleDown
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -48,9 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -67,13 +61,17 @@ import com.pe.losjardines.components.loading.LoadingAJ
 import com.pe.losjardines.components.textInput.InputType
 import com.pe.losjardines.components.textInput.TextInputAJ
 import com.pe.losjardines.presentation.components.HeaderComponent
+import com.pe.losjardines.presentation.components.table.TableColumn
+import com.pe.losjardines.presentation.components.table.registrationColumn
+import com.pe.losjardines.presentation.components.table.tableSection
+import com.pe.losjardines.presentation.components.table.updateFieldParamsOf
 import com.pe.losjardines.presentation.content.consultation.contract.ConsultationEvent
 import com.pe.losjardines.presentation.content.consultation.contract.ConsultationState
+import com.pe.losjardines.presentation.components.table.UpdateFieldParams
 import com.pe.losjardines.presentation.content.consultation.viewmodel.ConsultationViewModel
 import com.pe.losjardines.presentation.content.utils.DocumentType
 import com.pe.losjardines.presentation.content.utils.FieldFilter
 import com.pe.losjardines.presentation.content.utils.FieldRegistration
-import com.pe.losjardines.presentation.content.utils.ResultState
 import com.pe.losjardines.presentation.content.utils.Sex
 import com.pe.losjardines.usecases.model.RegistrationDto
 import com.pe.losjardines.utils.companions.EMPTY
@@ -81,13 +79,8 @@ import com.pe.losjardines.utils.constance.MonthFilter
 import com.pe.losjardines.values.AppTheme
 import com.pe.losjardines.values.AppTypography
 import com.pe.losjardines.values.BackgroundBrandColor
-import com.pe.losjardines.values.BackgroundOverlay
-import com.pe.losjardines.values.BackgroundTableBrand
-import com.pe.losjardines.values.DefaultTextColor
 import com.pe.losjardines.values.DividerColor
-import com.pe.losjardines.values.DividerGrayColor
 import com.pe.losjardines.values.LocalAppTypographyCore
-import com.pe.losjardines.values.SoftTextColor
 import losjardineskmp.feature.ui.generated.resources.Res
 import losjardineskmp.feature.ui.generated.resources.description_not_register_found
 import losjardineskmp.feature.ui.generated.resources.filter_button
@@ -100,19 +93,6 @@ import losjardineskmp.feature.ui.generated.resources.year_filter_title
 import org.jetbrains.compose.resources.stringResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
-
-data class UpdateFieldParams(
-    val show: Boolean = false,
-    val id: Long = 0L,
-    val collection: String = "",
-    val idNetwork: String = "",
-    val field: FieldRegistration? = null,
-    val title: String = "",
-    val description: String = "",
-    val value: String = "",
-    val typeField: TypeField = TypeField.TEXT,
-    val listOption: List<String> = emptyList()
-)
 
 @Composable
 fun ConsultationMobileScreen(
@@ -215,6 +195,8 @@ private fun ConsultationContent(
         )
     }
 
+    val columns = registrationColumns(catalog)
+
     LazyColumn(
         modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp)
     ) {
@@ -246,458 +228,129 @@ private fun ConsultationContent(
 
         item {
             Spacer(modifier = Modifier.height(16.dp))
-
-            HeaderTableContent(
-                modifier = Modifier.fillMaxWidth().horizontalScroll(sharedScrollState)
-            )
         }
 
-        items(items = uiState.clientsRegister, key = { it.id ?: 0L }) { client ->
-            InformationTableContent(
-                modifier = Modifier.fillMaxWidth().horizontalScroll(sharedScrollState),
-                client = client,
-                catalog = catalog,
-                onUpdateClick = {
-                    updateFieldParams = it
-                },
-                onDeleteClick = { id, idFirebase ->
-                    deleteParams = Triple(true, id, idFirebase)
-                }
-            )
-        }
-
-        if (uiState.clientsRegister.isEmpty()) {
-            item {
+        tableSection(
+            columns = columns,
+            rows = uiState.clientsRegister,
+            rowKey = { it.id ?: 0L },
+            scrollState = sharedScrollState,
+            actionWidth = ACTION_COLUMN_WIDTH,
+            onUpdateClick = { updateFieldParams = it },
+            emptyContent = {
                 EmptyStateAJ(
                     modifier = Modifier.fillMaxWidth(),
                     image = Res.drawable.ic_not_found,
                     title = stringResource(Res.string.title_not_register_found),
                     description = stringResource(Res.string.description_not_register_found)
                 )
+            },
+            rowAction = { client ->
+                Icon(
+                    modifier = Modifier
+                        .size(24.dp)
+                        .clip(CircleShape)
+                        .clickable(
+                            onClick = { deleteParams = Triple(true, client.id ?: 0L, client.idFirebase) }
+                        ),
+                    imageVector = Icons.Default.DeleteOutline,
+                    contentDescription = null,
+                    tint = BackgroundBrandColor
+                )
             }
+        )
+    }
+}
+
+private fun registrationColumns(
+    catalog: ConsultationViewModel.CatalogState
+): List<TableColumn<RegistrationDto>> = listOf(
+    registrationColumn(
+        field = FieldRegistration.ROOM,
+        value = { it.room },
+        update = {
+            updateFieldParamsOf(FieldRegistration.ROOM, it.id ?: 0L, it.collection, it.idFirebase, it.room, TypeField.NUMBER)
         }
-    }
-}
-
-@Composable
-private fun HeaderTableContent(
-    modifier: Modifier = Modifier,
-    typography: AppTypography = LocalAppTypographyCore.current
-) {
-    Row(
-        modifier = modifier
-            .clip(RoundedCornerShape(topStart = 8.dp, topEnd = 8.dp))
-            .background(BackgroundTableBrand)
-            .lineDividerSectionTable()
-            .padding(12.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            modifier = Modifier.width(FieldRegistration.ROOM.dimensionWidth),
-            text = FieldRegistration.ROOM.displayName,
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier.width(FieldRegistration.FULL_NAME.dimensionWidth),
-            text = FieldRegistration.FULL_NAME.displayName,
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier.width(FieldRegistration.SEX.dimensionWidth),
-            text = FieldRegistration.SEX.displayName,
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier.width(FieldRegistration.CHECK_IN_DATE.dimensionWidth),
-            text = FieldRegistration.CHECK_IN_DATE.displayName,
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier.width(FieldRegistration.CHECK_OUT_DATE.dimensionWidth),
-            text = FieldRegistration.CHECK_OUT_DATE.displayName,
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier.width(FieldRegistration.DOCUMENT_TYPE.dimensionWidth),
-            text = FieldRegistration.DOCUMENT_TYPE.displayName,
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier.width(FieldRegistration.DOCUMENT_NUMBER.dimensionWidth),
-            text = FieldRegistration.DOCUMENT_NUMBER.displayName,
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier.width(FieldRegistration.COUNTRY_OF_RESIDENCE.dimensionWidth),
-            text = FieldRegistration.COUNTRY_OF_RESIDENCE.displayName,
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier.width(FieldRegistration.REGION_OF_RESIDENCE.dimensionWidth),
-            text = FieldRegistration.REGION_OF_RESIDENCE.displayName,
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier.width(FieldRegistration.TRAVEL_REASON.dimensionWidth),
-            text = FieldRegistration.TRAVEL_REASON.displayName,
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier.width(FieldRegistration.RATE.dimensionWidth),
-            text = FieldRegistration.RATE.displayName,
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier.width(FieldRegistration.OBSERVATION.dimensionWidth),
-            text = FieldRegistration.OBSERVATION.displayName,
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier.width(64.dp),
-            text = "Acción",
-            color = DefaultTextColor,
-            style = typography.bodyLarge
-        )
-    }
-}
-
-@Composable
-private fun InformationTableContent(
-    modifier: Modifier = Modifier,
-    client: RegistrationDto,
-    catalog: ConsultationViewModel.CatalogState = ConsultationViewModel.CatalogState(),
-    onUpdateClick: (UpdateFieldParams) -> Unit = {},
-    onDeleteClick: (Long, String) -> Unit = {_,_ ->},
-    typography: AppTypography = LocalAppTypographyCore.current
-){
-    Row(
-        modifier = modifier
-            .background(BackgroundOverlay)
-            .lineDividerSectionTable()
-            .padding(horizontal = 8.dp, vertical = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Text(
-            modifier = Modifier
-                .width(FieldRegistration.ROOM.dimensionWidth)
-                .clickable{
-                    val updateFieldParams = UpdateFieldParams(
-                        show = true,
-                        id = client.id ?: 0L,
-                        collection = client.collection,
-                        idNetwork = client.idFirebase,
-                        field = FieldRegistration.ROOM,
-                        title = "Actualizar ${FieldRegistration.ROOM.displayName}",
-                        description = "Ingresa el nuevo valor del campo ${FieldRegistration.ROOM.displayName}",
-                        value = client.room,
-                        typeField = TypeField.NUMBER
-                    )
-                    onUpdateClick(updateFieldParams)
-                }
-            ,
-            text = client.room,
-            color = SoftTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .width(FieldRegistration.FULL_NAME.dimensionWidth)
-                .clickable{
-                    val updateFieldParams = UpdateFieldParams(
-                        show = true,
-                        id = client.id ?: 0L,
-                        collection = client.collection,
-                        idNetwork = client.idFirebase,
-                        field = FieldRegistration.FULL_NAME,
-                        title = "Actualizar ${FieldRegistration.FULL_NAME.displayName}",
-                        description = "Ingresa el nuevo valor del campo ${FieldRegistration.FULL_NAME.displayName}",
-                        value = client.name,
-                        typeField = TypeField.TEXT_SPECIAL
-                    )
-                    onUpdateClick(updateFieldParams)
-                }
-            ,
-            text = client.name,
-            color = SoftTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .width(FieldRegistration.SEX.dimensionWidth)
-                .clickable{
-                    val updateFieldParams = UpdateFieldParams(
-                        show = true,
-                        field = FieldRegistration.SEX,
-                        id = client.id ?: 0L,
-                        collection = client.collection,
-                        idNetwork = client.idFirebase,
-                        title = "Actualizar ${FieldRegistration.SEX.displayName}",
-                        description = "Ingresa el nuevo valor del campo ${FieldRegistration.SEX.displayName}",
-                        value = client.sex,
-                        listOption = Sex.options,
-                        typeField = TypeField.DROP_DOWN
-                    )
-                    onUpdateClick(updateFieldParams)
-                }
-            ,
-            text = Sex.getAbbreviations(client.sex),
-            color = SoftTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .width(FieldRegistration.CHECK_IN_DATE.dimensionWidth)
-                .clickable{
-                    val updateFieldParams = UpdateFieldParams(
-                        show = true,
-                        id = client.id ?: 0L,
-                        collection = client.collection,
-                        idNetwork = client.idFirebase,
-                        field = FieldRegistration.CHECK_IN_DATE,
-                        title = "Actualizar ${FieldRegistration.CHECK_IN_DATE.displayName}",
-                        description = "Ingresa el nuevo valor del campo ${FieldRegistration.CHECK_IN_DATE.displayName}",
-                        value = client.dateEnter,
-                        typeField = TypeField.DATE_PICKER
-                    )
-                    onUpdateClick(updateFieldParams)
-                }
-            ,
-            text = client.dateEnter,
-            color = SoftTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .width(FieldRegistration.CHECK_OUT_DATE.dimensionWidth)
-                .clickable{
-                    val updateFieldParams = UpdateFieldParams(
-                        show = true,
-                        id = client.id ?: 0L,
-                        collection = client.collection,
-                        idNetwork = client.idFirebase,
-                        field = FieldRegistration.CHECK_OUT_DATE,
-                        title = "Actualizar ${FieldRegistration.CHECK_OUT_DATE.displayName}",
-                        description = "Ingresa el nuevo valor del campo ${FieldRegistration.CHECK_OUT_DATE.displayName}",
-                        value = client.dateExit,
-                        typeField = TypeField.DATE_PICKER
-                    )
-                    onUpdateClick(updateFieldParams)
-                }
-            ,
-            text = client.dateExit,
-            color = SoftTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .width(FieldRegistration.DOCUMENT_TYPE.dimensionWidth)
-                .clickable{
-                    val updateFieldParams = UpdateFieldParams(
-                        show = true,
-                        id = client.id ?: 0L,
-                        collection = client.collection,
-                        idNetwork = client.idFirebase,
-                        field = FieldRegistration.DOCUMENT_TYPE,
-                        title = "Actualizar ${FieldRegistration.DOCUMENT_TYPE.displayName}",
-                        description = "Ingresa el nuevo valor del campo ${FieldRegistration.DOCUMENT_TYPE.displayName}",
-                        value = client.typeDocument,
-                        typeField = TypeField.DROP_DOWN,
-                        listOption = DocumentType.options
-                    )
-                    onUpdateClick(updateFieldParams)
-                }
-            ,
-            text = client.typeDocument,
-            color = SoftTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .width(FieldRegistration.DOCUMENT_NUMBER.dimensionWidth)
-                .clickable{
-                    val updateFieldParams = UpdateFieldParams(
-                        show = true,
-                        id = client.id ?: 0L,
-                        collection = client.collection,
-                        idNetwork = client.idFirebase,
-                        field = FieldRegistration.DOCUMENT_NUMBER,
-                        title = "Actualizar ${FieldRegistration.DOCUMENT_NUMBER.displayName}",
-                        description = "Ingresa el nuevo valor del campo ${FieldRegistration.DOCUMENT_NUMBER.displayName}",
-                        value = client.numberDocument,
-                        typeField = TypeField.TEXT_SPECIAL
-                    )
-                    onUpdateClick(updateFieldParams)
-                }
-            ,
-            text = client.numberDocument,
-            color = SoftTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .width(FieldRegistration.COUNTRY_OF_RESIDENCE.dimensionWidth)
-                .clickable{
-                    val updateFieldParams = UpdateFieldParams(
-                        show = true,
-                        id = client.id ?: 0L,
-                        collection = client.collection,
-                        idNetwork = client.idFirebase,
-                        field = FieldRegistration.COUNTRY_OF_RESIDENCE,
-                        title = "Actualizar ${FieldRegistration.COUNTRY_OF_RESIDENCE.displayName}",
-                        description = "Ingresa el nuevo valor del campo ${FieldRegistration.COUNTRY_OF_RESIDENCE.displayName}",
-                        value = client.country,
-                        typeField = TypeField.DROP_DOWN,
-                        listOption = catalog.countries.map { it.name }
-                    )
-                    onUpdateClick(updateFieldParams)
-                }
-            ,
-            text = client.country,
-            color = SoftTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .width(FieldRegistration.REGION_OF_RESIDENCE.dimensionWidth)
-                .clickable(enabled = client.region.isNotEmpty()){
-                    val updateFieldParams = UpdateFieldParams(
-                        show = true,
-                        id = client.id ?: 0L,
-                        collection = client.collection,
-                        idNetwork = client.idFirebase,
-                        field = FieldRegistration.REGION_OF_RESIDENCE,
-                        title = "Actualizar ${FieldRegistration.COUNTRY_OF_RESIDENCE.displayName}",
-                        description = "Ingresa el nuevo valor del campo ${FieldRegistration.COUNTRY_OF_RESIDENCE.displayName}",
-                        value = client.region,
-                        typeField = TypeField.DROP_DOWN,
-                        listOption = catalog.regions.map { it.name }
-                    )
-                    onUpdateClick(updateFieldParams)
-                }
-            ,
-            text = client.region,
-            color = SoftTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .width(FieldRegistration.TRAVEL_REASON.dimensionWidth)
-                .clickable{
-                    val updateFieldParams = UpdateFieldParams(
-                        show = true,
-                        id = client.id ?: 0L,
-                        collection = client.collection,
-                        idNetwork = client.idFirebase,
-                        field = FieldRegistration.TRAVEL_REASON,
-                        title = "Actualizar ${FieldRegistration.TRAVEL_REASON.displayName}",
-                        description = "Ingresa el nuevo valor del campo ${FieldRegistration.TRAVEL_REASON.displayName}",
-                        value = client.reasonTravel,
-                        typeField = TypeField.DROP_DOWN,
-                        listOption = catalog.travelReasons.map { it.description }
-                    )
-                    onUpdateClick(updateFieldParams)
-                }
-            ,
-            text = client.reasonTravel,
-            color = SoftTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .width(FieldRegistration.RATE.dimensionWidth)
-                .clickable{
-                    val updateFieldParams = UpdateFieldParams(
-                        show = true,
-                        id = client.id ?: 0L,
-                        collection = client.collection,
-                        idNetwork = client.idFirebase,
-                        field = FieldRegistration.RATE,
-                        title = "Actualizar ${FieldRegistration.RATE.displayName}",
-                        description = "Ingresa el nuevo valor del campo ${FieldRegistration.RATE.displayName}",
-                        value = client.fee,
-                        typeField = TypeField.NUMBER
-                    )
-                    onUpdateClick(updateFieldParams)
-                }
-            ,
-            text = "S/ ${client.fee}",
-            color = SoftTextColor,
-            style = typography.bodyLarge
-        )
-
-        Text(
-            modifier = Modifier
-                .width(FieldRegistration.OBSERVATION.dimensionWidth)
-                .clickable{
-                    val updateFieldParams = UpdateFieldParams(
-                        show = true,
-                        id = client.id ?: 0L,
-                        collection = client.collection,
-                        idNetwork = client.idFirebase,
-                        field = FieldRegistration.OBSERVATION,
-                        title = "Actualizar ${FieldRegistration.OBSERVATION.displayName}",
-                        description = "Ingresa el nuevo valor del campo ${FieldRegistration.OBSERVATION.displayName}",
-                        value = client.observation,
-                        typeField = TypeField.TEXT
-                    )
-                    onUpdateClick(updateFieldParams)
-                }
-            ,
-            text = client.observation,
-            color = SoftTextColor,
-            style = typography.bodyLarge
-        )
-
-        Box(modifier = Modifier.width(64.dp), contentAlignment = Alignment.Center){
-            Icon(
-                modifier = Modifier
-                    .size(24.dp)
-                    .clickable(
-                        onClick = { onDeleteClick(client.id ?: 0L, client.idFirebase) }
-                    ),
-                imageVector = Icons.Default.Delete,
-                contentDescription = null,
-                tint = BackgroundBrandColor
-            )
+    ),
+    registrationColumn(
+        field = FieldRegistration.FULL_NAME,
+        value = { it.name },
+        update = {
+            updateFieldParamsOf(FieldRegistration.FULL_NAME, it.id ?: 0L, it.collection, it.idFirebase, it.name, TypeField.TEXT_SPECIAL)
         }
-    }
-}
+    ),
+    registrationColumn(
+        field = FieldRegistration.SEX,
+        value = { Sex.getAbbreviations(it.sex) },
+        update = {
+            updateFieldParamsOf(FieldRegistration.SEX, it.id ?: 0L, it.collection, it.idFirebase, it.sex, TypeField.DROP_DOWN, Sex.options)
+        }
+    ),
+    registrationColumn(
+        field = FieldRegistration.CHECK_IN_DATE,
+        value = { it.dateEnter },
+        update = {
+            updateFieldParamsOf(FieldRegistration.CHECK_IN_DATE, it.id ?: 0L, it.collection, it.idFirebase, it.dateEnter, TypeField.DATE_PICKER)
+        }
+    ),
+    registrationColumn(
+        field = FieldRegistration.CHECK_OUT_DATE,
+        value = { it.dateExit },
+        update = {
+            updateFieldParamsOf(FieldRegistration.CHECK_OUT_DATE, it.id ?: 0L, it.collection, it.idFirebase, it.dateExit, TypeField.DATE_PICKER)
+        }
+    ),
+    registrationColumn(
+        field = FieldRegistration.DOCUMENT_TYPE,
+        value = { it.typeDocument },
+        update = {
+            updateFieldParamsOf(FieldRegistration.DOCUMENT_TYPE, it.id ?: 0L, it.collection, it.idFirebase, it.typeDocument, TypeField.DROP_DOWN, DocumentType.options)
+        }
+    ),
+    registrationColumn(
+        field = FieldRegistration.DOCUMENT_NUMBER,
+        value = { it.numberDocument },
+        update = {
+            updateFieldParamsOf(FieldRegistration.DOCUMENT_NUMBER, it.id ?: 0L, it.collection, it.idFirebase, it.numberDocument, TypeField.DOCUMENT)
+        }
+    ),
+    registrationColumn(
+        field = FieldRegistration.COUNTRY_OF_RESIDENCE,
+        value = { it.country },
+        update = {
+            updateFieldParamsOf(FieldRegistration.COUNTRY_OF_RESIDENCE, it.id ?: 0L, it.collection, it.idFirebase, it.country, TypeField.DROP_DOWN, catalog.countries.map { country -> country.name })
+        }
+    ),
+    registrationColumn(
+        field = FieldRegistration.REGION_OF_RESIDENCE,
+        value = { it.region },
+        enabled = { it.region.isNotEmpty() },
+        update = {
+            updateFieldParamsOf(FieldRegistration.REGION_OF_RESIDENCE, it.id ?: 0L, it.collection, it.idFirebase, it.region, TypeField.DROP_DOWN, catalog.regions.map { region -> region.name })
+        }
+    ),
+    registrationColumn(
+        field = FieldRegistration.TRAVEL_REASON,
+        value = { it.reasonTravel },
+        update = {
+            updateFieldParamsOf(FieldRegistration.TRAVEL_REASON, it.id ?: 0L, it.collection, it.idFirebase, it.reasonTravel, TypeField.DROP_DOWN, catalog.travelReasons.map { reason -> reason.description })
+        }
+    ),
+    registrationColumn(
+        field = FieldRegistration.RATE,
+        value = { "S/ ${it.fee}" },
+        update = {
+            updateFieldParamsOf(FieldRegistration.RATE, it.id ?: 0L, it.collection, it.idFirebase, it.fee, TypeField.NUMBER)
+        }
+    ),
+    registrationColumn(
+        field = FieldRegistration.OBSERVATION,
+        value = { it.observation },
+        update = {
+            updateFieldParamsOf(FieldRegistration.OBSERVATION, it.id ?: 0L, it.collection, it.idFirebase, it.observation, TypeField.TEXT)
+        }
+    )
+)
 
 @Composable
 private fun FilterSectionComponent(
@@ -797,17 +450,7 @@ private fun FilterSectionComponent(
     }
 }
 
-@Composable
-private fun Modifier.lineDividerSectionTable(): Modifier {
-    return this.drawBehind(onDraw = {
-        drawLine(
-            color = DividerGrayColor,
-            start = Offset(0f, size.height),
-            end = Offset(size.width, size.height),
-            strokeWidth = 2f
-        )
-    })
-}
+private val ACTION_COLUMN_WIDTH = 64.dp
 
 @Preview
 @Composable

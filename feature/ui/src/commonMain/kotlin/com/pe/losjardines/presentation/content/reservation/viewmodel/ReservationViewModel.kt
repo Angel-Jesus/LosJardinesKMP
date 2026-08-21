@@ -85,7 +85,7 @@ class ReservationViewModel(
     }
 
     private fun getCatalogInformation(){
-        executeParallel(
+        executeThirdParallel(
             first = { getCountriesUseCase.run() },
             second = { getRegionsUseCase.run("PE") },
             third = { getTypeRoomUseCase.run() },

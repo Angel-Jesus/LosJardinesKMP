@@ -3,7 +3,6 @@ package com.pe.losjardines.base.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pe.losjardines.base.error.Failure
-import com.pe.losjardines.base.error.getMessage
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -65,8 +64,26 @@ abstract class BaseViewModel<S : BaseUiState, E: BaseEvent, F: BaseEffect>(
         }
     }
 
+    protected fun <R1, R2> executeTwoParallel(
+        first: suspend () -> R1,
+        second: suspend () -> R2,
+        onSuccess: suspend (R1, R2) -> Unit,
+        onError: suspend (Failure) -> Unit = {}
+    ) {
+        executeParallelJob?.cancel()
+        executeParallelJob = viewModelScope.launch {
+            try {
+                val r1 = async { first() }
+                val r2 = async { second() }
+                onSuccess(r1.await(), r2.await())
+            } catch (e: Throwable) {
+                onError(Failure.fromThrowable(e))
+            }
+        }
+    }
+
     // ── 3 use cases en paralelo ────────────────────────────────────────────────
-    protected fun <R1, R2, R3> executeParallel(
+    protected fun <R1, R2, R3> executeThirdParallel(
         first: suspend () -> R1,
         second: suspend () -> R2,
         third: suspend () -> R3,

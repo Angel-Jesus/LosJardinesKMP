@@ -91,7 +91,7 @@ class ConsultationViewModel(
     }
 
     private fun getCatalogInformation(){
-        executeParallel(
+        executeThirdParallel(
             first = { getCountriesUseCase.run() },
             second = { getReasonTravelsUseCase.run() },
             third = { getRegionsUseCase.run("PE") },

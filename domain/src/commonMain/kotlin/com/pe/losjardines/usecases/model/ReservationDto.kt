@@ -1,5 +1,7 @@
 package com.pe.losjardines.usecases.model
 
+import com.pe.losjardines.utils.calculateNights
+
 data class ReservationDto(
     val collection: String,
     val id: Long? = null,
@@ -20,3 +22,10 @@ data class ReservationDto(
     val attentionState: String = ReservationStatus.CHECK_IN.value,
     val companions: List<String> = emptyList()
 )
+
+/**
+ * Cantidad de días que ocupa la reserva/habitación, calculada entre [ReservationDto.dateEnter]
+ * y [ReservationDto.dateExit] (formato `dd/MM/yyyy`). Devuelve como mínimo 1 y 0 si las fechas
+ * no son válidas.
+ */
+fun ReservationDto.occupiedDays(): Int = calculateNights(dateEnter, dateExit)

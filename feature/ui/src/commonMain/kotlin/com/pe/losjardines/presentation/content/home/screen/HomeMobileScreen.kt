@@ -28,6 +28,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import com.pe.losjardines.components.buttom.ButtonAJ
 import com.pe.losjardines.components.loading.LoadingAJ
 import com.pe.losjardines.presentation.components.HeaderComponent
@@ -37,6 +39,7 @@ import com.pe.losjardines.presentation.content.home.contract.HomeEvent
 import com.pe.losjardines.presentation.content.home.contract.HomeUiState
 import com.pe.losjardines.presentation.content.home.viewmodel.HomeViewModel
 import com.pe.losjardines.usecases.model.ReservationDto
+import com.pe.losjardines.usecases.model.occupiedDays
 import com.pe.losjardines.utils.orZero
 import com.pe.losjardines.values.AppTheme
 import com.pe.losjardines.values.AppTypography
@@ -50,14 +53,19 @@ import org.koin.compose.viewmodel.koinViewModel
 fun HomeMobileScreen(
     title: String,
     onLogout: () -> Unit,
+    onCheckIn: (ReservationDto) -> Unit = {},
     viewModel: HomeViewModel = koinViewModel(),
 ){
     val uiState by viewModel.uiState.collectAsState()
 
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME){
+        viewModel.onEvent(HomeEvent.GetSummary)
+    }
+
     if(uiState.isLoading){
         LoadingAJ(
             title = "Actualización",
-            subtitle = "Obteniendo información de los clientyes"
+            subtitle = "Obteniendo información de los clientes"
         )
     }
 
@@ -65,7 +73,8 @@ fun HomeMobileScreen(
         title = title,
         dispatcher = viewModel::onEvent,
         uiState = uiState,
-        onLogout = onLogout
+        onLogout = onLogout,
+        onCheckIn = onCheckIn
     )
 }
 
@@ -75,6 +84,7 @@ private fun HomeMobileContent(
     title: String,
     dispatcher: (HomeEvent) -> Unit,
     onLogout: () -> Unit,
+    onCheckIn: (ReservationDto) -> Unit = {},
     typography: AppTypography = LocalAppTypographyCore.current
 ) {
     Column(modifier = Modifier.fillMaxSize().padding(start = 16.dp, end = 16.dp, bottom = 16.dp)) {
@@ -105,7 +115,8 @@ private fun HomeMobileContent(
 
         ReservationSection(
             modifier = Modifier.weight(1f),
-            reservations = uiState.reservations
+            reservations = uiState.reservations,
+            onCheckIn = onCheckIn
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -124,7 +135,8 @@ private fun HomeMobileContent(
 private fun ReservationSection(
     modifier: Modifier = Modifier,
     typography: AppTypography = LocalAppTypographyCore.current,
-    reservations: List<ReservationDto>
+    reservations: List<ReservationDto>,
+    onCheckIn: (ReservationDto) -> Unit = {}
 ){
     if(reservations.isNotEmpty()){
         LazyColumn(modifier = modifier) {
@@ -133,10 +145,10 @@ private fun ReservationSection(
                     modifier = Modifier.fillMaxWidth(),
                     name = reservation.userName,
                     room = reservation.room,
-                    days = "4",
+                    days = reservation.occupiedDays().toString(),
                     date = reservation.dateEnter,
                     onClick = {
-                           
+                        onCheckIn(reservation)
                     }
                 )
             }

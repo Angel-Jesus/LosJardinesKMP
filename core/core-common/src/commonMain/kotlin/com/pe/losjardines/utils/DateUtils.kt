@@ -145,7 +145,7 @@ fun calculateNights(dateEnter: String, dateExit: String): Int{
         val exit = dateExit.parseDate() ?: return 0
         (exit.toEpochDays() - enter.toEpochDays()).coerceAtLeast(1)
     } catch (_: Exception) {
-        0
+        1
     }
 }
 

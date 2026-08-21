@@ -90,7 +90,14 @@ fun NavGraphBuilder.navContentMobileManager(
                     composable(ItemsContentNavScreen.DashboardNavScreen.route){
                         HomeMobileScreen(
                             title = ItemsContentNavScreen.DashboardNavScreen.title,
-                            onLogout = onLogout
+                            onLogout = onLogout,
+                            onCheckIn = { reservation ->
+                                navController.navigate(
+                                    ItemsContentNavScreen.RegistrationNavScreen.createRoute(reservation.id)
+                                ) {
+                                    launchSingleTop = true
+                                }
+                            }
                         )
                     }
 

@@ -170,7 +170,7 @@ class RegistrationViewModel(
     }
 
     private fun getCatalogInformation(){
-        executeParallel(
+        executeThirdParallel(
             first = { getCountriesUseCase.run() },
             second = { getReasonTravelsUseCase.run() },
             third = { getTypeRoomUseCase.run() },

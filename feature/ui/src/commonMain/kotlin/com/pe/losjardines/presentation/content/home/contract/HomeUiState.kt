@@ -9,5 +9,7 @@ data class HomeUiState(
     val reservation: String = String.EMPTY,
     val available: String = String.EMPTY,
     val reservationNow: String = String.EMPTY,
-    val reservations: List<ReservationDto> = emptyList()
+    val reservations: List<ReservationDto> = emptyList(),
+    val showReportResult: Boolean = false,
+    val reportSuccess: Boolean = true
 ): BaseUiState

@@ -22,6 +22,7 @@ import com.pe.losjardines.usecases.model.RegionDto
 import com.pe.losjardines.usecases.model.TravelReasonDto
 import com.pe.losjardines.usecases.model.UpdateParams
 import com.pe.losjardines.utils.companions.EMPTY
+import com.pe.losjardines.utils.constance.MonthFilter
 import com.pe.losjardines.utils.getDayNowParams
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -110,7 +111,7 @@ class ConsultationViewModel(
     private fun clearFilter() {
         updateState {
             copy(
-                monthFilter = String.EMPTY,
+                monthFilter = MonthFilter.NONE.displayName,
                 yearFilter = String.EMPTY,
                 searchDni = String.EMPTY,
                 showClearFilter = false

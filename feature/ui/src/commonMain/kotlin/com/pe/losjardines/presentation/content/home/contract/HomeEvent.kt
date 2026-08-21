@@ -7,4 +7,5 @@ sealed interface HomeEvent: BaseEvent {
     data object GetSummary: HomeEvent
     data class GenerateReport(val filter: FilterValues? = null): HomeEvent
     data object UpdateRegister: HomeEvent
+    data object DismissReportResult: HomeEvent
 }

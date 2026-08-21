@@ -103,6 +103,7 @@ fun ConsultationMobileScreen(
     val catalog by viewModel.catalogState.collectAsState()
 
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME){
+        viewModel.onEvent(ConsultationEvent.ClearFilter)
         viewModel.onEvent(ConsultationEvent.GetClientsRegister())
     }
 
@@ -440,7 +441,10 @@ private fun FilterSectionComponent(
                         IconButtonAJ(
                             modifier = Modifier.height(52.dp),
                             icon = Icons.Default.Delete,
-                            onClick = onClearFilterClick
+                            onClick = {
+                                onClearFilterClick()
+                                onChangeExpanded(false)
+                            }
                         )
                     }
                 }

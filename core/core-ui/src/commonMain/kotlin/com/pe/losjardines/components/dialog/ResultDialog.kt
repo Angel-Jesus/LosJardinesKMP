@@ -3,6 +3,7 @@ package com.pe.losjardines.components.dialog
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -17,6 +18,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -59,8 +61,6 @@ fun ResultDialog(
     onDismiss: () -> Unit,
     typography: AppTypography = LocalAppTypographyCore.current
 ){
-    val imageState = Res.drawable.ic_success.takeIf{ isSuccess } ?: Res.drawable.ic_error
-
     LaunchedEffect(visibility){
         if(visibility){
             delay(timeVisibility)
@@ -72,38 +72,61 @@ fun ResultDialog(
         Dialog(
             onDismissRequest = onDismiss
         ){
-            Column(
-                modifier = modifier
-                    .clip(RoundedCornerShape(8.dp))
-                    .background(BackgroundLightColor)
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ){
-                Image(
-                    modifier = Modifier.size(48.dp),
-                    painter = painterResource(imageState),
-                    contentDescription = null
-                )
-
-                Text(
-                    text = title,
-                    style = typography.headerSmall,
-                    color = BlackTextColor
-                )
-
-                if(!description.isNullOrEmpty()) {
-                    Text(
-                        text = description,
-                        style = typography.bodyLarge,
-                        color = GrayTextColor,
-                        textAlign = TextAlign.Center
-                    )
-                }
-            }
+            ResultDialogContent(
+                modifier = modifier,
+                title = title,
+                description = description,
+                isSuccess = isSuccess,
+                typography = typography
+            )
         }
     }
 
+}
+
+/**
+ * Contenido visual de [ResultDialog] sin el envoltorio [Dialog]. Se extrae para poder
+ * previsualizarlo con `@Preview`, ya que los composables `Dialog` no se renderizan en el preview.
+ */
+@Composable
+private fun ResultDialogContent(
+    modifier: Modifier = Modifier,
+    title: String,
+    description: String? = null,
+    isSuccess: Boolean = true,
+    typography: AppTypography = LocalAppTypographyCore.current
+){
+    val imageState = Res.drawable.ic_success.takeIf{ isSuccess } ?: Res.drawable.ic_error
+
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(8.dp))
+            .background(BackgroundLightColor)
+            .padding(16.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Image(
+            modifier = Modifier.size(48.dp),
+            painter = painterResource(imageState),
+            contentDescription = null
+        )
+
+        Text(
+            text = title,
+            style = typography.headerSmall,
+            color = BlackTextColor
+        )
+
+        if(!description.isNullOrEmpty()) {
+            Text(
+                text = description,
+                style = typography.bodyLarge,
+                color = GrayTextColor,
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 }
 
 /**
@@ -138,46 +161,149 @@ fun ResultActionDialog(
     Dialog(
         onDismissRequest = onDismiss
     ){
-        Column(
-            modifier = modifier
-                .clip(RoundedCornerShape(14.dp))
-                .background(BackgroundLightColor)
-                .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
+        ResultActionDialogContent(
+            modifier = modifier,
+            title = title,
+            description = description,
+            primaryButtonText = primaryButtonText,
+            secondaryButtonText = secondaryButtonText,
+            onPrimaryClick = onPrimaryClick,
+            onSecondaryClick = onSecondaryClick,
+            typography = typography
+        )
+    }
+}
+
+/**
+ * Contenido visual de [ResultActionDialog] sin el envoltorio [Dialog]. Se extrae para poder
+ * previsualizarlo con `@Preview`, ya que los composables `Dialog` no se renderizan en el preview.
+ */
+@Composable
+private fun ResultActionDialogContent(
+    modifier: Modifier = Modifier,
+    title: String,
+    description: String? = null,
+    primaryButtonText: String,
+    secondaryButtonText: String,
+    onPrimaryClick: () -> Unit,
+    onSecondaryClick: () -> Unit = {},
+    typography: AppTypography = LocalAppTypographyCore.current
+){
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(14.dp))
+            .background(BackgroundLightColor)
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Text(
+            text = title,
+            style = typography.headerSmall,
+            color = BlackTextColor
+        )
+
+        if(!description.isNullOrEmpty()) {
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
-                text = title,
-                style = typography.headerSmall,
-                color = BlackTextColor
+                text = description,
+                style = typography.bodyLarge,
+                color = GrayTextColor,
+                textAlign = TextAlign.Center
+            )
+        }
+
+        Row(
+            modifier = Modifier.padding(top = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            ButtonAJ(
+                modifier = Modifier.weight(1f),
+                text = primaryButtonText,
+                onClick = onPrimaryClick
             )
 
-            if(!description.isNullOrEmpty()) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = description,
-                    style = typography.bodyLarge,
-                    color = GrayTextColor,
-                    textAlign = TextAlign.Center
-                )
-            }
+            ButtonAJ(
+                modifier = Modifier.weight(1f),
+                text = secondaryButtonText,
+                colors = ButtonDefaults.buttonColors(containerColor = BackgroundBrandInvertedColor, contentColor = BrandIconColor),
+                onClick = onSecondaryClick
+            )
+        }
+    }
+}
 
-            Row(
-                modifier = Modifier.padding(top = 16.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                ButtonAJ(
-                    modifier = Modifier.weight(1f),
-                    text = primaryButtonText,
-                    onClick = onPrimaryClick
-                )
+@Preview
+@Composable
+private fun ResultDialogSuccessPreview() {
+    AppTheme {
+        Box(modifier = Modifier.background(Color.White).padding(16.dp)) {
+            ResultDialogContent(
+                title = "¡Operación exitosa!",
+                description = "Información del cliente guardada correctamente",
+                isSuccess = true
+            )
+        }
+    }
+}
 
-                ButtonAJ(
-                    modifier = Modifier.weight(1f),
-                    text = secondaryButtonText,
-                    colors = ButtonDefaults.buttonColors(containerColor = BackgroundBrandInvertedColor, contentColor = BrandIconColor),
-                    onClick = onSecondaryClick
-                )
-            }
+@Preview
+@Composable
+private fun ResultDialogErrorPreview() {
+    AppTheme {
+        Box(modifier = Modifier.background(Color.White).padding(16.dp)) {
+            ResultDialogContent(
+                title = "Error al procesar",
+                description = "No se pudo guardar la información. Inténtalo nuevamente.",
+                isSuccess = false
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ResultDialogWithoutDescriptionPreview() {
+    AppTheme {
+        Box(modifier = Modifier.background(Color.White).padding(16.dp)) {
+            ResultDialogContent(
+                title = "¡Operación exitosa!",
+                description = null,
+                isSuccess = true
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ResultActionDialogPreview() {
+    AppTheme {
+        Box(modifier = Modifier.background(Color.White).padding(16.dp)) {
+            ResultActionDialogContent(
+                title = "¿Deseas continuar?",
+                description = "Se registrará la información del cliente con los datos ingresados.",
+                primaryButtonText = "Aceptar",
+                secondaryButtonText = "Cancelar",
+                onPrimaryClick = {},
+                onSecondaryClick = {}
+            )
+        }
+    }
+}
+
+@Preview
+@Composable
+private fun ResultActionDialogWithoutDescriptionPreview() {
+    AppTheme {
+        Box(modifier = Modifier.background(Color.White).padding(16.dp)) {
+            ResultActionDialogContent(
+                title = "¿Deseas continuar?",
+                description = null,
+                primaryButtonText = "Reintentar",
+                secondaryButtonText = "Volver",
+                onPrimaryClick = {},
+                onSecondaryClick = {}
+            )
         }
     }
 }

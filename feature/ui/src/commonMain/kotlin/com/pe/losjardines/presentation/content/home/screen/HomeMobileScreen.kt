@@ -31,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import com.pe.losjardines.components.buttom.ButtonAJ
+import com.pe.losjardines.components.dialog.ResultDialog
 import com.pe.losjardines.components.loading.LoadingAJ
 import com.pe.losjardines.presentation.components.HeaderComponent
 import com.pe.losjardines.presentation.components.ImageDescriptionItem
@@ -129,6 +130,18 @@ private fun HomeMobileContent(
             }
         )
     }
+
+    ResultDialog(
+        title = if (uiState.reportSuccess) "Reporte generado" else "Error al generar reporte",
+        description = if (uiState.reportSuccess) {
+            "El reporte se generó correctamente."
+        } else {
+            "No se pudo generar el reporte. Inténtalo nuevamente."
+        },
+        isSuccess = uiState.reportSuccess,
+        visibility = uiState.showReportResult,
+        onDismiss = { dispatcher(HomeEvent.DismissReportResult) }
+    )
 }
 
 @Composable

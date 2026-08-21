@@ -33,6 +33,7 @@ class HomeViewModel(
             is HomeEvent.GetSummary -> getHomeSummary()
             is HomeEvent.GenerateReport -> generateReport(event.filter)
             is HomeEvent.UpdateRegister -> updateRegisterByCloud()
+            is HomeEvent.DismissReportResult -> updateState { copy(showReportResult = false) }
         }
     }
 
@@ -74,10 +75,10 @@ class HomeViewModel(
                 generateExcelReportUseCase.run(GenerateExcelReportUseCase.Params(stream, outputFile, reportFilter))
             },
             onSuccess = {
-                updateState { copy(isLoading = false) }
+                updateState { copy(isLoading = false, showReportResult = true, reportSuccess = true) }
             },
             onError = {
-                updateState { copy(isLoading = false) }
+                updateState { copy(isLoading = false, showReportResult = true, reportSuccess = false) }
                 println("Error generating report: $it")
             }
         )

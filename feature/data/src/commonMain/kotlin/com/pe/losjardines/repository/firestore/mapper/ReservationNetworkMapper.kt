@@ -1,5 +1,6 @@
 package com.pe.losjardines.repository.firestore.mapper
 
+import com.pe.losjardines.firebase.firestore.FirestoreConstance.RESERVATION_COLLECTION
 import com.pe.losjardines.firebase.firestore.model.ReservationNetwork
 import com.pe.losjardines.firebase.firestore.model.TrashNetwork
 import com.pe.losjardines.usecases.model.ReservationDto
@@ -24,8 +25,8 @@ fun ReservationDto.toData(): ReservationNetwork = ReservationNetwork(
     companions = this.companions
 )
 
-fun ReservationNetwork.toDomain(collection: String): ReservationDto = ReservationDto(
-    collection = collection,
+fun ReservationNetwork.toDomain(): ReservationDto = ReservationDto(
+    collection = RESERVATION_COLLECTION,
     idFirebase = this.id,
     country = this.country,
     dateEnter = this.dateEnter.toLocalDate(),

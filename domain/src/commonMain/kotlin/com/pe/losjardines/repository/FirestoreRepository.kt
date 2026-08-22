@@ -20,4 +20,5 @@ interface FirestoreRepository {
     suspend fun updateRoomState(room: RoomDto): Either<Failure, Unit>
     suspend fun getRoomState(): Either<Failure, List<RoomDto>>
     suspend fun getRegistrationsByCollection(collection: String): Either<Failure, List<RegistrationDto>>
+    suspend fun getReservationsByCollection(): Either<Failure, List<ReservationDto>>
 }

@@ -276,4 +276,6 @@ private class FakeReservationDatabaseRepository(
     override suspend fun getReservationById(id: Long): Either<Failure, ReservationDto> = Either.Error(Failure.UnknownFailure("fake"))
     override suspend fun moveReservationToTrash(reservationDto: ReservationDto, dateDeleted: Long, state: String): Either<Failure, Unit> = Either.Success(Unit)
     override suspend fun updateReservationAttentionState(id: Long, attentionState: String, state: String): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun deleteAllReservations(): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun insertReservations(reservations: List<ReservationDto>, state: String): Either<Failure, Unit> = Either.Success(Unit)
 }

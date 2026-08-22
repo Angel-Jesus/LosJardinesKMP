@@ -43,4 +43,6 @@ interface DatabaseRepository {
         offset: Long
     ): Either<Failure, List<ReservationDto>>
     suspend fun updateReservationAttentionState(id: Long, attentionState: String, state: String): Either<Failure, Unit>
+    suspend fun deleteAllReservations(): Either<Failure, Unit>
+    suspend fun insertReservations(reservations: List<ReservationDto>, state: String): Either<Failure, Unit>
 }

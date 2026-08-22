@@ -9,6 +9,7 @@ import com.pe.losjardines.usecases.content.GenerateExcelReportUseCase
 import com.pe.losjardines.usecases.content.GetReservationsUseCase
 import com.pe.losjardines.usecases.content.GetRoomStateUseCase
 import com.pe.losjardines.usecases.content.UpdateRegisterByCloudUseCase
+import com.pe.losjardines.usecases.content.UpdateReservationByCloudUseCase
 import com.pe.losjardines.usecases.model.FilterValues
 import com.pe.losjardines.usecases.model.ReservationStatus
 import com.pe.losjardines.utils.DateParams
@@ -18,13 +19,12 @@ import com.pe.losjardines.utils.getDayNow
 import com.pe.losjardines.utils.getDayNowParams
 import com.pe.losjardines.utils.getLastMonth
 import com.pe.losjardines.utils.toDateStringResult
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 
 class HomeViewModel(
     private val excelTemplateProvider: ExcelTemplateProvider,
     private val generateExcelReportUseCase: GenerateExcelReportUseCase,
     private val updateRegisterByCloudUseCase: UpdateRegisterByCloudUseCase,
+    private val updateReservationByCloudUseCase: UpdateReservationByCloudUseCase,
     private val getReservationsUseCase: GetReservationsUseCase,
     private val getRoomStateUseCase: GetRoomStateUseCase
 ): BaseViewModel<HomeUiState, HomeEvent, HomeEffect>(HomeUiState()) {
@@ -86,11 +86,10 @@ class HomeViewModel(
 
     private fun updateRegisterByCloud(){
         updateState { copy(isLoading = true) }
-        executeTask(
-            task = {
-                updateRegisterByCloudUseCase.run()
-            },
-            onSuccess = {
+        executeTwoParallel(
+            first = { updateRegisterByCloudUseCase.run() },
+            second = { updateReservationByCloudUseCase.run() },
+            onSuccess = { _, _ ->
                 updateState { copy(isLoading = false) }
             },
             onError = {

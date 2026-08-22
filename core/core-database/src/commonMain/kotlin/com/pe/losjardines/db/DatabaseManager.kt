@@ -133,6 +133,30 @@ class DatabaseManager(
 
     fun deleteAllReservations() = database.databaseQueries.deleteAllReservations()
 
+    fun insertReservations(reservations: List<ReservationDb>) = database.databaseQueries.transaction {
+        reservations.forEach { reservationDb ->
+            database.databaseQueries.insertReservation(
+                collection = reservationDb.collection,
+                idFirebase = reservationDb.idFirebase,
+                country = reservationDb.country,
+                dateEnter = reservationDb.dateEnter,
+                dateExit = reservationDb.dateExit,
+                fee = reservationDb.fee,
+                name = reservationDb.name,
+                sex = reservationDb.sex,
+                typeDocument = reservationDb.typeDocument,
+                numberDocument = reservationDb.numberDocument,
+                observation = reservationDb.observation,
+                region = reservationDb.region,
+                room = reservationDb.room,
+                typeRoom = reservationDb.typeRoom,
+                companions = reservationDb.companions,
+                state = reservationDb.state,
+                attentionState = reservationDb.attentionState
+            )
+        }
+    }
+
     fun moveReservationToTrash(trashDb: TrashDb, reservationId: Long) = database.databaseQueries.transaction {
         database.databaseQueries.insertTrash(
             collection = trashDb.collection,

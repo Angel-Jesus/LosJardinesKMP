@@ -145,4 +145,16 @@ class DatabaseRepositoryImpl(
             databaseManager.updateReservationAttentionState(id, attentionState, state)
         }
     }
+
+    override suspend fun deleteAllReservations(): Either<Failure, Unit> {
+        return callDatabase {
+            databaseManager.deleteAllReservations()
+        }
+    }
+
+    override suspend fun insertReservations(reservations: List<ReservationDto>, state: String): Either<Failure, Unit> {
+        return callDatabase {
+            databaseManager.insertReservations(reservations.map { it.toData(state) })
+        }
+    }
 }

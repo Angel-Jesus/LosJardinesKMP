@@ -74,6 +74,12 @@ class FirestoreRepositoryImpl(
         }
     }
 
+    override suspend fun getReservationsByCollection(): Either<Failure, List<ReservationDto>> {
+        return callFirestore {
+            firebaseManager.getReservations().map { it.toDomain() }
+        }
+    }
+
     override suspend fun sendReservation(reservationDto: ReservationDto): Either<Failure, Unit> {
         return callFirestore {
             firebaseManager.sendReservation(reservationDto.toData())

@@ -64,6 +64,8 @@ class FakeDatabaseRepository(
     override suspend fun moveReservationToTrash(reservationDto: ReservationDto, dateDeleted: Long, state: String): Either<Failure, Unit> = Either.Success(Unit)
     override suspend fun getReservations(state: String, limit: Long, offset: Long): Either<Failure, List<ReservationDto>> = Either.Success(emptyList())
     override suspend fun updateReservationAttentionState(id: Long, attentionState: String, state: String): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun deleteAllReservations(): Either<Failure, Unit> = Either.Success(Unit)
+    override suspend fun insertReservations(reservations: List<ReservationDto>, state: String): Either<Failure, Unit> = Either.Success(Unit)
 }
 
 /** Fake del repositorio remoto. No participa en la generación del reporte. */
@@ -79,6 +81,7 @@ class FakeFirestoreRepository : FirestoreRepository {
     override suspend fun sendReservationToTrash(reservationDto: ReservationDto, dateDeleted: Long): Either<Failure, Unit> = Either.Success(Unit)
     override suspend fun deleteReservation(reservationDto: ReservationDto): Either<Failure, Unit> = Either.Success(Unit)
     override suspend fun getRegistrationsByCollection(collection: String): Either<Failure, List<RegistrationDto>> = Either.Success(emptyList())
+    override suspend fun getReservationsByCollection(): Either<Failure, List<ReservationDto>> = Either.Success(emptyList())
 }
 
 /**

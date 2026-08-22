@@ -18,6 +18,7 @@ import com.pe.losjardines.usecases.content.SyncronizationUseCase
 import com.pe.losjardines.usecases.content.ValidateRoomAvailabilityUseCase
 import com.pe.losjardines.usecases.content.UpdateClientInfoUseCase
 import com.pe.losjardines.usecases.content.UpdateRegisterByCloudUseCase
+import com.pe.losjardines.usecases.content.UpdateReservationByCloudUseCase
 import com.pe.losjardines.usecases.content.UpdateStateRoomUseCase
 import com.pe.losjardines.usecases.login.CheckSessionUseCase
 import com.pe.losjardines.usecases.login.LoginUseCase
@@ -50,6 +51,7 @@ val domainModules = module {
     factoryOf(::ValidateRoomAvailabilityUseCase)
     factoryOf(::GenerateExcelReportUseCase)
     factoryOf(::UpdateRegisterByCloudUseCase)
+    factoryOf(::UpdateReservationByCloudUseCase)
 
     single<ExcelGenerator> { ExcelEditor() }
 }

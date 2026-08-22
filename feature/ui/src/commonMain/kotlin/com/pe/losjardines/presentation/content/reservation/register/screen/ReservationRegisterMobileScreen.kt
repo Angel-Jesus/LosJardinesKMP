@@ -149,6 +149,7 @@ fun ReservationRegisterMobileScreen(
         description = showResult.second,
         isSuccess = showResult.first == ResultState.SUCCESS,
         visibility = showResult.first != ResultState.NONE,
+        timeVisibility = 2000,
         onDismiss = {
             showResult = Pair(ResultState.NONE, String.EMPTY)
         }

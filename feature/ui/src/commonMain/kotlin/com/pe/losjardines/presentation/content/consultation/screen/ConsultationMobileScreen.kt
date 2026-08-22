@@ -143,7 +143,7 @@ private fun ConsultationContent(
     typography: AppTypography = LocalAppTypographyCore.current
 ) {
     val sharedScrollState = rememberScrollState()
-    var isExpanded by rememberSaveable { mutableStateOf(false) }
+    var isExpanded by remember { mutableStateOf(false) }
     var updateFieldParams by remember { mutableStateOf(UpdateFieldParams()) }
     var deleteParams by remember { mutableStateOf(Triple(false, 0L, String.EMPTY)) }
 

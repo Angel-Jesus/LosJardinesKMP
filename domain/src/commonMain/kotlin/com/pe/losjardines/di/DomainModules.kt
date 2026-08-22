@@ -15,6 +15,7 @@ import com.pe.losjardines.usecases.content.GetRoomStateUseCase
 import com.pe.losjardines.usecases.content.SaveCustomerRegistrationUseCase
 import com.pe.losjardines.usecases.content.SaveReservationUseCase
 import com.pe.losjardines.usecases.content.SyncronizationUseCase
+import com.pe.losjardines.usecases.content.ValidateRoomAvailabilityUseCase
 import com.pe.losjardines.usecases.content.UpdateClientInfoUseCase
 import com.pe.losjardines.usecases.content.UpdateRegisterByCloudUseCase
 import com.pe.losjardines.usecases.content.UpdateStateRoomUseCase
@@ -46,6 +47,7 @@ val domainModules = module {
     factoryOf(::DeleteReservationUseCase)
     factoryOf(::CheckInReservationUseCase)
     factoryOf(::GetReservationByIdUseCase)
+    factoryOf(::ValidateRoomAvailabilityUseCase)
     factoryOf(::GenerateExcelReportUseCase)
     factoryOf(::UpdateRegisterByCloudUseCase)
 

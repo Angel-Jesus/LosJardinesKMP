@@ -23,6 +23,7 @@ import com.pe.losjardines.usecases.model.TravelReasonDto
 import com.pe.losjardines.usecases.model.UpdateParams
 import com.pe.losjardines.utils.companions.EMPTY
 import com.pe.losjardines.utils.constance.MonthFilter
+import com.pe.losjardines.utils.getCurrentYear
 import com.pe.losjardines.utils.getDayNowParams
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
@@ -112,7 +113,7 @@ class ConsultationViewModel(
         updateState {
             copy(
                 monthFilter = MonthFilter.NONE.displayName,
-                yearFilter = String.EMPTY,
+                yearFilter = getCurrentYear(),
                 searchDni = String.EMPTY,
                 showClearFilter = false
             )
@@ -122,13 +123,13 @@ class ConsultationViewModel(
     }
 
     private fun getClientsRegister(filter: FilterValues? = null) {
+        updateState { copy(loading = true, clientsRegister = emptyList())}
         getCatalogInformation()
 
-        updateState { copy(loading = true)}
         executeTask(
             task = { getClientsRegisterUseCase.run(filter) },
             onSuccess = {
-                updateState { copy(clientsRegister = it, loading = false, showClearFilter = true) }
+                updateState { copy(clientsRegister = it, loading = false, showClearFilter = filter != null) }
             },
             onError = ::handleError
         )

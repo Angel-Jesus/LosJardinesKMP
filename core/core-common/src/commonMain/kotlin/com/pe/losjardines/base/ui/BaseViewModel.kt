@@ -3,6 +3,7 @@ package com.pe.losjardines.base.ui
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.pe.losjardines.base.error.Failure
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
@@ -58,8 +59,11 @@ abstract class BaseViewModel<S : BaseUiState, E: BaseEvent, F: BaseEffect>(
             try {
                 val result = task.invoke()
                 onSuccess(result)
-            }catch (e: Throwable){
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Throwable){
                 onError(Failure.fromThrowable(throwable = e))
+                println("Error: ${e.message}")
             }
         }
     }
@@ -76,8 +80,11 @@ abstract class BaseViewModel<S : BaseUiState, E: BaseEvent, F: BaseEffect>(
                 val r1 = async { first() }
                 val r2 = async { second() }
                 onSuccess(r1.await(), r2.await())
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Throwable) {
                 onError(Failure.fromThrowable(e))
+                println("Error: ${e.message}")
             }
         }
     }
@@ -97,8 +104,11 @@ abstract class BaseViewModel<S : BaseUiState, E: BaseEvent, F: BaseEffect>(
                 val r2 = async { second() }
                 val r3 = async { third() }
                 onSuccess(r1.await(), r2.await(), r3.await())
+            } catch (e: CancellationException) {
+                throw e
             } catch (e: Throwable) {
                 onError(Failure.fromThrowable(e))
+                println("Error: ${e.message}")
             }
         }
     }

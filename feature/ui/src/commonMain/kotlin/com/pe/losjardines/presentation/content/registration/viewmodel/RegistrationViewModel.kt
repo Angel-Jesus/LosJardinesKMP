@@ -16,9 +16,12 @@ import com.pe.losjardines.usecases.catalog.GetTypeRoomUseCase
 import com.pe.losjardines.usecases.content.CheckInReservationUseCase
 import com.pe.losjardines.usecases.content.GetReservationByIdUseCase
 import com.pe.losjardines.usecases.content.SaveCustomerRegistrationUseCase
+import com.pe.losjardines.usecases.content.ValidateRoomAvailabilityUseCase
 import com.pe.losjardines.usecases.model.CountryDto
 import com.pe.losjardines.usecases.model.RegionDto
 import com.pe.losjardines.usecases.model.RegistrationDto
+import com.pe.losjardines.usecases.model.ReservationDto
+import com.pe.losjardines.usecases.model.RoomAvailability
 import com.pe.losjardines.usecases.model.TravelReasonDto
 import com.pe.losjardines.usecases.model.TypeRoomDto
 import com.pe.losjardines.utils.companions.EMPTY
@@ -35,7 +38,8 @@ class RegistrationViewModel(
     private val getTypeRoomUseCase: GetTypeRoomUseCase,
     private val saveCustomerRegistrationUseCase: SaveCustomerRegistrationUseCase,
     private val checkInReservationUseCase: CheckInReservationUseCase,
-    private val getReservationByIdUseCase: GetReservationByIdUseCase
+    private val getReservationByIdUseCase: GetReservationByIdUseCase,
+    private val validateRoomAvailabilityUseCase: ValidateRoomAvailabilityUseCase
 ): BaseViewModel<RegistrationState, RegistrationEvent, RegistrationEffect>(RegistrationState()) {
 
     private val _catalogState = MutableStateFlow(CatalogState())
@@ -89,17 +93,43 @@ class RegistrationViewModel(
         )
         executeTask(
             task = {
-                // Modo check-in: primero se actualiza el estado de la reserva (Firebase + local),
-                // luego se registra al cliente. Cada paso degrada a "pendiente" si no hay conexión.
-                if (reservation != null) checkInReservationUseCase.run(reservation)
-                saveCustomerRegistrationUseCase.run(customerInformation)
+                // Antes de guardar se valida que la habitación no tenga otra reserva activa que
+                // choque con las fechas, para evitar la doble ocupación. En modo check-in se
+                // excluye la propia reserva que se está atendiendo para no auto-bloquearse.
+                val availability = validateRoomAvailabilityUseCase.run(
+                    ValidateRoomAvailabilityUseCase.Params(
+                        room = customerInformation.room,
+                        dateEnter = customerInformation.dateEnter,
+                        dateExit = customerInformation.dateExit,
+                        excludeReservationId = reservation?.id,
+                        excludeIdFirebase = reservation?.idFirebase
+                    )
+                )
+
+                when (availability) {
+                    is RoomAvailability.Conflict -> availability
+                    is RoomAvailability.Available -> {
+                        // Modo check-in: primero se actualiza el estado de la reserva (Firebase + local),
+                        // luego se registra al cliente. Cada paso degrada a "pendiente" si no hay conexión.
+                        if (reservation != null) checkInReservationUseCase.run(reservation)
+                        saveCustomerRegistrationUseCase.run(customerInformation)
+                        availability
+                    }
+                }
             },
-            onSuccess = {
-                resetData()
-                if (reservation != null) {
-                    sendEffect(RegistrationEffect.CheckInCompleted)
-                } else {
-                    sendEffect(RegistrationEffect.SuccessSave("Información del cliente guardado correctamente"))
+            onSuccess = { availability ->
+                when (availability) {
+                    is RoomAvailability.Conflict -> {
+                        sendEffect(RegistrationEffect.ErrorSave(roomConflictMessage(availability.reservation)))
+                    }
+                    is RoomAvailability.Available -> {
+                        resetData()
+                        if (reservation != null) {
+                            sendEffect(RegistrationEffect.CheckInCompleted)
+                        } else {
+                            sendEffect(RegistrationEffect.SuccessSave("Información del cliente guardado correctamente"))
+                        }
+                    }
                 }
             },
             onError = {
@@ -107,6 +137,9 @@ class RegistrationViewModel(
             }
         )
     }
+
+    private fun roomConflictMessage(reservation: ReservationDto): String =
+        "La habitación ${reservation.room} ya tiene una reserva (${reservation.dateEnter} - ${reservation.dateExit}) que se cruza con las fechas seleccionadas."
 
     private fun loadReservation(id: Long) {
         executeTask(

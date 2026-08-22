@@ -13,9 +13,11 @@ import com.pe.losjardines.usecases.catalog.GetCountriesUseCase
 import com.pe.losjardines.usecases.catalog.GetRegionsUseCase
 import com.pe.losjardines.usecases.catalog.GetTypeRoomUseCase
 import com.pe.losjardines.usecases.content.SaveReservationUseCase
+import com.pe.losjardines.usecases.content.ValidateRoomAvailabilityUseCase
 import com.pe.losjardines.usecases.model.CountryDto
 import com.pe.losjardines.usecases.model.RegionDto
 import com.pe.losjardines.usecases.model.ReservationDto
+import com.pe.losjardines.usecases.model.RoomAvailability
 import com.pe.losjardines.usecases.model.TypeRoomDto
 import com.pe.losjardines.utils.companions.EMPTY
 import com.pe.losjardines.utils.getDateNow
@@ -28,7 +30,8 @@ class ReservationRegisterViewModel(
     private val getCountriesUseCase: GetCountriesUseCase,
     private val getRegionsUseCase: GetRegionsUseCase,
     private val getTypeRoomUseCase: GetTypeRoomUseCase,
-    private val saveReservationUseCase: SaveReservationUseCase
+    private val saveReservationUseCase: SaveReservationUseCase,
+    private val validateRoomAvailabilityUseCase: ValidateRoomAvailabilityUseCase
 ): BaseViewModel<ReservationRegisterState, ReservationRegisterEvent, ReservationRegisterEffect>(ReservationRegisterState()) {
 
     private val _catalogState = MutableStateFlow(CatalogState())
@@ -78,16 +81,44 @@ class ReservationRegisterViewModel(
         )
 
         executeTask(
-            task = { saveReservationUseCase.run(reservation) },
-            onSuccess = {
-                resetData()
-                sendEffect(ReservationRegisterEffect.SuccessSave("Reserva registrada correctamente"))
+            task = {
+                // Se valida que la habitación no tenga otra reserva activa que choque con las
+                // fechas solicitadas, para evitar reservar la misma habitación a dos clientes.
+                val availability = validateRoomAvailabilityUseCase.run(
+                    ValidateRoomAvailabilityUseCase.Params(
+                        room = reservation.room,
+                        dateEnter = reservation.dateEnter,
+                        dateExit = reservation.dateExit
+                    )
+                )
+
+                when (availability) {
+                    is RoomAvailability.Conflict -> availability
+                    is RoomAvailability.Available -> {
+                        saveReservationUseCase.run(reservation)
+                        availability
+                    }
+                }
+            },
+            onSuccess = { availability ->
+                when (availability) {
+                    is RoomAvailability.Conflict -> {
+                        sendEffect(ReservationRegisterEffect.ErrorSave(roomConflictMessage(availability.reservation)))
+                    }
+                    is RoomAvailability.Available -> {
+                        resetData()
+                        sendEffect(ReservationRegisterEffect.SuccessSave("Reserva registrada correctamente"))
+                    }
+                }
             },
             onError = {
                 sendEffect(ReservationRegisterEffect.ErrorSave(it.getMessage().orEmpty()))
             }
         )
     }
+
+    private fun roomConflictMessage(reservation: ReservationDto): String =
+        "La habitación ${reservation.room} ya tiene una reserva (${reservation.dateEnter} - ${reservation.dateExit}) que se cruza con las fechas seleccionadas."
 
     private fun valueChanged(value: Any, field: FieldRegistration){
         when(field){

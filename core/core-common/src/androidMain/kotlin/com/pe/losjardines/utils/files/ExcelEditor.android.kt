@@ -2,6 +2,7 @@ package com.pe.losjardines.utils.files
 
 import com.pe.losjardines.base.either.Either
 import com.pe.losjardines.base.error.Failure
+import com.pe.losjardines.base.error.toFailure
 import org.apache.poi.ss.usermodel.WorkbookFactory
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import java.io.FileOutputStream
@@ -47,6 +48,6 @@ actual class ExcelEditor actual constructor() : ExcelGenerator {
         workbook.close()
         Either.Success(outputFile)
     }.getOrElse { error ->
-        Either.Error(Failure.fromThrowable(error))
+        Either.Error(error.toFailure())
     }
 }

@@ -2,6 +2,7 @@ package com.pe.losjardines.usecases.content
 
 import com.pe.losjardines.base.either.Either
 import com.pe.losjardines.base.error.Failure
+import com.pe.losjardines.base.error.toException
 import com.pe.losjardines.repository.DatabaseRepository
 import com.pe.losjardines.repository.FirestoreRepository
 import com.pe.losjardines.usecases.model.FielTypeRegister.Companion.getRegisterUpdate
@@ -14,10 +15,10 @@ class UpdateClientInfoUseCase(
     val databaseRepository: DatabaseRepository,
     val firestoreRepository: FirestoreRepository
 ) {
-    @Throws(Exception::class, CancellationException::class, Failure::class)
+    @Throws(Exception::class, CancellationException::class)
     suspend fun run(fieldParams: UpdateParams) {
-        if (fieldParams.registrationDto == null) throw Failure.UnknownFailure("Not found client")
-        if (fieldParams.fieldTypeRegister == null) throw Failure.UnknownFailure("Not found field type")
+        if (fieldParams.registrationDto == null) throw Failure.UnknownFailure("Not found client").toException()
+        if (fieldParams.fieldTypeRegister == null) throw Failure.UnknownFailure("Not found field type").toException()
 
         val result = firestoreRepository.updateClientField(
             fieldParams.registrationDto,
@@ -36,7 +37,7 @@ class UpdateClientInfoUseCase(
                     StateProcess.PENDING_UPDATE.description,
                     fieldParams.fieldTypeRegister.getRegisterUpdate(fieldParams.newValue, fieldParams.registrationDto)
                 )
-                else -> throw result.error
+                else -> throw result.error.toException()
             }
         }
     }

@@ -1,7 +1,7 @@
 package com.pe.losjardines.usecases.content
 
 import com.pe.losjardines.base.either.Either
-import com.pe.losjardines.base.error.Failure
+import com.pe.losjardines.base.error.toException
 import com.pe.losjardines.repository.DatabaseRepository
 import com.pe.losjardines.usecases.model.ReservationDto
 import com.pe.losjardines.usecases.model.ReservationStatus
@@ -34,7 +34,7 @@ class ValidateRoomAvailabilityUseCase(
         val excludeIdFirebase: String? = null
     )
 
-    @Throws(Exception::class, CancellationException::class, Failure::class)
+    @Throws(Exception::class, CancellationException::class)
     suspend fun run(params: Params): RoomAvailability {
         val room = params.room.trim()
         val newEnter = params.dateEnter.dateToEpochMillis()
@@ -61,7 +61,7 @@ class ValidateRoomAvailabilityUseCase(
         while (true) {
             val page = when (val result = databaseRepository.getReservations(state, PAGE_SIZE, offset)) {
                 is Either.Success -> result.data
-                is Either.Error -> throw result.error
+                is Either.Error -> throw result.error.toException()
             }
             all += page
             if (page.size < PAGE_SIZE) break

@@ -2,6 +2,7 @@ package com.pe.losjardines.usecases.content
 
 import com.pe.losjardines.base.either.Either
 import com.pe.losjardines.base.error.Failure
+import com.pe.losjardines.base.error.toException
 import com.pe.losjardines.repository.DatabaseRepository
 import com.pe.losjardines.repository.FirestoreRepository
 import com.pe.losjardines.usecases.model.FilterValues
@@ -17,7 +18,7 @@ class GetClientsRegisterUseCase(
     private val firestoreRepository: FirestoreRepository,
     private val databaseRepository: DatabaseRepository
 ) {
-    @Throws(Exception::class, CancellationException::class, Failure::class)
+    @Throws(Exception::class, CancellationException::class)
     suspend fun run(filter: FilterValues? = null): List<RegistrationDto> {
         val result = if (filter == null) {
             databaseRepository.getClientsRegister(getDateInitToEpochMillis(), getDateLastToEpochMillis(), null)
@@ -25,15 +26,15 @@ class GetClientsRegisterUseCase(
             val month = MonthFilter.fromDisplayName(filter.month)
             val year = filter.year.toIntOrNull() ?: 0
             val dateInit = getDateToEpochMillis(1, month?.number ?: 0, year)
-                ?: throw Failure.UnknownFailure("Error getting month or year")
+                ?: throw Failure.UnknownFailure("Error getting month or year").toException()
             val dateLast = getDateToEpochMillis(getLastDayOfMonth(year, month?.number ?: 0), month?.number ?: 0, year)
-                ?: throw Failure.UnknownFailure("Error getting month or year")
+                ?: throw Failure.UnknownFailure("Error getting month or year").toException()
             databaseRepository.getClientsRegister(dateInit, dateLast, filter.searchDni?.takeIf { it.isNotEmpty() })
         }
 
         return when (result) {
             is Either.Success -> result.data
-            is Either.Error -> throw result.error
+            is Either.Error -> throw result.error.toException()
         }
     }
 }

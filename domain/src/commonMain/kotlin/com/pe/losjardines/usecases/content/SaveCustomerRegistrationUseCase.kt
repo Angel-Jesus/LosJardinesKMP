@@ -2,6 +2,7 @@ package com.pe.losjardines.usecases.content
 
 import com.pe.losjardines.base.either.Either
 import com.pe.losjardines.base.error.Failure
+import com.pe.losjardines.base.error.toException
 import com.pe.losjardines.repository.DatabaseRepository
 import com.pe.losjardines.repository.FirestoreRepository
 import com.pe.losjardines.usecases.model.RegistrationDto
@@ -13,7 +14,7 @@ class SaveCustomerRegistrationUseCase(
     private val databaseRepository: DatabaseRepository,
     private val firestoreRepository: FirestoreRepository
 ) {
-    @Throws(Exception::class, CancellationException::class, Failure::class)
+    @Throws(Exception::class, CancellationException::class)
     suspend fun run(registrationDto: RegistrationDto) {
         val dto = registrationDto.copy(idFirebase = generateFirebaseDocumentId())
 
@@ -21,7 +22,7 @@ class SaveCustomerRegistrationUseCase(
             is Either.Success -> databaseRepository.saveCustomerInformation(dto, StateProcess.SYNC.description)
             is Either.Error-> when(sendResult.error){
                 is Failure.InternetConnection -> databaseRepository.saveCustomerInformation(dto, StateProcess.PENDING_INSERT.description)
-                else -> throw sendResult.error
+                else -> throw sendResult.error.toException()
             }
         }
     }

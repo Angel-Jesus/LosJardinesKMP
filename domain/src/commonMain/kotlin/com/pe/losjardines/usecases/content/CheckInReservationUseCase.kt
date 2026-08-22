@@ -2,6 +2,7 @@ package com.pe.losjardines.usecases.content
 
 import com.pe.losjardines.base.either.Either
 import com.pe.losjardines.base.error.Failure
+import com.pe.losjardines.base.error.toException
 import com.pe.losjardines.repository.DatabaseRepository
 import com.pe.losjardines.repository.FirestoreRepository
 import com.pe.losjardines.usecases.model.ReservationDto
@@ -20,7 +21,7 @@ class CheckInReservationUseCase(
     private val databaseRepository: DatabaseRepository,
     private val firestoreRepository: FirestoreRepository
 ) {
-    @Throws(Exception::class, CancellationException::class, Failure::class)
+    @Throws(Exception::class, CancellationException::class)
     suspend fun run(reservation: ReservationDto) {
         val id = reservation.id ?: return
         val attentionState = ReservationStatus.OCCUPIED.value
@@ -29,13 +30,13 @@ class CheckInReservationUseCase(
             is Either.Success -> StateProcess.SYNC.description
             is Either.Error -> when (result.error) {
                 is Failure.InternetConnection -> StateProcess.PENDING_UPDATE.description
-                else -> throw result.error
+                else -> throw result.error.toException()
             }
         }
 
         when (val result = databaseRepository.updateReservationAttentionState(id, attentionState, syncState)) {
             is Either.Success -> Unit
-            is Either.Error -> throw result.error
+            is Either.Error -> throw result.error.toException()
         }
     }
 }

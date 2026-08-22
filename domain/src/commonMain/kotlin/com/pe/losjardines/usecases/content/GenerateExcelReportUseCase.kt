@@ -1,7 +1,7 @@
 package com.pe.losjardines.usecases.content
 
 import com.pe.losjardines.base.either.Either
-import com.pe.losjardines.base.error.Failure
+import com.pe.losjardines.base.error.toException
 import com.pe.losjardines.usecases.model.FilterValues
 import com.pe.losjardines.usecases.model.RegistrationDto
 import com.pe.losjardines.utils.calculateNights
@@ -40,7 +40,7 @@ class GenerateExcelReportUseCase(
         val filter: FilterValues? = null
     )
 
-    @Throws(Exception::class, CancellationException::class, Failure::class)
+    @Throws(Exception::class, CancellationException::class)
     suspend fun run(params: Params): PlatformFile {
         val registrations = getClientsRegisterUseCase.run(params.filter)
         val sections = ExcelCellSection()
@@ -54,7 +54,7 @@ class GenerateExcelReportUseCase(
 
         return when (val result = excelEditor.generarDesdeTemplate(params.templateStream, params.outputFile, updates, sheetName)) {
             is Either.Success -> result.data
-            is Either.Error -> throw result.error
+            is Either.Error -> throw result.error.toException()
         }
     }
 

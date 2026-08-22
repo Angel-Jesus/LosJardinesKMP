@@ -2,6 +2,7 @@ package com.pe.losjardines.utils.files
 
 import com.pe.losjardines.base.either.Either
 import com.pe.losjardines.base.error.Failure
+import com.pe.losjardines.base.error.toFailure
 
 actual class ExcelEditor actual constructor() : ExcelGenerator {
     actual override fun generarDesdeTemplate(
@@ -9,5 +10,5 @@ actual class ExcelEditor actual constructor() : ExcelGenerator {
         outputFile: PlatformFile,
         updates: List<ExcelCellUpdate>,
         sheetName: String
-    ): Either<Failure, PlatformFile> = Either.Error(Failure.fromThrowable(Throwable("Not supported")))
+    ): Either<Failure, PlatformFile> = Either.Error(Throwable("Not supported").toFailure())
 }

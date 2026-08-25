@@ -19,14 +19,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropUp
 import androidx.compose.material.icons.filled.CalendarMonth
-import androidx.compose.material.icons.filled.CalendarViewWeek
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.DeleteOutline
-import androidx.compose.material.icons.filled.FilterCenterFocus
-import androidx.compose.material.icons.filled.TransitEnterexit
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -67,7 +61,6 @@ import com.pe.losjardines.usecases.model.ReservationDto
 import com.pe.losjardines.usecases.model.ReservationStatus
 import com.pe.losjardines.utils.companions.EMPTY
 import com.pe.losjardines.values.AppTheme
-import com.pe.losjardines.values.AppTypography
 import com.pe.losjardines.values.BackgroundBrandColor
 import com.pe.losjardines.values.LocalAppTypographyCore
 import losjardineskmp.feature.ui.generated.resources.Res

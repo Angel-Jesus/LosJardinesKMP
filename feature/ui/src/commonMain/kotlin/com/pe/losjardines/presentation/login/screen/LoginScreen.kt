@@ -17,9 +17,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,13 +27,11 @@ import com.pe.losjardines.components.dialog.ResultDialog
 import com.pe.losjardines.components.loading.LoadingAJ
 import com.pe.losjardines.components.textInput.InputType
 import com.pe.losjardines.components.textInput.TextInputAJ
-import com.pe.losjardines.presentation.content.utils.ResultState
 import com.pe.losjardines.presentation.login.contract.LoginEffect
 import com.pe.losjardines.presentation.login.contract.LoginEvent
 import com.pe.losjardines.presentation.login.contract.LoginState
 import com.pe.losjardines.presentation.login.viewmodel.FieldType
 import com.pe.losjardines.presentation.login.viewmodel.LoginViewModel
-import com.pe.losjardines.utils.companions.EMPTY
 import com.pe.losjardines.values.AppTheme
 import com.pe.losjardines.values.AppTypography
 import com.pe.losjardines.values.BrandTextColor
@@ -49,7 +44,6 @@ import org.jetbrains.compose.resources.painterResource
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.viewmodel.koinViewModel
 import org.koin.core.annotation.KoinExperimentalAPI
-import kotlin.String.Companion
 
 @OptIn(KoinExperimentalAPI::class)
 @Composable
@@ -95,7 +89,7 @@ fun LoginScreen(
 }
 
 @Composable
-private fun LoginContent(
+internal fun LoginContent(
     isMobile: Boolean,
     uiState: LoginState,
     dispatcherEvent: (LoginEvent) -> Unit,
@@ -132,7 +126,7 @@ private fun LoginContent(
         Spacer(modifier = Modifier.height(24.dp))
 
         TextInputAJ(
-            modifier = Modifier.fillMaxWidth(1f.takeIf { isMobile } ?: 0.4f),
+            modifier = Modifier.fillMaxWidth(1f.takeIf { isMobile } ?: 0.5f),
             value = uiState.email,
             label = "Nombre de usuario",
             inputType = InputType.EMAIL,
@@ -164,7 +158,7 @@ private fun LoginContent(
 
 @Preview
 @Composable
-private fun LoginPreview(){
+private fun LoginMobilePreview(){
     AppTheme {
         Box(modifier = Modifier.background(Color.White)){
             LoginContent(

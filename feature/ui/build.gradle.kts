@@ -60,8 +60,23 @@ kotlin {
         desktopMain.dependencies {
             // Coroutines
             implementation(libs.kotlinx.coroutines.swing)
+            // Galeria de previews de escritorio (ver preview/gallery/PreviewGallery.kt)
+            implementation(compose.desktop.currentOs)
         }
     }
+}
+
+/**
+ * Lanza la galeria de previews de escritorio (feature/ui/src/desktopMain/.../preview/gallery).
+ * Uso: ./gradlew :feature:ui:runPreviewGallery
+ */
+tasks.register<JavaExec>("runPreviewGallery") {
+    group = "preview"
+    description = "Abre la galeria de previews de Compose Desktop"
+
+    val desktopMainCompilation = kotlin.jvm("desktop").compilations.getByName("main")
+    classpath(desktopMainCompilation.output.allOutputs, desktopMainCompilation.runtimeDependencyFiles)
+    mainClass.set("com.pe.losjardines.preview.gallery.PreviewGalleryKt")
 }
 
 android {

@@ -8,8 +8,10 @@ data class AuthResponse(
     val providerId: String
 )
 
-fun AuthResult.toAuthResponse() = AuthResponse(
-    uid = user?.uid.orEmpty(),
-    isEmailVerified = user?.isEmailVerified == true,
-    providerId = user?.providerId.orEmpty()
+ expect suspend fun AuthResult.toAuthResponse(): AuthResponse
+
+internal val EmptyAuthResponse = AuthResponse(
+    uid = "",
+    isEmailVerified = false,
+    providerId = ""
 )
